@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>爬虫与网络编程基础_Task01：计算机网络基础</title>
+    <url>/3VQT4K6/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>为了使网络上获得的数据干净整洁，并且可以为自己的应用所用，我们得想出一些形式来表示应用与网络之间来来往往的数据。最常使用的两种技术就是：XML 和 JSON。</p>
+<span id="more"></span>
+
+<p>但是 Python 中的列表或者字典并不能在 Java 中使用（Java 中使用 HashMap），所以不能直接把 Python 中的字典传给 Java，而是应该发送 Python 与 Java 都能接受的数据。</p>
+<p>因此，两者之间需要一种 <em>Wire Format</em> 来作为互相交换数据的媒介。而 XML 和 JSON 是两种比较常用的 <em>Wire Format</em>。</p>
+<h2 id="0x01-Python-中创建-List"><a href="#0x01-Python-中创建-List" class="headerlink" title="0x01 Python 中创建 List"></a>0x01 Python 中创建 List</h2><h3 id="1-创建列表"><a href="#1-创建列表" class="headerlink" title="1. 创建列表"></a>1. 创建列表</h3><p>在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义列表</span></span><br><span class="line"><span class="built_in">list</span> = [(<span class="string">&quot;小王&quot;</span>,<span class="number">40</span>,<span class="number">50</span>),(<span class="string">&quot;小贾&quot;</span>,<span class="number">50</span>,<span class="number">23</span>)]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(&#39;小王&#39;, 40,50), (&#39;小贾&#39;, 50,23)]</code></p>
+</blockquote>
+<h3 id="2-导入列表"><a href="#2-导入列表" class="headerlink" title="2. 导入列表"></a>2. 导入列表</h3><p>如果想把 Numpy 数组转成 Json 格式，可以首先将数组转为列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data = data.tolist()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-将数据存储为-Json-格式，并进行读取"><a href="#0x02-将数据存储为-Json-格式，并进行读取" class="headerlink" title="0x02 将数据存储为 Json 格式，并进行读取"></a>0x02 将数据存储为 Json 格式，并进行读取</h2><h3 id="JSON-库的一些用法"><a href="#JSON-库的一些用法" class="headerlink" title="JSON 库的一些用法"></a>JSON 库的一些用法</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>json.dumps ()</td>
+<td>将 Python 对象编码成 Json 字符串</td>
+</tr>
+<tr>
+<td>json.loads ()</td>
+<td>将 Json 字符串解码成 Python 对象</td>
+</tr>
+<tr>
+<td>json.dump ()</td>
+<td>将 Python 中的对象转化成 Json 储存到文件中</td>
+</tr>
+<tr>
+<td>json.load ()</td>
+<td>将文件中的 Json 的格式转化成 Python 对象提取</td>
+</tr>
+</tbody></table>
+<p>json.dump () 和 json.dumps () 的区别</p>
+<ul>
+<li>json.dumps () 是把 Python 对象转换成 Json 对象的一个过程，生成的是字符串。</li>
+<li>json.dump () 是把 Python 对象转换成 Json 对象生成一个 fp 的文件流，和文件相关。</li>
+</ul>
+<p>所以后面多的一个 <code>s</code> 可以理解为 <code>string</code></p>
+<p>更详细的内容可以参考 <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a></p>
+<h3 id="1-存储到-JSON-文件中"><a href="#1-存储到-JSON-文件中" class="headerlink" title="1. 存储到 JSON 文件中"></a>1. 存储到 JSON 文件中</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入 json 模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为新建 json 文件命名</span></span><br><span class="line">filename = <span class="string">&#x27;info.json&#x27;</span></span><br><span class="line"><span class="comment"># 使用json.dump()方法转为json格式数据</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    json.dump(<span class="built_in">list</span>, file)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 读取 json 文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    info = json.load(file)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (info)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>printout:<br><code>[[&#39;小王&#39;, 40,50], [&#39;小贾&#39;, 50,23]]</code></p>
+</blockquote>
+<p>Tips：</p>
+<ul>
+<li>默认会转为二进制数据，目前存储的 Json 文件内容为：<code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code>。读取的时候默认又转到了可读的 Python 对象。所以读取并打印的时候看见的是字符。</li>
+<li>如果希望文件中不使用二进制存储，通过 <code>ensure_ascii=False</code> 设置不转为二进制，即存储文件时：<code>json.dump(list, file, ensure_ascii=False)</code>。</li>
+</ul>
+<h3 id="2-编码成-JSON-字符串"><a href="#2-编码成-JSON-字符串" class="headerlink" title="2. 编码成 JSON 字符串"></a>2. 编码成 JSON 字符串</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用 json.dumps() 方法转为json格式数据</span></span><br><span class="line"><span class="comment"># 注意：默认会转为二进制数据，使用 ensure_ascii=False 设置不转为二进制</span></span><br><span class="line">json_data = json.dumps(<span class="built_in">list</span>, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span> (json_data)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&quot;小王&quot;, 40,50], [&quot;小贾&quot;, 50,23]]</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">json_data = json.dumps(<span class="built_in">list</span>)</span><br><span class="line"><span class="built_in">print</span>(json_data)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code></p>
+</blockquote>
+<p><code>json.dumps()</code> 也是默认编码成二进制数据。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打印数据类型</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(json_data))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&lt;class ‘list’&gt;<br>&lt;class ‘str’&gt;</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">py_data = json.loads(json_data)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(py_data))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&lt;class ‘list’&gt;</p>
+</blockquote>
+<h2 id="0x03-将数据存储为-XML-格式，并进行读取"><a href="#0x03-将数据存储为-XML-格式，并进行读取" class="headerlink" title="0x03 将数据存储为 XML 格式，并进行读取"></a>0x03 将数据存储为 XML 格式，并进行读取</h2><h3 id="XML-eXtensible-Markup-Language"><a href="#XML-eXtensible-Markup-Language" class="headerlink" title="XML (eXtensible Markup Language)"></a>XML (eXtensible Markup Language)</h3><p>主要目的是帮助信息系统交换结构化数据，是一种比 JSON 要老一些的技术。</p>
+<p>XML 代码美化工具：Pretty Printer。</p>
+<p>XML 是一种树状结构的数据。</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203142247567.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203142248500.png"></p>
+<p>And you can think of this as, like folders on your computer.</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203142255711.png"></p>
+<p>我们要做的，就是从根节点，一层一层向下挖掘，找到这些数据。</p>
+<p>更多信息可以参考：<br> <a href="https://www.w3school.com.cn/xml/index.asp">XML 教程</a><br> <a href="https://www.runoob.com/xml/xml-tutorial.html">XML 教程 | 菜鸟教程</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a></p>
+<h3 id="1-存储为-XML-格式"><a href="#1-存储为-XML-格式" class="headerlink" title="1. 存储为 XML 格式"></a>1. 存储为 XML 格式</h3><p>首先将 List 转为字典：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = [<span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>] <span class="comment"># 这里要用 str 型</span></span><br><span class="line">d = <span class="built_in">dict</span>(<span class="built_in">zip</span>(index, <span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(d)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#123;&#39;0&#39;: (&#39;小王&#39;, 40,50), &#39;1&#39;: (&#39;小贾&#39;, 50,23)&#125;</code></p>
+</blockquote>
+<p>然后定义一个方法将字典转为 XML。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> Element</span><br><span class="line"></span><br><span class="line"><span class="comment"># Turn a simple dict of key/value pairs into XML</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_xml</span>(<span class="params">tag, d</span>):</span><br><span class="line">    elem = Element(tag)</span><br><span class="line">    <span class="keyword">for</span> key, val <span class="keyword">in</span> d.items():</span><br><span class="line">        child = Element(key)</span><br><span class="line">        child.text = <span class="built_in">str</span>(val)</span><br><span class="line">        elem.append(child)</span><br><span class="line">    <span class="keyword">return</span> elem</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">e = dict_to_xml(<span class="string">&#x27;info&#x27;</span>, d)</span><br><span class="line"><span class="built_in">print</span>(e)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&lt;Element &#39;info&#39; at 0x0000018CA90C69A8&gt;</code></p>
+</blockquote>
+<p>或者可以使用 <code>pip3 install dicttoxml</code> 来转换。</p>
+<h3 id="2-读取-XML-格式"><a href="#2-读取-XML-格式" class="headerlink" title="2. 读取 XML 格式"></a>2. 读取 XML 格式</h3><p>转换结果是一个 <code>Element</code> 实例。对于 I&#x2F;O 操作，使用 <code>xml.etree.ElementTree</code> 中的 <code>tostring()</code> 函数很容易就能将它转换成一个字节字符串。例如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> tostring</span><br><span class="line">tostring(e)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>b&quot;&lt;info&gt;&lt;0&gt;(&#39;&amp;#23567;&amp;#29579;&#39;, 40,50)&lt;/0&gt;&lt;1&gt;(&#39;&amp;#23567;&amp;#36158;&#39;, 50,23)&lt;/1&gt;&lt;/info&gt;&quot;</code></p>
+</blockquote>
+<p>目前的 <code>e</code> 就是一个树状结构的示例，探索一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(e.tag)</span><br><span class="line"><span class="built_in">print</span>(e.text)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>info</code><br><code>None</code></p>
+</blockquote>
+<p>相当于目前在 <code>root</code> 节点。</p>
+<p>把子节点打印出来：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    <span class="built_in">print</span>(child.tag)</span><br><span class="line">    <span class="built_in">print</span> (child.text)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>0<br>(‘小王’, 40,50)<br>1<br>(‘小贾’, 50,23)</p>
+</blockquote>
+<p>或者也可以将节点读取出来后，存成字典或者列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">to_dict = &#123;&#125;</span><br><span class="line">to_list = []</span><br><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    to_dict[child.tag] = child.text</span><br><span class="line">    </span><br><span class="line">to_list.append(to_dict)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(to_dict)</span><br><span class="line"><span class="built_in">print</span> (to_list)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;</code><br><code>[&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;]</code></p>
+</blockquote>
+<p>也可以使用 <code>pip3 install xmltodict</code> 来转换并读取。</p>
+<h2 id="0x04-计算机网络基础"><a href="#0x04-计算机网络基础" class="headerlink" title="0x04 计算机网络基础"></a>0x04 计算机网络基础</h2><p>学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
+<h3 id="1-网络层次分层"><a href="#1-网络层次分层" class="headerlink" title="1. 网络层次分层"></a>1. 网络层次分层</h3><h4 id="OSI-模型"><a href="#OSI-模型" class="headerlink" title="OSI 模型"></a>OSI 模型</h4><ul>
+<li><p>OSI 概念：</p>
+<ul>
+<li>为了使不同计算机厂家生产的计算机能够相互通信，以便在更大的范围内建立计算机网络，国际标准化组织（ISO）在 1978 年提出了”开放系统互联参考模型”，即著名的 OSI&#x2F;RM 模型（Open System Interconnection&#x2F;Reference Model）。“开放性”是指世界上任何地方、任何遵循 OSI 标准的系统，只要连接起来就能互相通信。</li>
+<li>注意：OSI 是一种 <strong>模型</strong>，并不是实际投入使用的协议，而是用来了解和设计网络体系结构的。</li>
+</ul>
+</li>
+<li><p>OSI 模型的目的：</p>
+<ul>
+<li>框架化；SOA。</li>
+<li>规范不同系统的互联标准，使两个不同的系统能够较容易的通信，而不需要改变底层的硬件或者软件的逻辑。</li>
+</ul>
+</li>
+<li><p>OSI 模型分为 7 层：</p>
+<ul>
+<li>将计算机网络体系结构的通信协议划分为七层，自下而上依次为：<ul>
+<li>物理层（Physics Layer）</li>
+<li>数据链路层（Data Link Layer）</li>
+<li>网络层（Network Layer）</li>
+<li>传输层（Transport Layer）</li>
+<li>会话层（Session Layer）</li>
+<li>表示层（Presentation Layer）</li>
+<li>应用层（Application Layer）</li>
+</ul>
+</li>
+<li>其中第四层完成数据传输服务，上面三层面向用户（ User Support Layers）。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151239418.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151240138.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151240443.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151228935.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151249700.png"></p>
+<h4 id="TCP-x2F-IP-协议"><a href="#TCP-x2F-IP-协议" class="headerlink" title="TCP&#x2F;IP 协议"></a>TCP&#x2F;IP 协议</h4><p>目前使用最多的是 TCP&#x2F;IP 四层协议。</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151129079.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151301087.png"></p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203151135178.png"></p>
+<h4 id="输入-URL-后执行的全过程"><a href="#输入-URL-后执行的全过程" class="headerlink" title="输入 URL 后执行的全过程"></a>输入 URL 后执行的全过程</h4><p>从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
+<ol>
+<li>DNS 域名解析：客户端浏览器通过 DNS 解析得到 Coggle 网站的 IP 地址。</li>
+<li>客户端与服务端建立 TCP 连接：TCP 三次握手。</li>
+<li>客户端发起 HTTP 请求：建立 TCP 连接后，把客户端信息（携带 cookies）传递给服务端。</li>
+<li>服务端响应 HTTP 请求。</li>
+<li>释放 TCP 连接：TCP 四次挥手。</li>
+<li>浏览器解析 HTML 代码，并请求 HTML 代码中的资源（如图片、音频、视频、CSS、JS 等等）。</li>
+<li>浏览器对页面进行渲染呈现给用户。</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>JSON 格式比较好理解，不多赘述。</p>
+<p>XML 格式是一种树状结构的数据表示，数据的写入与读取都是基于这种结构的。所以首先要理解 XML 的这种内在结构，才能明白为什么 XML 的读写操作是这个样子的，否则直接照搬方法也很难清楚为什么这样做。我这里也只是浅尝辄止的了解基础概念，因为工作重心不在这，暂时不需要太深入的研究。</p>
+<p>虽然 XML 的格式看起来跟 HTML 十分相似，但这两种格式是负责不一样的工作的。<strong>XML 被设计用来传输和存储数据。HTML 被设计用来显示数据。</strong> 而且 HTML 中使用的标签（以及 HTML 的结构）是预定义好的；而 <strong>XML 仅仅是纯文本</strong>，允许创作者定义自己的标签和自己的文档结构。也就是说是针对自己的应用自行设计标签与结构，使得能够读懂 XML 的应用程序可以有针对性地处理 XML 的标签。标签的功能性意义依赖于应用程序的特性。</p>
+<p>之前学过的计算机网络基础大部分都还给老师了，只是模糊地记得一些概念，但要我去说每个层或者每种协议里面传输了哪些数据，数据分为哪几种，各自负责什么功能，或者计算一下 IP 已经是想不起来了。这次先复习一下 OSI 和 TCP&#x2F;IP 的基本结构。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>Json 读写：<br> <a href="https://www.cnblogs.com/tizer/p/11067098.html">Python 中如何将数据存储为 json 格式的文件</a><br> <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a><br> <a href="https://cloud.tencent.com/developer/article/1181728">Python json 模块 dumps、dump、loads、load 的使用</a></p>
+<p>XML 读写：<br><a href="https://www.w3school.com.cn/xml/xml_intro.asp">XML 简介</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a><br> <a href="https://zhmou.github.io/2021/10/12/Use-Python-to-Read-and-Write-XML-files/">使用 Python 读写 XML 文件 | Zh 某的备忘录</a><br> <a href="https://www.bilibili.com/video/BV1Sx411Q7zp?from=search&seid=13822148224876736274&spm_id_from=333.337.0.0">【一起学 Python·网络爬虫】XML 简介与解析 | bilibili</a><br> <a href="https://blog.csdn.net/Strive_0902/article/details/119856186">Python 列表转字典</a><br> <a href="https://blog.csdn.net/Jarry_cm/article/details/104925292">字典和列表相互转换</a><br> <a href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p05_turning_dictionary_into_xml.html">6.5 将字典转换为 XML — python3-cookbook 3.0.0 文档</a><br> <a href="https://www.jianshu.com/p/ae932d11f059">使用两个三方库来读写</a></p>
+<p>计算机网络基础：<br> <a href="https://www.bilibili.com/video/BV1FL4y1M7oM?p=17">OSI、TCP&#x2F;IP、计算机基础、操作系统 | bilibili</a><br> <a href="https://www.bilibili.com/video/BV1ZD4y1R7RT/?spm_id_from=333.788.recommend_more_video.0">计算机基础知识 | bilibili</a><br> <a href="https://www.jianshu.com/p/9b9438dff7a2">图解 OSI 七层模型</a><br> <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a></p>
+<p>输入 URL 后执行的全过程：<br> <a href="https://juejin.cn/post/6844903757877084174">这里的三次握手，四次挥手讲的很清楚。</a> ⭐⭐⭐<br> <a href="https://blog.csdn.net/qq_41837249/article/details/117001110">输入 URL 后的全部过程 会用到哪些协议？</a><br> <a href="https://blog.csdn.net/TTTZZZTTTZZZ/article/details/87214111">结合协议来讲，每个步骤在哪一层</a></p>
+]]></content>
+      <categories>
+        <category>爬虫与网络编程基础</category>
+      </categories>
+      <tags>
+        <tag>Coggle 30 Days of ML</tag>
+        <tag>Spider</tag>
+        <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>爬虫与网络编程基础</title>
+    <url>/2FSK6BP/</url>
+    <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
+<h2 id="0x00-内容介绍"><a href="#0x00-内容介绍" class="headerlink" title="0x00 内容介绍"></a>0x00 内容介绍</h2><p>爬虫与网络编程基础这部分的入门学习的要解决的问题如下：</p>
+<ul>
+<li>对网络编程了解较少，不会从 HTML 中提取信息；</li>
+<li>不会爬虫，不会收集数据，也不会部署模型。</li>
+</ul>
+<p>而上述问题都是一个合格算法工程师所必备的。因此借助这个活动来入门。</p>
+<span id="more"></span>
+
+<h2 id="0x01-学习内容"><a href="#0x01-学习内容" class="headerlink" title="0x01 学习内容"></a>0x01 学习内容</h2><p>当今的世界是一个互联的世界，绝大多数的计算机和人都在通过网络和他人传递信息、沟通互联。我们在网络上学习、游戏、工作，我们提供各种各样的网络服务，又有很多人使用着各种各样的网络服务。网络改变了世界，而程序员“定义”了网络。我们在代码中实现了网络的通信，让一切变得可能。网络爬虫是一种按照一定的规则，自动地抓取万维网信息的程序或者脚本。<strong>在本次学习中我们将学习基础的爬虫操作，并学习基础的 HTTP 协议，最后尝试完成基础的网络编程。</strong></p>
+<h2 id="0x02-打卡汇总"><a href="#0x02-打卡汇总" class="headerlink" title="0x02 打卡汇总"></a>0x02 打卡汇总</h2><table>
+<thead>
+<tr>
+<th>任务名称</th>
+<th>难度</th>
+<th>所需技能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任务 1：计算机网络基础</td>
+<td>低、1</td>
+<td>json、xml</td>
+</tr>
+<tr>
+<td>任务 2：HTTP 协议与 requests</td>
+<td>低、1</td>
+<td>requests</td>
+</tr>
+<tr>
+<td>任务 3：bs4 基础使用</td>
+<td>中、2</td>
+<td>bs4</td>
+</tr>
+<tr>
+<td>任务 4：bs4 高阶使用</td>
+<td>高、3</td>
+<td>bs4</td>
+</tr>
+<tr>
+<td>任务 5：正则表达式</td>
+<td>高、3</td>
+<td>re</td>
+</tr>
+<tr>
+<td>任务 6：Python 网络编程基础</td>
+<td>高、3</td>
+<td>scoket</td>
+</tr>
+<tr>
+<td>任务 7：tornado 基础使用</td>
+<td>中、2</td>
+<td>tornado</td>
+</tr>
+<tr>
+<td>任务 8：tornado 用户注册&#x2F;登录</td>
+<td>高、3</td>
+<td>tornado</td>
+</tr>
+<tr>
+<td>任务 9：tornado 部署机器学习模型</td>
+<td>中、2</td>
+<td>tornado</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><a href="network-spider-programming-task01.md">任务 1：计算机网络基础</a></p>
+<ul>
+<li>步骤 1：在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]。</li>
+<li>步骤 2：将步骤 1 的数据存储为 json 格式，并进行读取。</li>
+<li>步骤 3：将步骤 1 的数据存储为 xml 格式，并进行读取。</li>
+<li>步骤 4：学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？将你的思考结果写到博客。</li>
+</ul>
+</li>
+<li><p>任务 2：HTTP 协议与 requests</p>
+<ul>
+<li>步骤 1： <a href="https://www.cnblogs.com/an-wen/p/11180076.html">学习 HTTP 协议</a></li>
+<li>步骤 2：HTTP 的 get 和 post 有什么区别？用处在哪儿？将你的思考写到博客。</li>
+<li>步骤 3：使用 Python 中 requests 中的 get 访问百度。</li>
+</ul>
+</li>
+<li><p>任务 3：bs4 基础使用</p>
+<ul>
+<li>学习资料： <a href="https://beautiful-soup-4.readthedocs.io/en/latest/">https://beautiful-soup-4.readthedocs.io/en/latest/</a></li>
+<li>步骤 1：使用 requests 和 bs4 爬取 <a href="https://scikit-learn.org/stable/modules/classes.html">sklearn api 页面</a>。</li>
+<li>步骤 2：在 api 页面中有多少个模块？有多少个 API？如 sklearn.base.DensityMixin，其中 base 为模块，DensityMixin 为 API。</li>
+<li>步骤 3：将模块名作为 key，api 作为 value 存储为字典。</li>
+</ul>
+</li>
+<li><p>任务 4：bs4 高阶使用</p>
+<ul>
+<li>步骤 1：爬取 <a href="https://scikit-learn.org/stable/glossary.html">sklearn 机器学习名词页面</a> , 爬取所有的名词，如 1d、2d 和 api；</li>
+<li>步骤 2：有一些名词在介绍时，会有额外的链接，请将每个名词介绍对应的链接也找出。</li>
+<li>步骤 3：原始的名词安装本身有类别，如下所示，你能将爬取的结果进行分类吗？</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">General Concepts</span><br><span class="line">Class APIs and Estimator Types</span><br><span class="line">Target Types</span><br><span class="line">Methods</span><br><span class="line">Parameters</span><br><span class="line">Attributes</span><br><span class="line">Data and sample properties</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>任务 5：正则表达式</p>
+<ul>
+<li>步骤 1： <a href="https://www.runoob.com/python/python-reg-expressions.html">学习正则表达式 re 模块使用</a> 。</li>
+<li>步骤 2：使用 re 筛选出机器学习名词，只包含字母的名词；</li>
+<li>步骤 3：使用 re 筛选出机器学习名词，首字母为 A 或 首字母为 B 的名词。</li>
+</ul>
+</li>
+<li><p>任务 6：Python 网络编程基础</p>
+<ul>
+<li>步骤 1： <a href="https://www.runoob.com/python/python-socket.html">学习 Socket 编程</a></li>
+<li>步骤 2：使用编写一个 Socket 聊天机器人，程序 A 发送数据给程序 B，程序 B 也可以发送信息给程序 A；</li>
+<li>步骤 3：使用编写一个 Socket 聊天机器人，程序 A 发送文件内容给 程序 B，程序 B 将文件进行存储。</li>
+</ul>
+</li>
+<li><p>任务 7：tornado 基础使用</p>
+<ul>
+<li>步骤 1：学习 tornado 基础使用<ul>
+<li>tornado 官网： <a href="https://www.tornadoweb.org/en/stable/">https://www.tornadoweb.org/en/stable/</a></li>
+<li>tornado 教程：<ul>
+<li><a href="http://www.ttlsa.com/docs/tornado/">http://www.ttlsa.com/docs/tornado/</a></li>
+<li><a href="http://doc.iplaypy.com/tornado/ch1.html">http://doc.iplaypy.com/tornado/ch1.html</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>步骤 2：编写 tornado 的 hello word 程序。</li>
+<li>步骤 3：编写 tornado 的 handler，分别接受 post 和 get 请求，请求为两个数字，进行求和，然后返回结果。</li>
+</ul>
+</li>
+<li><p>任务 8：tornado 用户注册&#x2F;登录</p>
+<ul>
+<li>步骤 1：使用 sqlite 创建用户信息表，表包含 <code>uid</code>，<code>name</code>，<code>passwd</code> 三个字段。</li>
+<li>步骤 2：编写 tornado 的用户注册 handler，完成用户注册逻辑，具体需要判断用户名和 passwd 合理性（不包含空格 &amp; 最大长度限制），然后插入数据。</li>
+<li>步骤 3：编写 tornado 的用户登录 handler，完成用户登录逻辑，根据 name 和 passwd 判断是否登录成功。</li>
+<li>步骤 4：结合 requests 和 tornado 完成上述逻辑。</li>
+</ul>
+</li>
+<li><p>任务 9：tornado 部署机器学习模型</p>
+<ul>
+<li>步骤 1：读取 <a href="https://mirror.coggle.club/dataset/waimai_10k.csv">外卖评论数据集</a>。</li>
+<li>步骤 2：使用 jieba 进行分词，TFIDF 提取特征，并选择分类器进行训练。</li>
+<li>步骤 3：将文本分类模型使用 tornado 进行部署，客户端 requests 发送文本进行分类。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-学习资料"><a href="#0x03-学习资料" class="headerlink" title="0x03 学习资料"></a>0x03 学习资料</h2><ul>
+<li><a href="https://www.jianshu.com/p/f6292d732217">https://www.jianshu.com/p/f6292d732217</a></li>
+<li><a href="https://www.bilibili.com/video/av59706997/">https://www.bilibili.com/video/av59706997/</a></li>
+<li><a href="https://cuiqingcai.com/1319.html">https://cuiqingcai.com/1319.html</a></li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 30 Days of ML（22 年 3 月） - Coggle 数据科学</a></p>
+]]></content>
+      <categories>
+        <category>爬虫与网络编程基础</category>
+      </categories>
+      <tags>
+        <tag>Coggle 30 Days of ML</tag>
+        <tag>Spider</tag>
+        <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
+    <url>/2RYYQJ0/</url>
+    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
+<span id="more"></span>
+
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
+<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
+<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
+<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
+<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
+
+<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
+
+<p>切回后可以使用。</p>
+<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
+
+<p>全部默认，四次回车，显示以下则建立成功。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>查看 ssh 密钥并且复制到 Github：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
+
+<p>检查 ssh 是否绑定成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Success：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
+<ul>
+<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
+<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
+</ul>
+<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
+<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
+<ul>
+<li>仓库名称：可以随便填，比如 <code>blog</code></li>
+<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
+<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
+<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
+</ul>
+<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
+
+<p>随后本地生成 hexo 界面：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
+
+<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
+<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改文档末尾的 deploy 设置：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
+<p>Tips：</p>
+<ul>
+<li>repository 是 GitHub 上建立的博客仓库</li>
+<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
+</ul>
+<p>更改完成后保存。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
+<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
+<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
+<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
+<p><strong>token 备份</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
+
+
+<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
+<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
+<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
+<p>点击即可进入博客网站。</p>
+<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
+<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
+<ul>
+<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
+</ul>
+<p>还有其他比较优秀的主题比如：</p>
+<ul>
+<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
+<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
+<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
+</ul>
+<p>后面这三款会有更加丰富的一些外观设计。</p>
+<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
+<p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
+
+<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
+<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
+<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
+<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
+<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
+<p>主题美化：</p>
+<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
+<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
+<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
+<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Gitee</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里灵杰_Task01_环境配置、实践数据下载</title>
+    <url>/330NJ94/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
+<li>任务内容：<ul>
+<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
+<li>使用 <code>jieba</code> 对文本进行分词</li>
+<li>使用 <code>TFIDF</code> 对文本进行编码</li>
+<li>思考如何使用 TFIDF 计算文本相似度？</li>
+</ul>
+</li>
+<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
+</ul>
+<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
+<p>首先导入需要用到的包：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities</span><br></pre></td></tr></table></figure>
+
+<p>读取数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
+
+<p>取字典 <code>train_query</code> 的前十条数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
+</blockquote>
+<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。</p>
+<blockquote>
+<p>搜索引擎模式：将结果精确分开，对比较长的词进行二次切分。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = jieba.cut_for_search(wordListTop10[i])</span><br><span class="line">    seg_list.append (seg) <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03-使用-TFIDF-对文本进行编码"><a href="#0x03-使用-TFIDF-对文本进行编码" class="headerlink" title="0x03 使用 TFIDF 对文本进行编码"></a>0x03 使用 <code>TFIDF</code> 对文本进行编码</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过token2id得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘赞臣’: 3, ‘慱’: 4, ‘手动’: 5, ‘料理’: 6, ‘朗’: 7, ‘机’: 8, ‘電力貓’: 9, ‘夹缝’: 10, ‘工具’: 11, ‘掏’: 12, ‘vip’: 13, ‘推’: 14, ‘飞’: 15, ‘功能’: 16, ‘多功能’: 17, ‘托地’: 18, ‘把’: 19, ‘充气’: 20, ‘浮力’: 21, ‘袖’: 22, ‘盒马花胶’: 23, ‘锅’: 24, ‘鸡汤’: 25, ‘乐’: 26, ‘塞塞’: 27, ‘gs5’: 28, ‘广汽传祺’: 29, ‘挡风’: 30, ‘挡风遮雨’: 31, ‘条子’: 32, ‘遮雨’: 33}</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务，大概了解了分词，文本向量化表示（词袋模型）之类的内容。</p>
+]]></content>
+      <categories>
+        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
+      </categories>
+  </entry>
+</search>
