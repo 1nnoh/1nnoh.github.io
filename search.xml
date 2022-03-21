@@ -1,6 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>矢量语义与嵌入之 TF-IDF 检索</title>
+    <url>/280EQA3/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>自然语言处理就是研究如何让计算机理解人类语言的一门技术。将计算机不能理解的人类语言编码成可以理解的向量化表示，是 NLP 工作的开始与基础。TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>这块内容第一次学的时候比较难理解，后来看到 <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">莫烦老师 </a> 讲的才算是彻底明白。补充一下这块内容。</p>
+</blockquote>
+<p>NLP 的首要任务：Vector Semantics and Embedding，也可以说是文本向量化，或着文本特征提取。想要表达的就是，NLP 首先要做的是，将文本语言变成计算机可以理解的语言——向量，否则后面的工作自然是无法开展的。</p>
+<p>在文本向量化的问题中，词袋模型（Bag-of-Words Model）和词嵌入（Word Embedding）是两种最常用的模型。更准确地说，词向量只能表征单个词，如果要表示文本，需要做一些额外的处理。本篇笔记首先学习词袋模型与 TF-IDF。</p>
+<h2 id="0x01-TF-IDF-的使用场景"><a href="#0x01-TF-IDF-的使用场景" class="headerlink" title="0x01 TF-IDF 的使用场景"></a>0x01 <code>TF-IDF</code> 的使用场景</h2><p>以搜索引擎为例，有了批量性地召回相对合适的内容后，比如我已经从 1 亿个网页中召回了 100 万个，但 100 万对于我来说，已经够让我看上好几年了。怎么能再继续提升一下精确度，找到我更在乎的内容呢？</p>
+<p>所以需要对召回的这 100 万个内容，做一个【问题与内容】的相似度排序，只返回那些头部内容（问题指的是用户搜索的词条，内容就是我们召回的网页）。</p>
+<p>因此简单来说，<code>TF-IDF</code> 要做的就是相似度排序，我们取相似度最高的内容返回给用户。从本质上来说，<code>TF-IDF</code> 是一种 <strong>向量表达</strong> 把语言 <strong>向量化</strong>，将词语，句子，文章转为词向量，句向量，文章向量。因为计算机只能理解数字，所以把我们要 <strong>把计算机不能理解的文本转为向量</strong>。等看完后面的内容就会深刻理解为什么 <code>TF-IFDF</code> 是 <strong>向量表达</strong>。</p>
+<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 <code>TF-IDF</code> 的原理</h2><p><code>TF</code> ：词频（Term Frequency）<br><code>IDF</code> ：逆文本频率指数（Inverse Document Frequency）</p>
+<ul>
+<li>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。<ul>
+<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
+<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
+</ul>
+</li>
+<li>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。<ul>
+<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
+<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
+<li>如果你搜索的关键词是“莫烦”，<strong>全网都没有几个</strong> 叫“莫烦”的，那么“莫烦” <code>IDF</code> 就会很大，即“莫烦”的 <strong>区分力更强</strong>。</li>
+</ul>
+</li>
+<li>既然 <code>TF</code> 是以单篇文章为中心的局部词信息，但并不知道如果放到全局（所有文章），哪些 <code>TF</code> 高频词是全局垃圾词（中性词），是搜索时没有意义的词； <code>IDF</code> 是统计所有文章的全局词信息，可以分辨 <code>TF</code> 中的哪些高频词是全局垃圾词，但并不知道每个单篇文章中的高频关键词。那么为什么不把两种指标结合，发挥各自的优势？因此通过 <code>TF-IDF</code> 来表达一篇文章。</li>
+</ul>
+</li>
+<li><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code><ul>
+<li>将两种指数相乘，得到 <code>TF-IDF</code> 表达一篇文章。</li>
+<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
+</ul>
+</li>
+</ul>
+<p>举个例子：比如有以下三篇文章，我们选取图中的四个词来表达这三篇文章。</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203211003678.png" alt="|700"></p>
+<p>计算出这四个词的 <code>TF</code> 与 <code>IDF</code> 之后，将两者相乘，得到 <code>TF-IDF</code>。</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203211033747.png"></p>
+<p>通过这些词的分数高低，可以判断每篇文章的关键词是什么。比如文章 1，即使“爱”的词频最高，是文章 1 中出现最多的词，但是通过 <code>IDF</code> 判断得知是全局垃圾词，反而“莫烦”的全局区分力更强（即使词频不高），所以根据综合评分 <code>TF-IDF</code> 得知——在文章 1 中，“莫烦” 的权值更重，更能代表这篇文章。</p>
+<p>至此，我们得到了三篇文章的向量化表示，那么如何在搜索中应用这三个文章向量呢？</p>
+<h2 id="0x03-TF-IDF-的应用"><a href="#0x03-TF-IDF-的应用" class="headerlink" title="0x03 TF-IDF 的应用"></a>0x03 <code>TF-IDF</code> 的应用</h2><p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203211047534.png"></p>
+<p>假设我们搜索“莫烦 Python”，计算机首先通过词表的模式，计算这个搜索问句（“莫烦 Python”）的 <code>IF-IDF</code> 值。然后计算搜索问句与每篇文章的 <code>IF-IDF</code> 值的 <code>cosine</code> 距离。简单来说就是将所有文章，按照词向量的维度放入四维空间（对应四个词），然后将搜索问句向量也放进去，最后查找哪一篇文章离这个搜索问句最近，越近说明相似度越高。由此找到与搜索问句最匹配的文章。图中是用三维空间来说明，一样的意思。</p>
+<p>动手实操一下吧： <a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<h2 id="0x04-向量化表达"><a href="#0x04-向量化表达" class="headerlink" title="0x04 向量化表达"></a>0x04 向量化表达</h2><p>向量化是 NLP 工作的基础。将问句，词语，句子或者文章，通过数字的形式投射到空间中，也就是将这些语言转为计算机可以理解的向量，然后按照向量的模式指向空间中的某个位置。</p>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203211101372.png"></p>
+<p>如图，比如 <code>0,23,116.5,21</code> 就是文章 1 的向量表达，下面是文章 2 与搜索问题的向量表达。所以 <code>TF-IDF</code> 本质上是一种向量表达。NLP 中还有许多其他的向量表达与应用，<code>TF-IDF</code> 是其中一种比较基础且好用的一种方式。</p>
+<p>在实际应用中，一般不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。因此词袋模型的文本表征，其实是一种稀疏向量表达，因为向量里面的元素大部分都是 0，只有出现在当前文本的词语才有词频的赋值。</p>
+<blockquote>
+<p>拓展：<br><code>TF-IDF</code> 就是一张将 <code>词语重要程度</code> 转换成 <code>向量</code> 的文档展示方式，那么在这些向量中，必定会有主导型元素，而这些元素其实就是这篇文档中很重要的关键词了。因此除了搜索匹配之外，<code>TF-IDF</code> 还有很多的应用，比如将挑选文档中的关键词（将主导元素提取出来）。<br>另外，由于 <code>IDF</code> 是所有文档的全局信息，那么带有不同属性的文档集群可能拥有不同性质的 <code>IDF</code> 分布。比如金融领域的 <code>IDF</code> 与生物领域的 <code>IDF</code> ，如果我要搜索金融相关的信息，却是在生物领域的 <code>IDF</code> 下搜索，那么得到的结果必然是不准确的。因此我需要一个带有金融属性的 <code>IDF</code> 表来优化对金融子领域的搜索。这也是 IDF 比较重要的应用方式之一。</p>
+</blockquote>
+<h2 id="0x05-词袋模型与-TF-IDF"><a href="#0x05-词袋模型与-TF-IDF" class="headerlink" title="0x05 词袋模型与 TF-IDF"></a>0x05 词袋模型与 <code>TF-IDF</code></h2><p>词袋（BoW）模型是数字文本表示的最简单形式。像单词本身一样，我们可以将一个句子表示为一个词向量包（一个数字串）。初入 NLP 可能会对这些概念产生困惑，比如什么是词袋模型，<code>TF-IDF</code> 就是词袋模型吗，下面来解释一下。</p>
+<h3 id="词集与词袋模型"><a href="#词集与词袋模型" class="headerlink" title="词集与词袋模型"></a>词集与词袋模型</h3><p>词袋模型将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。这个模型的主要作用也就是对文本做单词切分，有点从一篇文章里提取关键词这种意思，旨在 <strong>用向量来描述文本的主要内容</strong>，其中包含了词集与词袋两种。</p>
+<p><strong>词集模型</strong>：单词构成的集合，集合中每个元素只有一个，即词集中的每个元素为一个单词，词集中的每个单词只出现一次，不重复。</p>
+<p><strong>词袋模型</strong>：在词集的基础上加入了频率这个维度，即统计单词在文档中出现的次数（令牌化和出现频数统计），通常我们在应用中都选用词袋模型。或者说，在词集的基础上，如果一个单词在文档中出现不止一次，统计其出现的次数。说人话就是，将每篇文章看成一袋子词，并忽略每个词出现的顺序。</p>
+<h3 id="词袋模型与-TF-IDF-联合使用"><a href="#词袋模型与-TF-IDF-联合使用" class="headerlink" title="词袋模型与 TF-IDF 联合使用"></a>词袋模型与 <code>TF-IDF</code> 联合使用</h3><p>词袋创建一组向量，其中包含文档中的单词出现次数，而 <code>TF-IDF</code> 编码可以识别其中每个单词的区分力，然后赋予权重。因此通过词袋模型是一种基础模型， <code>TF-IDF</code> 是一种编码方式，基于词袋模型，我们可以采用 <code>TF-IDF</code> 编码，也可以使用 One-Hot 编码或者其他的编码方式。</p>
+<p>我理解就是，恰好词袋模型实现了词频统计，恰好这正是 <code>TF</code> 要做的事情，所以再加上 <code>IDF</code> 联合起来，基于词袋模型实现了我们要做的  <code>TF-IDF</code> 编码。</p>
+<h2 id="0x06-文本向量化"><a href="#0x06-文本向量化" class="headerlink" title="0x06 文本向量化"></a>0x06 文本向量化</h2><p>刚入门 NLP 想必会对这些专业名词头晕眼花，下面简单列举一下关系：</p>
+<ul>
+<li>文本向量化（文本表征 Word Representation）<ul>
+<li>词袋模型及其编码方法（BoW）<ul>
+<li>One-Hot 编码</li>
+<li>TF 编码</li>
+<li>TF-IDF 编码</li>
+<li>N-gram 编码</li>
+</ul>
+</li>
+<li>词嵌入模型（Word Embedding）<ul>
+<li>Word2Vec<ul>
+<li>Skip-Gram 模型</li>
+<li>CBOW 模型</li>
+</ul>
+</li>
+<li>GloVe</li>
+</ul>
+</li>
+<li>主题模型（Topic Model）<ul>
+<li>LSA 模型</li>
+<li>PLSA 模型</li>
+<li>LDA 模型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Bag-of-Words Model（BoW）和 <code>TF-IDF</code> 编码都是帮助我们将文本句子转换为向量的技术，是使得机器理解文本的技术。</p>
+<p>但是 BoW 这样的技术会有一些弊端，比如语序关系丢失（忽略上下文），异常依赖于优秀的词汇库，缺乏相似词之间的表达，并且向量稀疏。为了解决这些问题，下一篇笔记学习另一类向量化的方法——Word Embedding 词嵌入。即自然语言中的词语转化为稠密的向量，相似的词会有相似的向量表示，这样的转化方便挖掘文字中词语和句子之间的特征。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
+<p>词袋模型与 TF-IDF:<br> <a href="https://www.jianshu.com/p/0422853b57a8">词袋模型与 TF-IDF</a><br> <a href="https://blog.csdn.net/fendouaini/article/details/108655680">词袋模型和 TF-IDF</a><br> <a href="https://blog.csdn.net/baidu_41797613/article/details/121268152">词袋模型与 TF-IDF 模型</a><br> <a href="https://www.jiqizhixin.com/graph/technologies/87c62b00-48b2-4e2a-8122-9876a3d3e59e">词袋模型 | 机器之心</a></p>
+<p> 词袋模型与词嵌入：<br>  <a href="https://davidchen93.blog.csdn.net/article/details/79993369?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&utm_relevant_index=1">词袋模型和词向量模型概念介绍</a><br>  <a href="https://zhuanlan.zhihu.com/p/71065945">从词袋模型 TF-IDF 到词嵌入 Word Embedding</a></p>
+<p>斯坦福经典 NLP 教材：<br>  <a href="https://web.stanford.edu/~jurafsky/slp3/6.pdf">https://web.stanford.edu/~jurafsky&#x2F;slp3&#x2F;6.pdf</a></p>
+]]></content>
+      <categories>
+        <category>Dive into NLP</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬虫与网络编程基础</title>
     <url>/2FSK6BP/</url>
     <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
@@ -161,130 +261,6 @@
         <tag>Coggle 30 Days of ML</tag>
         <tag>Spider</tag>
         <tag>Network Programming</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
-    <url>/2RYYQJ0/</url>
-    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
-<span id="more"></span>
-
-<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
-<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
-<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
-<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
-<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
-<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
-
-<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
-
-<p>切回后可以使用。</p>
-<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
-
-<p>全部默认，四次回车，显示以下则建立成功。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-
-<p>查看 ssh 密钥并且复制到 Github：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
-
-<p>检查 ssh 是否绑定成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>Success：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
-<ul>
-<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
-<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
-</ul>
-<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
-<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
-<ul>
-<li>仓库名称：可以随便填，比如 <code>blog</code></li>
-<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
-<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
-<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
-</ul>
-<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
-
-<p>随后本地生成 hexo 界面：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
-
-<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
-<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>修改文档末尾的 deploy 设置：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
-<p>Tips：</p>
-<ul>
-<li>repository 是 GitHub 上建立的博客仓库</li>
-<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
-</ul>
-<p>更改完成后保存。</p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>部署：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
-<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
-<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
-<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
-<p><strong>token 备份</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
-
-
-<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
-<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
-<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
-<p>点击即可进入博客网站。</p>
-<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
-<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
-<ul>
-<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
-</ul>
-<p>还有其他比较优秀的主题比如：</p>
-<ul>
-<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
-<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
-<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
-</ul>
-<p>后面这三款会有更加丰富的一些外观设计。</p>
-<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
-<p>报错：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
-
-<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
-<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
-<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
-<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
-<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
-<p>主题美化：</p>
-<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
-<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
-<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
-<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Gitee</tag>
-        <tag>Github</tag>
       </tags>
   </entry>
   <entry>
@@ -486,9 +462,493 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里灵杰_Task01_环境配置、实践数据下载</title>
-    <url>/330NJ94/</url>
-    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
+    <title>爬虫与网络编程基础_Task02_HTTP协议与Requests</title>
+    <url>/4NXBKD/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>Requests 是一个 Python 公认的，优秀的第三方网络爬虫库，可以自动爬取 HTML 页面，自动进行网络请求的提交。所以本次任务首先来了解，学习 Requests 库以及 HTTP 协议。另外，由于Requests 库与 HTTP 协议的方法是一一对应的，所以会穿插着学习，以便更容易理解。</p>
+<span id="more"></span>
+
+<h2 id="0x01-初探-Requests-库"><a href="#0x01-初探-Requests-库" class="headerlink" title="0x01 初探 Requests 库"></a>0x01 初探 Requests 库</h2><p> <a href="https://docs.python-requests.org/zh_CN/latest/">Requests: 让 HTTP 服务人类 — Requests 2.18.1 文档</a><br> <a href="https://pypi.org/project/requests/">requests · PyPI</a></p>
+<h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><p>安装 <code>requests</code>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install requests</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Requests-库的七个主要方法"><a href="#2-Requests-库的七个主要方法" class="headerlink" title="2. Requests 库的七个主要方法"></a>2. Requests 库的七个主要方法</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>requests.request()</td>
+<td>构造一个请求，支持以下各方法的基础方法</td>
+</tr>
+<tr>
+<td>requests.get()</td>
+<td>获取 HTML 网页的主要方法，对应于 HTTP 的 GET</td>
+</tr>
+<tr>
+<td>requests.head()</td>
+<td>获取 HTML 网页头信息的方法，对应于 HTTP 的 HEAD</td>
+</tr>
+<tr>
+<td>requests.post()</td>
+<td>向 HTML 网页提交 POST 请求的方法，对应于 HTTP 的 POST</td>
+</tr>
+<tr>
+<td>requests.put()</td>
+<td>向 HTML 网页提交 PUT 请求的方法，对应于 HTTP 的 PUT</td>
+</tr>
+<tr>
+<td>requests.patch()</td>
+<td>向 HTML 网页提交局部修改请求，对应于 HTTP 的 PATCH</td>
+</tr>
+<tr>
+<td>requests.delete()</td>
+<td>向 HTML 页面提交删除请求，对应于 HTTP 的 DELETE</td>
+</tr>
+</tbody></table>
+<p>先来动动手：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">r = requests.get(<span class="string">&quot;http://www.baidu.com&quot;</span>) <span class="comment"># GET</span></span><br><span class="line">r.status_code <span class="comment"># 检测请求状态码</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>200</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">r.encoding = <span class="string">&#x27;utf-8&#x27;</span> <span class="comment"># 修改内容编码</span></span><br><span class="line">r.text[:<span class="number">500</span>] <span class="comment"># 查看响应内容的字符串</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#39;&lt;!DOCTYPE html&gt;\r\n&lt;!--STATUS OK--&gt;&lt;html&gt; &lt;head&gt;&lt;meta http-equiv=content-type content=text/html;charset=utf-8&gt;&lt;meta http-equiv=X-UA-Compatible content=IE=Edge&gt;&lt;meta content=always name=referrer&gt;&lt;link rel=stylesheet type=text/css href=http://s1.bdstatic.com/r/www/cache/bdorz/baidu.min.css&gt;&lt;title&gt;百度一下，你就知道&lt;/title&gt;&lt;/head&gt; &lt;body link=#0000cc&gt; &lt;div id=wrapper&gt; &lt;div id=head&gt; &lt;div class=head_wrapper&gt; &lt;div class=s_form&gt; &lt;div class=s_form_wrapper&gt; &lt;div id=lg&gt; &lt;img hidefocus=true src=//www.baidu.com/img/bd_&#39;</code></p>
+</blockquote>
+<p>下面仅先介绍最常使用的 <code>requests.get()</code> 方法，其余的方法待学习了 HTTP 协议之后，再对照着理解。</p>
+<h4 id="requests-get-方法"><a href="#requests-get-方法" class="headerlink" title="requests.get() 方法"></a>requests.get() 方法</h4><p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200044542.png"></p>
+<p>具体参数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">r = requests.get(url, params, **kwargs)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>url</code> ：拟获取页面的 URL 链接。</li>
+<li><code>params</code> ：URL 中的额外参数，字典或者字节流格式，可选。</li>
+<li><code>**kwargs</code> : 12 个控制访问的参数</li>
+</ul>
+<p>通过 <code>requests.get()</code> 方法返回得到的 Response 对象具有以下属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r.status_code</td>
+<td>HTTP 请求的返回状态，若为 200 则表示请求成功</td>
+</tr>
+<tr>
+<td>r.text</td>
+<td>HTTP 响应内容的字符串形式，即，url 对应的页面内容</td>
+</tr>
+<tr>
+<td>r.encoding</td>
+<td>从 HTTP header 中猜测的相应内容编码方式</td>
+</tr>
+<tr>
+<td>r.apparent_encoding</td>
+<td>从内容中分析出的响应内容编码方式（备选编码方式）</td>
+</tr>
+<tr>
+<td>r.content</td>
+<td>HTTP 响应内容的二进制形式</td>
+</tr>
+</tbody></table>
+<p>这五个属性是最常使用的五个属性。<br><code>r.status_code</code> 获得的状态码，只有返回 200 表示请求成功，其他则为失败，如 404。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200100765.png" alt="|600"></p>
+<p>使用 <code>requests.get()</code> 方法获取信息的基本流程：<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200102154.png" alt="|500"></p>
+<p><strong>Case  通过 get 获取网页信息</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">r = requests.get(<span class="string">&quot;http://www.baidu.com&quot;</span>)</span><br><span class="line">r.status_code <span class="comment"># 返回 200，确认响应成功</span></span><br><span class="line">r.text[-<span class="number">300</span>:] <span class="comment"># 查看响应内容</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#39;out Baidu&lt;/a&gt; &lt;/p&gt; &lt;p id=cp&gt;&amp;copy;2017&amp;nbsp;Baidu&amp;nbsp;&lt;a href=http://www.baidu.com/duty/&gt;ä½¿ç\x94¨ç\x99¾åº¦å\x89\x8då¿\x85è¯»&lt;/a&gt;&amp;nbsp; &lt;a href=http://jianyi.baidu.com/ class=cp-feedback&gt;æ\x84\x8fè§\x81å\x8f\x8dé¦\x88&lt;/a&gt;&amp;nbsp;äº¬ICPè¯\x81030173å\x8f·&amp;nbsp; &lt;img src=//www.baidu.com/img/gs.gif&gt; &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/body&gt; &lt;/html&gt;\r\n&#39;</code></p>
+</blockquote>
+<p>可以发现，返回的内容中有很多乱码。那么来看一下内容的编码方式。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">r.encoding <span class="comment"># 从 header 猜测编码</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>‘ISO-8859-1’</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">r.apparent_encoding <span class="comment"># 备选编码</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>‘utf-8’</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">r.encoding = <span class="string">&#x27;utf-8&#x27;</span> <span class="comment"># 使用备选编码替换当前编码方式</span></span><br><span class="line">r.text[-<span class="number">300</span>:] <span class="comment"># 再次查看响应内容</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#39; href=http://ir.baidu.com&gt;About Baidu&lt;/a&gt; &lt;/p&gt; &lt;p id=cp&gt;&amp;copy;2017&amp;nbsp;Baidu&amp;nbsp;&lt;a href=http://www.baidu.com/duty/&gt;使用百度前必读&lt;/a&gt;&amp;nbsp; &lt;a href=http://jianyi.baidu.com/ class=cp-feedback&gt;意见反馈&lt;/a&gt;&amp;nbsp;京 ICP 证 030173 号&amp;nbsp; &lt;img src=//www.baidu.com/img/gs.gif&gt; &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/body&gt; &lt;/html&gt;\r\n&#39;</code></p>
+</blockquote>
+<p>经过替换编码方式，原来的一些乱码变成了中文。变得具有可读性了。为什么会这样？那就需要理解 Response 的编码。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r.encoding</td>
+<td>从 HTTP header 中猜测的相应内容编码方式</td>
+</tr>
+<tr>
+<td>r.apparent_encoding</td>
+<td>从内容中分析出的响应内容编码方式（备选编码方式）</td>
+</tr>
+</tbody></table>
+<p><code>r.encoding</code>：如果 header 中不存在 charset 字段，则默认编码为 ISO-8859-1。<br>就是当我们刚刚访问百度的时候，默认的编码。但这个编码并不能解析中文，所以查看内容时，会出现乱码。</p>
+<p><code>r.apparent_encoding</code>：根据网页内容分析出的编码方式。<br>为了避免上述情况，<code>Requests</code> 库还提供了另一种备选编码方案，从 HTTP 的内容部分（而不是头部份），去分析内容可能的编码形式。严格来说 <code>r.apparent_encoding</code> 比 <code>r.encoding</code> 更加准确，因为前者是实实在在去分析内容，找到可能的编码；而后者只是从 header 的相关字段中提取编码。所以当后者不能正确解码时，需要使用前者——备用编码，来解析返回的信息。这也是为什么示例中替换编码方式后，即可正确解析出中文的原因。</p>
+<h3 id="3-爬取网页的通用代码框架"><a href="#3-爬取网页的通用代码框架" class="headerlink" title="3. 爬取网页的通用代码框架"></a>3. 爬取网页的通用代码框架</h3><p>注意 <code>Requests</code> 库有时会产生异常，比如网络连接错误、<code>HTTP</code> 错误异常、重定向异常、请求 <code>URL</code> 超时异常等等。所以我们需要判断 <code>r.status_codes</code> 是否为 200，在这里我们怎么样去捕捉异常呢？</p>
+<p>这里我们可以利用 <code>r.raise_for_status()</code> 语句去捕捉异常，该语句在方法内部判断 <code>r.status_code</code> 是否等于 200，如果不等于，则抛出异常。</p>
+<p>于是在这里我们有一个爬取网页的通用代码框架：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    r = requests.get(url, timeout=<span class="number">30</span>) <span class="comment"># 请求超时时间为 30 秒</span></span><br><span class="line">    r.raise_for_status() <span class="comment"># 如果状态不是 200，则引发 HTTPError 异常</span></span><br><span class="line">    r.encoding = r.apparent_encoding <span class="comment"># 配置编码</span></span><br><span class="line">    <span class="keyword">return</span> r.text </span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;产生异常&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200150745.png"></p>
+<p>可见当 <code>url</code> 链接没有协议，产生错误时，抛出了异常。</p>
+<p>通过这种框架，可以使我们的爬虫方法更加可靠，稳定。</p>
+<h2 id="0x02-学习-HTTP-协议"><a href="#0x02-学习-HTTP-协议" class="headerlink" title="0x02 学习 HTTP 协议"></a>0x02 学习 HTTP 协议</h2><p>为了更好的理解 Requests 库中的这些方法，我们需要学习并了解 HTTP 协议。</p>
+<h3 id="HTTP-协议简介"><a href="#HTTP-协议简介" class="headerlink" title="HTTP 协议简介"></a>HTTP 协议简介</h3><p>HTTP，<strong>H</strong>yper<strong>T</strong>ext <strong>T</strong>ransfer <strong>P</strong>rotocol，超文本传输协议。</p>
+<p>HTTP 是万维网的数据通信的基础。</p>
+<p>HTTP 是一种基于“请求与响应”模式的，无状态的应用层协议。</p>
+<ul>
+<li>“请求与响应”：用户发起请求，服务器做相关响应。</li>
+<li>无状态：第一次请求与第二次请求之间，没有关联。并且对于发送过的请求或响应都不进行保存。</li>
+<li>应用层协议：该协议基于 TCP 协议。</li>
+</ul>
+<h3 id="HTTP-工作原理"><a href="#HTTP-工作原理" class="headerlink" title="HTTP 工作原理"></a>HTTP 工作原理</h3><p>HTTP 协议定义 Web 客户端如何从 Web 服务器请求 Web 页面，以及服务器如何把 Web 页面传送给客户端。HTTP 协议采用了请求&#x2F;响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。</p>
+<p>以下是 HTTP 请求&#x2F;响应的步骤：</p>
+<ol>
+<li>客户端连接到 Web 服务器。</li>
+<li>发送 HTTP 请求。</li>
+<li>服务器接受请求并返回 HTTP 响应。</li>
+<li>释放连接 TCP 连接。</li>
+<li>客户端浏览器解析 HTML 内容。</li>
+</ol>
+<p>在浏览器地址栏键入 URL，按下回车之后会经历以下流程：</p>
+<ol>
+<li>浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址。</li>
+<li>解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立 TCP 连接。</li>
+<li>浏览器发出读取文件 (URL 中域名后面部分对应的文件) 的 HTTP 请求，该请求报文作为 TCP 三次握手的第三个报文的数据发送给服务器。</li>
+<li>服务器对浏览器请求作出响应，并把对应的 HTML 文本发送给浏览器。</li>
+<li>释放 TCP 连接。</li>
+<li>浏览器将该 HTML 文本并显示内容。</li>
+</ol>
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><p>URL，Universal Resource Locator，<strong>统一资源定位符</strong>。</p>
+<p>HTTP 协议采用 URL 作为定位网络资源的标识。</p>
+<p>URL 遵守一种标准的语法，它由协议、域名、端口、路径名称、查询字符串、以及锚部分这六个部分构成，其中端口可以省略，查询字符串和锚部分为参数。具体语法规则如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">protocol://host: port/pathname?query<span class="comment">#fragment</span></span><br></pre></td></tr></table></figure>
+
+<p>在上述语法规则中，<code>protocol</code> 表示协议，<code>host</code> 表示主机名（域名或 IP 地址），<code>port</code> 表示端口，<code>pathname</code> 表示路径名称，<code>query</code> 表示查询字符串，<code>fragment</code> 表示锚部分。<code>#</code> 代表网页中的一个位置，作为页面 <code>定位符</code> 出现在 URL 中。其右面的字符，就是该位置的 <code>标识符</code>（锚部分）。</p>
+<p><strong>统一资源定位符</strong> 将从因特网获取信息的几种基本元素包含在一个简单的地址中：</p>
+<ul>
+<li>传输协议 - protocol<ul>
+<li>如 http&#x2F;https&#x2F;ftp 等。</li>
+</ul>
+</li>
+<li>服务器 - host<ul>
+<li>通常为域名：因为 IP 地址不好记，因此用域名美化，可以理解为 IP 的别名。使用域名 -&gt; 通过 DNS 解析找到对应的 IP。</li>
+<li>有时为 IP 地址：主机地址，每台电脑都有自己特定的标识，IPv4&#x2F;IPv6。</li>
+</ul>
+</li>
+<li>端口号 - port （可省略）：可以理解为窗口，交流的端口<ul>
+<li>http：默认打开 80 端口</li>
+<li>https：默认打开 443 端口</li>
+</ul>
+</li>
+<li>路径 - path：访问主机分享文件的地址<ul>
+<li>以 <code>/</code> 字符区别路径中的每一个目录名称</li>
+<li>文件路径：用户直接访问主机分享的文件</li>
+<li>路由：目前比较流行的形式（后端监听地址访问事件，返回特定的内容）</li>
+</ul>
+</li>
+<li>查询参数 - query：帮助用户访问到特定的资源<ul>
+<li>格式 <code>?name=value&amp;name=value...</code></li>
+<li>GET 模式的表单参数，以 <code>?</code> 字符为起点，每个参数以 <code>&amp;</code> 隔开，再以 <code>=</code> 分开参数名称与资料，通常以 UTF8 的 URL 编码，避开字符冲突的问题。</li>
+</ul>
+</li>
+<li>锚点 - fragment：<ul>
+<li><code>#fragment</code> 锚点，又叫命名锚记，是文档中的一种标记，网页设计者可以用它和 URL“锚”在一起，其作用像一个迅速定位器一样，可快速将访问者带到指定位置。</li>
+<li>HTTP 请求不包括 <code>#</code> ：<code>#</code> 是用来指导浏览器动作的，对服务器端完全无用。</li>
+</ul>
+</li>
+</ul>
+<p>典型的统一资源定位符看上去是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">http://zh.wikipedia.org:80/w/index.php?title=Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2&amp;printable=<span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ol>
+<li><code>http</code> 是协议；</li>
+<li><code>zh.wikipedia.org</code> 是服务器；</li>
+<li><code>80</code> 是服务器上的网络端口号；</li>
+<li><code>/w/index.php</code> 是路径；</li>
+<li><code>?title=Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2&amp;printable=yes</code> 是查询参数。</li>
+</ol>
+<p>大多数网页浏览器不要求用户输入网页中 <code>http://</code> 的部分，因为绝大多数网页内容是超文本传输协议文件。同样，<code>80</code> 是超文本传输协议文件的常用端口号，因此一般也不必写明。一般来说用户只要键入统一资源定位符的一部分就可以了。<strong>这只是浏览器中可以省略，写爬虫的时候，URL 中的传输协议是不可以省略的。</strong></p>
+<p><strong>总结</strong>：URL 是通过 HTTP 协议存取资源的 Internet 路径，一个 URL 对应一个数据资源。</p>
+<h3 id="HTTP-协议对资源的操作"><a href="#HTTP-协议对资源的操作" class="headerlink" title="HTTP 协议对资源的操作"></a>HTTP 协议对资源的操作</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>请求获取 URL 位置的资源</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>请求获取 URL 位置资源的响应消息报告，即获取该资源的头部信息</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>请求向 URL 位置的资源后附加新的数据</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>请求向 URL 位置存储一个资源，覆盖原 URL 位置的资源</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>请求局部更新 URL 位置的资源，即改变该处资源的部分内容</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>请求删除 URL 位置存储的资源</td>
+</tr>
+</tbody></table>
+<p><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203201707788.png"></p>
+<p><strong>GET 与 POST 的区别</strong>：</p>
+<ul>
+<li>原理区别：GET 请求获取资源，不会产生动作；POST 可能会修改服务器上的资源。因此 POST 用于修改和写入数据，GET 一般用于搜索排序和筛选之类的操作，目的是资源的获取，读取数据。</li>
+<li>参数位置区别：GET 把参数包含在 URL 中，POST 通过 Request body 传递参数。所以 POST 可以发送的数据更大，GET 有 URL 长度限制；POST 能发送更多的数据类型（GET 只能发送 ASCII 字符）。</li>
+<li>POST 更加安全：不会作为 URL 的一部分，不会被缓存、保存在服务器日志、以及浏览器浏览记录中。</li>
+<li>POST 比 GET 慢：POST 在真正接收数据之前会先将请求头发送给服务器进行确认，然后才真正发送数据。<ul>
+<li>浏览器请求 TCP 连接（第一次握手）</li>
+<li>服务器答应进行 TCP 连接（第二次握手）</li>
+<li>浏览器确认，并发送 POST 请求头（第三次握手，这个报文比较小，所以 HTTP 会在此时进行第一次数据发送）</li>
+<li>服务器返回 100 Continue 响应</li>
+<li>浏览器发送数据</li>
+<li>服务器返回 200 OK 响应</li>
+</ul>
+</li>
+</ul>
+<p><strong>PATCH 与 PUT 的区别</strong>：<br>假设 URL 位置有一组数据 UserInfo，包括 UserID，UserName 等 20 个字段。<br>需求：修改 UserName，其他不变。</p>
+<ul>
+<li>采用 PATCH，仅向 URL 提交 UserName 的局部更新请求。</li>
+<li>采用 PUT，必须将所有 20 个字段一并提交到 URL，未提交的字段将被删除。</li>
+</ul>
+<p>因此 PATCH 的最主要好处是：节省网络带宽。</p>
+<h2 id="0x03-再探-Requests-库"><a href="#0x03-再探-Requests-库" class="headerlink" title="0x03 再探 Requests 库"></a>0x03 再探 Requests 库</h2><p>HTTP 协议方法与 Requests 库方法是一一对应的。因此有了对 HTTP 协议方法的理解之后，我们再来学习 Requests 库中的其他方法。</p>
+<h3 id="Requests-库中的其他方法"><a href="#Requests-库中的其他方法" class="headerlink" title="Requests 库中的其他方法"></a>Requests 库中的其他方法</h3><h4 id="request-head-方法"><a href="#request-head-方法" class="headerlink" title="request.head() 方法"></a>request.head() 方法</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.head(<span class="string">&quot;http://httpbin.org/get&quot;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.headers</span><br><span class="line">&#123;<span class="string">&#x27;Date&#x27;</span>: <span class="string">&#x27;Sat, 19 Mar 2022 18:27:08 GMT&#x27;</span>, <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>, <span class="string">&#x27;Content-Length&#x27;</span>: <span class="string">&#x27;307&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>, <span class="string">&#x27;Server&#x27;</span>: <span class="string">&#x27;gunicorn/19.9.0&#x27;</span>, <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span>: <span class="string">&#x27;true&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line"><span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 <code>r.text</code> 为空，因此通过 <code>head()</code> 方法可以用很少的网络流量，来获得网页的概括信息。</p>
+<h4 id="requests-post-方法"><a href="#requests-post-方法" class="headerlink" title="requests.post () 方法"></a>requests.post () 方法</h4><ol>
+<li>向 URL POST 一个字典，自动编码为 form。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>payload = &#123;<span class="string">&quot;key1&quot;</span>: <span class="string">&quot;value1&quot;</span>,<span class="string">&quot;key2&quot;</span>: <span class="string">&quot;value2&quot;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.post(<span class="string">&quot;http://httpbin.org/post&quot;</span>, data = payload)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r.text)</span><br><span class="line">&#123; ...</span><br><span class="line">  <span class="string">&quot;form&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;key1&quot;</span>: <span class="string">&quot;value1&quot;</span>, </span><br><span class="line">    <span class="string">&quot;key2&quot;</span>: <span class="string">&quot;value2&quot;</span></span><br><span class="line">  &#125;, </span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可见，当向 URL POST 一个字典或者键值对的时候，会默认存储在表单 form 的字段下。</p>
+<ol start="2">
+<li>向 URL POST 一个字符串，自动编码为 data。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt;r = requests.post(<span class="string">&quot;http://httpbin.org/post&quot;</span>, data = <span class="string">&#x27;juanbudongle&#x27;</span>)</span><br><span class="line">&gt;&gt;&gt;<span class="built_in">print</span>(r.text)</span><br><span class="line">&#123; ...</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: <span class="string">&quot;juanbudongle&quot;</span>,</span><br><span class="line">  <span class="string">&quot;files&quot;</span>: &#123;&#125;,</span><br><span class="line">  <span class="string">&quot;form&quot;</span>: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="requests-put-方法"><a href="#requests-put-方法" class="headerlink" title="requests.put() 方法"></a>requests.put() 方法</h4><p>与 POST 类似，只是会覆盖原 URL 位置的资源</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>payload = &#123;<span class="string">&quot;key1&quot;</span>: <span class="string">&quot;value1&quot;</span>,<span class="string">&quot;key2&quot;</span>: <span class="string">&quot;value2&quot;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.put(<span class="string">&quot;http://httpbin.org/post&quot;</span>, data = payload)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r.text)</span><br><span class="line">&#123; ...</span><br><span class="line">  <span class="string">&quot;form&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;key1&quot;</span>: <span class="string">&quot;value1&quot;</span>, </span><br><span class="line">    <span class="string">&quot;key2&quot;</span>: <span class="string">&quot;value2&quot;</span></span><br><span class="line">  &#125;, </span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>requests.post ()</code> 与 <code>requests.put()</code> 类似，上节末尾已经分析过两种方法的区别。</p>
+<h3 id="Requests-库的基础方法"><a href="#Requests-库的基础方法" class="headerlink" title="Requests 库的基础方法"></a>Requests 库的基础方法</h3><p><code>requests.request()</code> 是 Requests 库所有方法的基础方法，因此将其单列出来。或者说，库中其他方法的实现，都是基于 <code>requests.request()</code> 方法。</p>
+<h4 id="requests-request-方法"><a href="#requests-request-方法" class="headerlink" title="requests. request () 方法"></a>requests. request () 方法</h4><p><code>requests.request(method, url, **kwargs)</code></p>
+<ul>
+<li><code>method</code> ：请求方式，对应 GET&#x2F;PUT&#x2F;POST 等 7 种。</li>
+<li><code>url</code> ：拟获取页面的 URL 链接。</li>
+<li><code>**kwargs</code> : 控制访问的参数，共 13 个。</li>
+</ul>
+<p>7 种请求方式如下：<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200326757.png" alt="|500"></p>
+<p><code>**kwargs</code> 控制访问的参数，一共有 13 个，均为可选项，下面依次讲解：</p>
+<ul>
+<li>params：字典或字节序列，作为参数增加到 <code>url</code> 中。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200336254.png" alt="|700"></li>
+<li>data：字典，字节序或文件对象，作为 Request 的内容。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200340659.png" alt="|700"><br>提交的键值对不直接存在 <code>url</code> 链接中，而是放在 Request 规定的存储位置。参考 <a href="#requests%20post%20%E6%96%B9%E6%B3%95">requests post 方法</a> 。</li>
+<li>json：json 格式的数据，作为 Request 的内容。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200347742.png" alt="|700"></li>
+<li>headers：字典，HTTP 定制头。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200349208.png"></li>
+<li>cookies：字典或 CookieJar，Request 中的 cookie。</li>
+<li>auth：元组，支持 HTTP 认证功能。</li>
+<li>files：字典类型，传输文件。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200351450.png" alt="|700"></li>
+<li>timeout: 设定超时时间，秒为单位。</li>
+<li>proxies：字典类型，设定访问代理服务器，可以增加登录认证。<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203200354523.png"><br>使用这个字段，可以有效隐藏用户爬取网页的源的 IP 地址信息，有效防止对爬虫的逆追踪。</li>
+<li>allow_redirects: True&#x2F;False，默认为 True，重定向开关。</li>
+<li>stream：True&#x2F;False，默认为 True，获取内容立即下载开关。</li>
+<li>verify：True&#x2F;False，默认为 True，认证 SSL 证书开关。</li>
+<li>cert： 本地 SSL 证书路径。</li>
+</ul>
+<h2 id="0x04-Requests-实战"><a href="#0x04-Requests-实战" class="headerlink" title="0x04 Requests 实战"></a>0x04 Requests 实战</h2><h3 id="Case-1-京东商品页面的爬取"><a href="#Case-1-京东商品页面的爬取" class="headerlink" title="Case 1. 京东商品页面的爬取"></a>Case 1. 京东商品页面的爬取</h3><p>对这个 <a href="https://item.jd.com/100029199502.html">手机商品页面</a> 进行爬取。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> requests</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">&#x27;https://item.jd.com/100029199502.html&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.encoding</span><br><span class="line"><span class="string">&#x27;UTF-8&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line">&#123;<span class="string">&#x27;Date&#x27;</span>: <span class="string">&#x27;Sat, 19 Mar 2022 18:27:08 GMT&#x27;</span>, <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>, <span class="string">&#x27;Content-Length&#x27;</span>: <span class="string">&#x27;307&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>, <span class="string">&#x27;Server&#x27;</span>: <span class="string">&#x27;gunicorn/19.9.0&#x27;</span>, <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span>: <span class="string">&#x27;true&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line"><span class="string">&quot;&lt;script&gt;window.location.href=&#x27;https://passport.jd.com/new/login.aspx?ReturnUrl=http%3A%2F%2Fitem.jd.com%2F100029199502.html&#x27;&lt;/script&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上都是基本流程操作，我们发现返回的信息并不是商品页面。如果将这个返回的 URL 在浏览器中打开，会呈现一个登录页面。或者说京东阻止了这个爬虫，把我们重定向到了登陆页面。因为我们即使不登陆，在浏览器上还是可以访问的。</p>
+<p>一般网页限制爬虫的方式有两种，一种是通过 Robots 协议，告知爬虫，哪些资源可以访问，哪些不可以；另一种是根据 HTTP 的 Header 中的 user-agent 来检测，判断这个 HTTP 访问是不是由爬虫发起的，对于爬虫的请求，网站是可以选择拒绝的。</p>
+<p>由于 <code>Requests</code> 库返回的 <code>Response</code> 对象（也就是 <code>requests.get()</code> 返回的 <code>r</code> ），包含发出的 <code>request</code> 请求，因此我们可以查看之前对京东发出的请求到底是什么内容。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.headers  <span class="comment"># 查看发出的头信息</span></span><br><span class="line">&#123;<span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;python-requests/2.27.1&#x27;</span>, <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>, <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>&#125;</span><br><span class="line"><span class="comment"># 可以发现，这里标明了我们是使用 &#x27;python-requests/2.27.1&#x27; 发出的请求</span></span><br><span class="line"><span class="comment"># 也就是说我们的爬虫诚实地告诉了服务器，这个请求是由一个爬虫产生的</span></span><br><span class="line"><span class="comment"># 因此，如果京东进行来源审查，并且不支持这种访问的时候，我们的访问会被拒绝</span></span><br><span class="line"><span class="comment"># 那么此时，我们就应该模拟浏览器来进行爬虫请求</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kv = &#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/7.0&#x27;</span>&#125;  <span class="comment"># 构造一个键值对，指定 user-agent</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">&#x27;https://item.jd.com/100029199502.html&#x27;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url, headers = kv)  <span class="comment"># 修改 HTTP 头中的 user-agent</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.headers  <span class="comment"># 查看发出请求的头信息</span></span><br><span class="line">&#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/7.0&#x27;</span>, <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>, <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>&#125;</span><br><span class="line"><span class="comment"># 可以看到 user-agent 已经修改为我们键值对中的内容</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text[:<span class="number">600</span>]  <span class="comment"># 查看返回内容</span></span><br><span class="line"><span class="string">&#x27;&lt;!DOCTYPE HTML&gt;\n&lt;html lang=&quot;zh-CN&quot;&gt;\n&lt;head&gt;\n    &lt;!-- shouji --&gt;\n    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;\n    &lt;title&gt;【华为Mate X2】华为 HUAWEI Mate X2 5G全网通12GB+512GB墨黑素皮款 典藏版 麒麟芯片 超感知徕卡四摄 折叠屏 华为手机【行情 报价 价格 评测】-京东&lt;/title&gt;\n    &lt;meta name=&quot;keywords&quot; content=&quot;HUAWEIMate X2,华为Mate X2,华为Mate X2报价,HUAWEIMate X2报价&quot;/&gt;\n    &lt;meta name=&quot;description&quot; content=&quot;【华为Mate X2】京东JD.COM提供华为Mate X2正品行货，并包括HUAWEIMate X2网购指南，以及华为Mate X2图片、Mate X2参数、Mate X2评论、Mate X2心得、Mate X2技巧等信息，网购华为Mate X2上京东,放心又轻松&quot; /&gt;\n    &lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot;&gt;\n    &lt;meta http-equiv=&quot;mobile&#x27;</span></span><br><span class="line"><span class="comment"># 正常返回商品页面</span></span><br></pre></td></tr></table></figure>
+
+<p>以上是在 Python IDLE 中的测试，下面给出全代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">&#x27;https://item.jd.com/100029199502.html&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    kv = &#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/7.0&#x27;</span>&#125;</span><br><span class="line">    r = requests.get(url, headers = kv)</span><br><span class="line">    r.raise_for_status()</span><br><span class="line">    r.encoding = r.apparent_encoding</span><br><span class="line">    <span class="built_in">print</span>(r.text[:<span class="number">1000</span>])</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Error&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：有的时候需要修改头信息 ‘user-agent’，模拟浏览器向服务器提交 HTTP 请求。</strong></p>
+<h3 id="Case-2-百度搜索结果爬取"><a href="#Case-2-百度搜索结果爬取" class="headerlink" title="Case 2. 百度搜索结果爬取"></a>Case 2. 百度搜索结果爬取</h3><p>百度的搜索关键词接口：<br><code>https://www.baidu.com/s?wd=keyword</code></p>
+<p>这里要注意的是，简单的给 HTTP 头信息进行修改是没用的，需要去找一个真实的 User-Agent 修改到头信息中。</p>
+<p>在浏览器中按下 F12：<br><img src="https://gitee.com/innoh/inno-figure-bed/raw/master/img/202203201605217.png" alt="|800"></p>
+<p>随便选取一个 GET 请求，复制请求标头里的用户代理 User-Agent 信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>agent = &#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kv = &#123;<span class="string">&#x27;wd&#x27;</span>: <span class="string">&#x27;Python&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get (<span class="string">&#x27; https://www.baidu.com/s &#x27;</span>, params=kv, headers=agent)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.url  <span class="comment"># 查看发出的 HTTP 请求的 URL</span></span><br><span class="line"><span class="string">&#x27;https://www.baidu.com/s?wd=Python&#x27;</span></span><br><span class="line"><span class="comment"># 可以看到，搜素关键词添加到了后面</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.headers</span><br><span class="line">&#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0&#x27;</span>, <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>, <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">len</span>(r.text)  <span class="comment"># 查看返回内容的长度</span></span><br><span class="line"><span class="number">786376</span></span><br><span class="line"><span class="comment"># 这就说明返回成功了</span></span><br><span class="line"><span class="comment"># 修改 User-Agent 不正确时，返回的长度只有 227，即代表被百度服务器阻止访问了</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：伪装最好还是伪装的真实些。</strong></p>
+<h3 id="Case-3-网络图片的爬取和存储"><a href="#Case-3-网络图片的爬取和存储" class="headerlink" title="Case 3. 网络图片的爬取和存储"></a>Case 3. 网络图片的爬取和存储</h3><p>在国家地理的网站上随便找 <a href="http://www.ngchina.com.cn/news/detail?newsId=47344">一幅图</a>，通过查看网页源码找到这幅图的 URL。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> requests</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>path = <span class="string">&quot;city.jpg&quot;</span>  <span class="comment"># 给图片一个存储位置，存在当前目录下，命名为 city</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">&#x27;https://ngimages.oss-cn-beijing.aliyuncs.com/2022/03/16/fabe20d0-01cc-400d-ae07-8f56516a556a.jpg&#x27;</span>  <span class="comment"># 源码中找到的图的 URL</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span>  <span class="comment"># 成功</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:  <span class="comment"># 将图片以二进制形式写入文件</span></span><br><span class="line">	    f.write(r.content)</span><br></pre></td></tr></table></figure>
+
+<p>完整代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;https://ngimages.oss-cn-beijing.aliyuncs.com/2022/03/16/fabe20d0-01cc-400d-ae07-8f56516a556a.jpg&#x27;</span></span><br><span class="line">root = <span class="string">&quot;E://pics//&quot;</span></span><br><span class="line">path = root + url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>]  <span class="comment"># .spilt 返回⼀个将字符串以 / 划分的列表，取 [-1]，即最后一个（或者说倒数第一个），也就是 URL 中图片的名字</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    kv = &#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0&#x27;</span>&#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(root):  <span class="comment"># 如果根目录不存在，则新建根目录</span></span><br><span class="line">        os.mkdir(root)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):  <span class="comment"># 如果文件不存在，则从网上爬取并存储</span></span><br><span class="line">        r = requests.get(url)</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(r.content)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;文件保存成功&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;文件保存成功&quot;</span>)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;爬取失败&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：在工程要求上，代码的可靠性与稳定性是非常重要的。因此哪怕是简单的代码，也要考虑可能出现的问题，并对这些问题做相关处理。</strong></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://www.cnblogs.com/an-wen/p/11180076.html">学习 HTTP 协议</a> ⭐⭐⭐<br> <a href="http://www.dedenotes.com/html/url-fragment.html">URL 锚点、fragment 锚部分、锚点定位的九点知识 </a> ⭐⭐<br> <a href="https://blog.csdn.net/caryee89/article/details/7398088">统一资源定位符 URL</a><br> <a href="https://blog.csdn.net/Selina_lxh/article/details/121840190">URL(统一资源定位符)各部分详解</a><br> <a href="https://www.bilibili.com/video/BV1pt41137qK?p=7">Python 爬虫视频教程全集 | bilibili</a> ⭐⭐⭐<br> <a href="https://blog.csdn.net/qq_29339467/article/details/105342399">Python 爬虫教程中转站</a><br> <a href="https://blog.csdn.net/pittpakk/article/details/81218566">python3 requests 详解</a><br> <a href="https://zhuanlan.zhihu.com/p/275695831">http 请求中 get 和 post 方法的区别</a><br> <a href="https://zhuanlan.zhihu.com/p/370768951">python 爬虫-百度搜索结果爬取</a></p>
+]]></content>
+      <categories>
+        <category>爬虫与网络编程基础</category>
+      </categories>
+      <tags>
+        <tag>Coggle 30 Days of ML</tag>
+        <tag>Spider</tag>
+        <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
+    <url>/2RYYQJ0/</url>
+    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
+<span id="more"></span>
+
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
+<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
+<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
+<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
+<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
+
+<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
+
+<p>切回后可以使用。</p>
+<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
+
+<p>全部默认，四次回车，显示以下则建立成功。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>查看 ssh 密钥并且复制到 Github：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
+
+<p>检查 ssh 是否绑定成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Success：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
+<ul>
+<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
+<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
+</ul>
+<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
+<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
+<ul>
+<li>仓库名称：可以随便填，比如 <code>blog</code></li>
+<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
+<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
+<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
+</ul>
+<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
+
+<p>随后本地生成 hexo 界面：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
+
+<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
+<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改文档末尾的 deploy 设置：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
+<p>Tips：</p>
+<ul>
+<li>repository 是 GitHub 上建立的博客仓库</li>
+<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
+</ul>
+<p>更改完成后保存。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
+<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
+<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
+<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
+<p><strong>token 备份</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
+
+
+<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
+<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
+<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
+<p>点击即可进入博客网站。</p>
+<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
+<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
+<ul>
+<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
+</ul>
+<p>还有其他比较优秀的主题比如：</p>
+<ul>
+<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
+<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
+<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
+</ul>
+<p>后面这三款会有更加丰富的一些外观设计。</p>
+<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
+<p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
+
+<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
+<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
+<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
+<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
+<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
+<p>主题美化：</p>
+<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
+<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
+<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
+<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Gitee</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
+    <url>/25S7X1E/</url>
+    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
 <li>任务内容：<ul>
 <li>从比赛官网下载数据集，并使用 Python 读取数据</li>
 <li>使用 <code>jieba</code> 对文本进行分词</li>
@@ -500,7 +960,7 @@
 </ul>
 <h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
 <p>首先导入需要用到的包：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
 
 <p>读取数据：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
@@ -511,23 +971,61 @@
 <blockquote>
 <p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
 </blockquote>
-<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。</p>
-<blockquote>
-<p>搜索引擎模式：将结果精确分开，对比较长的词进行二次切分。</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = jieba.cut_for_search(wordListTop10[i])</span><br><span class="line">    seg_list.append (seg) <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="0x03-使用-TFIDF-对文本进行编码"><a href="#0x03-使用-TFIDF-对文本进行编码" class="headerlink" title="0x03 使用 TFIDF 对文本进行编码"></a>0x03 使用 <code>TFIDF</code> 对文本进行编码</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过token2id得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
+<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
+<p>有三种分词模式，这里使用默认的精确模式。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘赞臣’: 3, ‘慱’: 4, ‘手动’: 5, ‘料理’: 6, ‘朗’: 7, ‘机’: 8, ‘電力貓’: 9, ‘夹缝’: 10, ‘工具’: 11, ‘掏’: 12, ‘vip’: 13, ‘推’: 14, ‘飞’: 15, ‘功能’: 16, ‘多功能’: 17, ‘托地’: 18, ‘把’: 19, ‘充气’: 20, ‘浮力’: 21, ‘袖’: 22, ‘盒马花胶’: 23, ‘锅’: 24, ‘鸡汤’: 25, ‘乐’: 26, ‘塞塞’: 27, ‘gs5’: 28, ‘广汽传祺’: 29, ‘挡风’: 30, ‘挡风遮雨’: 31, ‘条子’: 32, ‘遮雨’: 33}</p>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]</span><br></pre></td></tr></table></figure>
+<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
+<p>可以查看 <a href="/undefined/" title="矢量语义与嵌入之 TF-IDF 检索">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
+</blockquote>
+<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务，大概了解了分词，文本向量化表示（词袋模型）之类的内容。</p>
+<blockquote>
+<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
+</blockquote>
+<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
+<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
+</blockquote>
+<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
+<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
+<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
+</blockquote>
+<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
+<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Output:</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
+<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
+<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
 ]]></content>
       <categories>
         <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
       </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
   </entry>
 </search>
