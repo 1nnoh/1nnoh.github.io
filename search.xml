@@ -462,6 +462,130 @@
       </tags>
   </entry>
   <entry>
+    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
+    <url>/2RYYQJ0/</url>
+    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
+<span id="more"></span>
+
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
+<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
+<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
+<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
+<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
+
+<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
+
+<p>切回后可以使用。</p>
+<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
+
+<p>全部默认，四次回车，显示以下则建立成功。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>查看 ssh 密钥并且复制到 Github：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
+
+<p>检查 ssh 是否绑定成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Success：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
+<ul>
+<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
+<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
+</ul>
+<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
+<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
+<ul>
+<li>仓库名称：可以随便填，比如 <code>blog</code></li>
+<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
+<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
+<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
+</ul>
+<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
+
+<p>随后本地生成 hexo 界面：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
+
+<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
+<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改文档末尾的 deploy 设置：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
+<p>Tips：</p>
+<ul>
+<li>repository 是 GitHub 上建立的博客仓库</li>
+<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
+</ul>
+<p>更改完成后保存。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
+<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
+<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
+<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
+<p><strong>token 备份</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
+
+
+<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
+<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
+<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
+<p>点击即可进入博客网站。</p>
+<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
+<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
+<ul>
+<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
+</ul>
+<p>还有其他比较优秀的主题比如：</p>
+<ul>
+<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
+<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
+<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
+</ul>
+<p>后面这三款会有更加丰富的一些外观设计。</p>
+<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
+<p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
+
+<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
+<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
+<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
+<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
+<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
+<p>主题美化：</p>
+<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
+<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
+<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
+<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Gitee</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬虫与网络编程基础_Task02_HTTP协议与Requests</title>
     <url>/4NXBKD/</url>
     <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>Requests 是一个 Python 公认的，优秀的第三方网络爬虫库，可以自动爬取 HTML 页面，自动进行网络请求的提交。所以本次任务首先来了解，学习 Requests 库以及 HTTP 协议。另外，由于Requests 库与 HTTP 协议的方法是一一对应的，所以会穿插着学习，以便更容易理解。</p>
@@ -822,213 +946,6 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
-    <url>/25S7X1E/</url>
-    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
-<li>任务内容：<ul>
-<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
-<li>使用 <code>jieba</code> 对文本进行分词</li>
-<li>使用 <code>TFIDF</code> 对文本进行编码</li>
-<li>思考如何使用 TFIDF 计算文本相似度？</li>
-</ul>
-</li>
-<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
-</ul>
-<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
-<p>首先导入需要用到的包：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
-
-<p>读取数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
-
-<p>取字典 <code>train_query</code> 的前十条数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
-</blockquote>
-<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
-<p>有三种分词模式，这里使用默认的精确模式。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
-<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
-</blockquote>
-<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
-</blockquote>
-<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
-<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
-</blockquote>
-<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
-<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
-<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
-</blockquote>
-<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
-<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Output:</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
-<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
-<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
-]]></content>
-      <categories>
-        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
-    <url>/2RYYQJ0/</url>
-    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
-<span id="more"></span>
-
-<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
-<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
-<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
-<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
-<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
-<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
-
-<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
-
-<p>切回后可以使用。</p>
-<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
-
-<p>全部默认，四次回车，显示以下则建立成功。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-
-<p>查看 ssh 密钥并且复制到 Github：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
-
-<p>检查 ssh 是否绑定成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>Success：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
-<ul>
-<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
-<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
-</ul>
-<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
-<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
-<ul>
-<li>仓库名称：可以随便填，比如 <code>blog</code></li>
-<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
-<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
-<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
-</ul>
-<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
-
-<p>随后本地生成 hexo 界面：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
-
-<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
-<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>修改文档末尾的 deploy 设置：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
-<p>Tips：</p>
-<ul>
-<li>repository 是 GitHub 上建立的博客仓库</li>
-<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
-</ul>
-<p>更改完成后保存。</p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>部署：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
-<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
-<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
-<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
-<p><strong>token 备份</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
-
-
-<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
-<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
-<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
-<p>点击即可进入博客网站。</p>
-<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
-<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
-<ul>
-<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
-</ul>
-<p>还有其他比较优秀的主题比如：</p>
-<ul>
-<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
-<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
-<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
-</ul>
-<p>后面这三款会有更加丰富的一些外观设计。</p>
-<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
-<p>报错：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
-
-<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
-<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
-<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
-<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
-<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
-<p>主题美化：</p>
-<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
-<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
-<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
-<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Gitee</tag>
-        <tag>Github</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>阿里灵杰_Task02</title>
     <url>/3ZBJY8Q/</url>
     <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
@@ -1122,6 +1039,89 @@
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>水哥讲的太好了，对我这种刚入门 NLP 的小白帮助很大，学到了 NLP 完整的一套训练流程。</p>
 <p>感觉句子编码 <code>pooling</code> 的时候好像也可以做一些技巧。目前是直接用 Word2Vec 得到的词向量，这个比赛本质上是看谁的词向量训练的好，所以后面尝试用 <code>SimCSE</code> 这些深度模型来训练，效果应该会提升一些。当然了，提分的话首先还是从数据入手，比如 <code>corpus</code> 的 <code>title</code> 长度很长，会有一百多个字符，而 <code>query</code> 就是比较短的搜索。所以 <code>corpus</code> 里的那些非核心词（噪声）势必会对训练产生影响。</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://github.com/datawhalechina/team-learning-data-mining/tree/master/ECommerceSearch">team-learning-data-mining&#x2F;ECommerceSearch at master · datawhalechina&#x2F;team-learning-data-mining · GitHub</a><br> <a href="https://www.bilibili.com/video/BV1dU4y1R7a2?spm_id_from=333.999.0.0">天池大神阿水解读：阿里灵杰电商搜索算法赛 | bilibili</a></p>
+]]></content>
+      <categories>
+        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
+    <url>/25S7X1E/</url>
+    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
+<li>任务内容：<ul>
+<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
+<li>使用 <code>jieba</code> 对文本进行分词</li>
+<li>使用 <code>TFIDF</code> 对文本进行编码</li>
+<li>思考如何使用 TFIDF 计算文本相似度？</li>
+</ul>
+</li>
+<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
+</ul>
+<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
+<p>首先导入需要用到的包：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
+
+<p>读取数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
+
+<p>取字典 <code>train_query</code> 的前十条数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
+</blockquote>
+<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
+<p>有三种分词模式，这里使用默认的精确模式。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
+<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
+</blockquote>
+<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
+</blockquote>
+<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
+<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
+</blockquote>
+<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
+<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
+<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
+</blockquote>
+<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
+<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Output:</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
+<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
+<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
 ]]></content>
       <categories>
         <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
