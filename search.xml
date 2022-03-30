@@ -1,204 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>爬虫与网络编程基础_Task01：计算机网络基础</title>
-    <url>/3VQT4K6/</url>
-    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>为了使网络上获得的数据干净整洁，并且可以为自己的应用所用，我们得想出一些形式来表示应用与网络之间来来往往的数据。最常使用的两种技术就是：XML 和 JSON。</p>
-<span id="more"></span>
-
-<p>但是 Python 中的列表或者字典并不能在 Java 中使用（Java 中使用 HashMap），所以不能直接把 Python 中的字典传给 Java，而是应该发送 Python 与 Java 都能接受的数据。</p>
-<p>因此，两者之间需要一种 <em>Wire Format</em> 来作为互相交换数据的媒介。而 XML 和 JSON 是两种比较常用的 <em>Wire Format</em>。</p>
-<h2 id="0x01-Python-中创建-List"><a href="#0x01-Python-中创建-List" class="headerlink" title="0x01 Python 中创建 List"></a>0x01 Python 中创建 List</h2><h3 id="1-创建列表"><a href="#1-创建列表" class="headerlink" title="1. 创建列表"></a>1. 创建列表</h3><p>在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义列表</span></span><br><span class="line"><span class="built_in">list</span> = [(<span class="string">&quot;小王&quot;</span>,<span class="number">40</span>,<span class="number">50</span>),(<span class="string">&quot;小贾&quot;</span>,<span class="number">50</span>,<span class="number">23</span>)]</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[(&#39;小王&#39;, 40,50), (&#39;小贾&#39;, 50,23)]</code></p>
-</blockquote>
-<h3 id="2-导入列表"><a href="#2-导入列表" class="headerlink" title="2. 导入列表"></a>2. 导入列表</h3><p>如果想把 Numpy 数组转成 Json 格式，可以首先将数组转为列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data = data.tolist()</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x02-将数据存储为-Json-格式，并进行读取"><a href="#0x02-将数据存储为-Json-格式，并进行读取" class="headerlink" title="0x02 将数据存储为 Json 格式，并进行读取"></a>0x02 将数据存储为 Json 格式，并进行读取</h2><h3 id="JSON-库的一些用法"><a href="#JSON-库的一些用法" class="headerlink" title="JSON 库的一些用法"></a>JSON 库的一些用法</h3><table>
-<thead>
-<tr>
-<th>方法</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>json.dumps ()</td>
-<td>将 Python 对象编码成 Json 字符串</td>
-</tr>
-<tr>
-<td>json.loads ()</td>
-<td>将 Json 字符串解码成 Python 对象</td>
-</tr>
-<tr>
-<td>json.dump ()</td>
-<td>将 Python 中的对象转化成 Json 储存到文件中</td>
-</tr>
-<tr>
-<td>json.load ()</td>
-<td>将文件中的 Json 的格式转化成 Python 对象提取</td>
-</tr>
-</tbody></table>
-<p>json.dump () 和 json.dumps () 的区别</p>
-<ul>
-<li>json.dumps () 是把 Python 对象转换成 Json 对象的一个过程，生成的是字符串。</li>
-<li>json.dump () 是把 Python 对象转换成 Json 对象生成一个 fp 的文件流，和文件相关。</li>
-</ul>
-<p>所以后面多的一个 <code>s</code> 可以理解为 <code>string</code></p>
-<p>更详细的内容可以参考 <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a></p>
-<h3 id="1-存储到-JSON-文件中"><a href="#1-存储到-JSON-文件中" class="headerlink" title="1. 存储到 JSON 文件中"></a>1. 存储到 JSON 文件中</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入 json 模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为新建 json 文件命名</span></span><br><span class="line">filename = <span class="string">&#x27;info.json&#x27;</span></span><br><span class="line"><span class="comment"># 使用json.dump()方法转为json格式数据</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    json.dump(<span class="built_in">list</span>, file)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 读取 json 文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    info = json.load(file)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (info)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>printout:<br><code>[[&#39;小王&#39;, 40,50], [&#39;小贾&#39;, 50,23]]</code></p>
-</blockquote>
-<p>Tips：</p>
-<ul>
-<li>默认会转为二进制数据，目前存储的 Json 文件内容为：<code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code>。读取的时候默认又转到了可读的 Python 对象。所以读取并打印的时候看见的是字符。</li>
-<li>如果希望文件中不使用二进制存储，通过 <code>ensure_ascii=False</code> 设置不转为二进制，即存储文件时：<code>json.dump(list, file, ensure_ascii=False)</code>。</li>
-</ul>
-<h3 id="2-编码成-JSON-字符串"><a href="#2-编码成-JSON-字符串" class="headerlink" title="2. 编码成 JSON 字符串"></a>2. 编码成 JSON 字符串</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用 json.dumps() 方法转为json格式数据</span></span><br><span class="line"><span class="comment"># 注意：默认会转为二进制数据，使用 ensure_ascii=False 设置不转为二进制</span></span><br><span class="line">json_data = json.dumps(<span class="built_in">list</span>, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span> (json_data)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[&quot;小王&quot;, 40,50], [&quot;小贾&quot;, 50,23]]</code></p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">json_data = json.dumps(<span class="built_in">list</span>)</span><br><span class="line"><span class="built_in">print</span>(json_data)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code></p>
-</blockquote>
-<p><code>json.dumps()</code> 也是默认编码成二进制数据。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打印数据类型</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(json_data))</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>&lt;class ‘list’&gt;<br>&lt;class ‘str’&gt;</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">py_data = json.loads(json_data)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(py_data))</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>&lt;class ‘list’&gt;</p>
-</blockquote>
-<h2 id="0x03-将数据存储为-XML-格式，并进行读取"><a href="#0x03-将数据存储为-XML-格式，并进行读取" class="headerlink" title="0x03 将数据存储为 XML 格式，并进行读取"></a>0x03 将数据存储为 XML 格式，并进行读取</h2><h3 id="XML-eXtensible-Markup-Language"><a href="#XML-eXtensible-Markup-Language" class="headerlink" title="XML (eXtensible Markup Language)"></a>XML (eXtensible Markup Language)</h3><p>主要目的是帮助信息系统交换结构化数据，是一种比 JSON 要老一些的技术。</p>
-<p>XML 代码美化工具：Pretty Printer。</p>
-<p>XML 是一种树状结构的数据。</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142247567.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142248500.png"></p>
-<p>And you can think of this as, like folders on your computer.</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142255711.png"></p>
-<p>我们要做的，就是从根节点，一层一层向下挖掘，找到这些数据。</p>
-<p>更多信息可以参考：<br> <a href="https://www.w3school.com.cn/xml/index.asp">XML 教程</a><br> <a href="https://www.runoob.com/xml/xml-tutorial.html">XML 教程 | 菜鸟教程</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a></p>
-<h3 id="1-存储为-XML-格式"><a href="#1-存储为-XML-格式" class="headerlink" title="1. 存储为 XML 格式"></a>1. 存储为 XML 格式</h3><p>首先将 List 转为字典：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = [<span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>] <span class="comment"># 这里要用 str 型</span></span><br><span class="line">d = <span class="built_in">dict</span>(<span class="built_in">zip</span>(index, <span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(d)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>&#123;&#39;0&#39;: (&#39;小王&#39;, 40,50), &#39;1&#39;: (&#39;小贾&#39;, 50,23)&#125;</code></p>
-</blockquote>
-<p>然后定义一个方法将字典转为 XML。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> Element</span><br><span class="line"></span><br><span class="line"><span class="comment"># Turn a simple dict of key/value pairs into XML</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_xml</span>(<span class="params">tag, d</span>):</span><br><span class="line">    elem = Element(tag)</span><br><span class="line">    <span class="keyword">for</span> key, val <span class="keyword">in</span> d.items():</span><br><span class="line">        child = Element(key)</span><br><span class="line">        child.text = <span class="built_in">str</span>(val)</span><br><span class="line">        elem.append(child)</span><br><span class="line">    <span class="keyword">return</span> elem</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">e = dict_to_xml(<span class="string">&#x27;info&#x27;</span>, d)</span><br><span class="line"><span class="built_in">print</span>(e)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>&lt;Element &#39;info&#39; at 0x0000018CA90C69A8&gt;</code></p>
-</blockquote>
-<p>或者可以使用 <code>pip3 install dicttoxml</code> 来转换。</p>
-<h3 id="2-读取-XML-格式"><a href="#2-读取-XML-格式" class="headerlink" title="2. 读取 XML 格式"></a>2. 读取 XML 格式</h3><p>转换结果是一个 <code>Element</code> 实例。对于 I&#x2F;O 操作，使用 <code>xml.etree.ElementTree</code> 中的 <code>tostring()</code> 函数很容易就能将它转换成一个字节字符串。例如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> tostring</span><br><span class="line">tostring(e)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>b&quot;&lt;info&gt;&lt;0&gt;(&#39;&amp;#23567;&amp;#29579;&#39;, 40,50)&lt;/0&gt;&lt;1&gt;(&#39;&amp;#23567;&amp;#36158;&#39;, 50,23)&lt;/1&gt;&lt;/info&gt;&quot;</code></p>
-</blockquote>
-<p>目前的 <code>e</code> 就是一个树状结构的示例，探索一下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(e.tag)</span><br><span class="line"><span class="built_in">print</span>(e.text)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>info</code><br><code>None</code></p>
-</blockquote>
-<p>相当于目前在 <code>root</code> 节点。</p>
-<p>把子节点打印出来：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    <span class="built_in">print</span>(child.tag)</span><br><span class="line">    <span class="built_in">print</span> (child.text)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>0<br>(‘小王’, 40,50)<br>1<br>(‘小贾’, 50,23)</p>
-</blockquote>
-<p>或者也可以将节点读取出来后，存成字典或者列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">to_dict = &#123;&#125;</span><br><span class="line">to_list = []</span><br><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    to_dict[child.tag] = child.text</span><br><span class="line">    </span><br><span class="line">to_list.append(to_dict)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(to_dict)</span><br><span class="line"><span class="built_in">print</span> (to_list)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;</code><br><code>[&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;]</code></p>
-</blockquote>
-<p>也可以使用 <code>pip3 install xmltodict</code> 来转换并读取。</p>
-<h2 id="0x04-计算机网络基础"><a href="#0x04-计算机网络基础" class="headerlink" title="0x04 计算机网络基础"></a>0x04 计算机网络基础</h2><p>学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
-<h3 id="1-网络层次分层"><a href="#1-网络层次分层" class="headerlink" title="1. 网络层次分层"></a>1. 网络层次分层</h3><h4 id="OSI-模型"><a href="#OSI-模型" class="headerlink" title="OSI 模型"></a>OSI 模型</h4><ul>
-<li><p>OSI 概念：</p>
-<ul>
-<li>为了使不同计算机厂家生产的计算机能够相互通信，以便在更大的范围内建立计算机网络，国际标准化组织（ISO）在 1978 年提出了”开放系统互联参考模型”，即著名的 OSI&#x2F;RM 模型（Open System Interconnection&#x2F;Reference Model）。“开放性”是指世界上任何地方、任何遵循 OSI 标准的系统，只要连接起来就能互相通信。</li>
-<li>注意：OSI 是一种 <strong>模型</strong>，并不是实际投入使用的协议，而是用来了解和设计网络体系结构的。</li>
-</ul>
-</li>
-<li><p>OSI 模型的目的：</p>
-<ul>
-<li>框架化；SOA。</li>
-<li>规范不同系统的互联标准，使两个不同的系统能够较容易的通信，而不需要改变底层的硬件或者软件的逻辑。</li>
-</ul>
-</li>
-<li><p>OSI 模型分为 7 层：</p>
-<ul>
-<li>将计算机网络体系结构的通信协议划分为七层，自下而上依次为：<ul>
-<li>物理层（Physics Layer）</li>
-<li>数据链路层（Data Link Layer）</li>
-<li>网络层（Network Layer）</li>
-<li>传输层（Transport Layer）</li>
-<li>会话层（Session Layer）</li>
-<li>表示层（Presentation Layer）</li>
-<li>应用层（Application Layer）</li>
-</ul>
-</li>
-<li>其中第四层完成数据传输服务，上面三层面向用户（ User Support Layers）。</li>
-</ul>
-</li>
-</ul>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151239418.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151240138.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151240443.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151228935.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151249700.png"></p>
-<h4 id="TCP-x2F-IP-协议"><a href="#TCP-x2F-IP-协议" class="headerlink" title="TCP&#x2F;IP 协议"></a>TCP&#x2F;IP 协议</h4><p>目前使用最多的是 TCP&#x2F;IP 四层协议。</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151129079.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151301087.png"></p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151135178.png"></p>
-<h4 id="输入-URL-后执行的全过程"><a href="#输入-URL-后执行的全过程" class="headerlink" title="输入 URL 后执行的全过程"></a>输入 URL 后执行的全过程</h4><p>从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
-<ol>
-<li>DNS 域名解析：客户端浏览器通过 DNS 解析得到 Coggle 网站的 IP 地址。</li>
-<li>客户端与服务端建立 TCP 连接：TCP 三次握手。</li>
-<li>客户端发起 HTTP 请求：建立 TCP 连接后，把客户端信息（携带 cookies）传递给服务端。</li>
-<li>服务端响应 HTTP 请求。</li>
-<li>释放 TCP 连接：TCP 四次挥手。</li>
-<li>浏览器解析 HTML 代码，并请求 HTML 代码中的资源（如图片、音频、视频、CSS、JS 等等）。</li>
-<li>浏览器对页面进行渲染呈现给用户。</li>
-</ol>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>JSON 格式比较好理解，不多赘述。</p>
-<p>XML 格式是一种树状结构的数据表示，数据的写入与读取都是基于这种结构的。所以首先要理解 XML 的这种内在结构，才能明白为什么 XML 的读写操作是这个样子的，否则直接照搬方法也很难清楚为什么这样做。我这里也只是浅尝辄止的了解基础概念，因为工作重心不在这，暂时不需要太深入的研究。</p>
-<p>虽然 XML 的格式看起来跟 HTML 十分相似，但这两种格式是负责不一样的工作的。<strong>XML 被设计用来传输和存储数据。HTML 被设计用来显示数据。</strong> 而且 HTML 中使用的标签（以及 HTML 的结构）是预定义好的；而 <strong>XML 仅仅是纯文本</strong>，允许创作者定义自己的标签和自己的文档结构。也就是说是针对自己的应用自行设计标签与结构，使得能够读懂 XML 的应用程序可以有针对性地处理 XML 的标签。标签的功能性意义依赖于应用程序的特性。</p>
-<p>之前学过的计算机网络基础大部分都还给老师了，只是模糊地记得一些概念，但要我去说每个层或者每种协议里面传输了哪些数据，数据分为哪几种，各自负责什么功能，或者计算一下 IP 已经是想不起来了。这次先复习一下 OSI 和 TCP&#x2F;IP 的基本结构。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>Json 读写：<br> <a href="https://www.cnblogs.com/tizer/p/11067098.html">Python 中如何将数据存储为 json 格式的文件</a><br> <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a><br> <a href="https://cloud.tencent.com/developer/article/1181728">Python json 模块 dumps、dump、loads、load 的使用</a></p>
-<p>XML 读写：<br><a href="https://www.w3school.com.cn/xml/xml_intro.asp">XML 简介</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a><br> <a href="https://zhmou.github.io/2021/10/12/Use-Python-to-Read-and-Write-XML-files/">使用 Python 读写 XML 文件 | Zh 某的备忘录</a><br> <a href="https://www.bilibili.com/video/BV1Sx411Q7zp?from=search&seid=13822148224876736274&spm_id_from=333.337.0.0">【一起学 Python·网络爬虫】XML 简介与解析 | bilibili</a><br> <a href="https://blog.csdn.net/Strive_0902/article/details/119856186">Python 列表转字典</a><br> <a href="https://blog.csdn.net/Jarry_cm/article/details/104925292">字典和列表相互转换</a><br> <a href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p05_turning_dictionary_into_xml.html">6.5 将字典转换为 XML — python3-cookbook 3.0.0 文档</a><br> <a href="https://www.jianshu.com/p/ae932d11f059">使用两个三方库来读写</a></p>
-<p>计算机网络基础：<br> <a href="https://www.bilibili.com/video/BV1FL4y1M7oM?p=17">OSI、TCP&#x2F;IP、计算机基础、操作系统 | bilibili</a><br> <a href="https://www.bilibili.com/video/BV1ZD4y1R7RT/?spm_id_from=333.788.recommend_more_video.0">计算机基础知识 | bilibili</a><br> <a href="https://www.jianshu.com/p/9b9438dff7a2">图解 OSI 七层模型</a><br> <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a></p>
-<p>输入 URL 后执行的全过程：<br> <a href="https://juejin.cn/post/6844903757877084174">这里的三次握手，四次挥手讲的很清楚。</a> ⭐⭐⭐<br> <a href="https://blog.csdn.net/qq_41837249/article/details/117001110">输入 URL 后的全部过程 会用到哪些协议？</a><br> <a href="https://blog.csdn.net/TTTZZZTTTZZZ/article/details/87214111">结合协议来讲，每个步骤在哪一层</a></p>
-]]></content>
-      <categories>
-        <category>爬虫与网络编程基础</category>
-      </categories>
-      <tags>
-        <tag>Coggle 30 Days of ML</tag>
-        <tag>Spider</tag>
-        <tag>Network Programming</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>矢量语义与嵌入之 TF-IDF 检索</title>
     <url>/280EQA3/</url>
     <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>自然语言处理就是研究如何让计算机理解人类语言的一门技术。将计算机不能理解的人类语言编码成可以理解的向量化表示，是 NLP 工作的开始与基础。TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。</p>
@@ -451,6 +253,204 @@
 <li><a href="https://cuiqingcai.com/1319.html">https://cuiqingcai.com/1319.html</a></li>
 </ul>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 30 Days of ML（22 年 3 月） - Coggle 数据科学</a></p>
+]]></content>
+      <categories>
+        <category>爬虫与网络编程基础</category>
+      </categories>
+      <tags>
+        <tag>Coggle 30 Days of ML</tag>
+        <tag>Spider</tag>
+        <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>爬虫与网络编程基础_Task01：计算机网络基础</title>
+    <url>/3VQT4K6/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>为了使网络上获得的数据干净整洁，并且可以为自己的应用所用，我们得想出一些形式来表示应用与网络之间来来往往的数据。最常使用的两种技术就是：XML 和 JSON。</p>
+<span id="more"></span>
+
+<p>但是 Python 中的列表或者字典并不能在 Java 中使用（Java 中使用 HashMap），所以不能直接把 Python 中的字典传给 Java，而是应该发送 Python 与 Java 都能接受的数据。</p>
+<p>因此，两者之间需要一种 <em>Wire Format</em> 来作为互相交换数据的媒介。而 XML 和 JSON 是两种比较常用的 <em>Wire Format</em>。</p>
+<h2 id="0x01-Python-中创建-List"><a href="#0x01-Python-中创建-List" class="headerlink" title="0x01 Python 中创建 List"></a>0x01 Python 中创建 List</h2><h3 id="1-创建列表"><a href="#1-创建列表" class="headerlink" title="1. 创建列表"></a>1. 创建列表</h3><p>在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义列表</span></span><br><span class="line"><span class="built_in">list</span> = [(<span class="string">&quot;小王&quot;</span>,<span class="number">40</span>,<span class="number">50</span>),(<span class="string">&quot;小贾&quot;</span>,<span class="number">50</span>,<span class="number">23</span>)]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(&#39;小王&#39;, 40,50), (&#39;小贾&#39;, 50,23)]</code></p>
+</blockquote>
+<h3 id="2-导入列表"><a href="#2-导入列表" class="headerlink" title="2. 导入列表"></a>2. 导入列表</h3><p>如果想把 Numpy 数组转成 Json 格式，可以首先将数组转为列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data = data.tolist()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-将数据存储为-Json-格式，并进行读取"><a href="#0x02-将数据存储为-Json-格式，并进行读取" class="headerlink" title="0x02 将数据存储为 Json 格式，并进行读取"></a>0x02 将数据存储为 Json 格式，并进行读取</h2><h3 id="JSON-库的一些用法"><a href="#JSON-库的一些用法" class="headerlink" title="JSON 库的一些用法"></a>JSON 库的一些用法</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>json.dumps ()</td>
+<td>将 Python 对象编码成 Json 字符串</td>
+</tr>
+<tr>
+<td>json.loads ()</td>
+<td>将 Json 字符串解码成 Python 对象</td>
+</tr>
+<tr>
+<td>json.dump ()</td>
+<td>将 Python 中的对象转化成 Json 储存到文件中</td>
+</tr>
+<tr>
+<td>json.load ()</td>
+<td>将文件中的 Json 的格式转化成 Python 对象提取</td>
+</tr>
+</tbody></table>
+<p>json.dump () 和 json.dumps () 的区别</p>
+<ul>
+<li>json.dumps () 是把 Python 对象转换成 Json 对象的一个过程，生成的是字符串。</li>
+<li>json.dump () 是把 Python 对象转换成 Json 对象生成一个 fp 的文件流，和文件相关。</li>
+</ul>
+<p>所以后面多的一个 <code>s</code> 可以理解为 <code>string</code></p>
+<p>更详细的内容可以参考 <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a></p>
+<h3 id="1-存储到-JSON-文件中"><a href="#1-存储到-JSON-文件中" class="headerlink" title="1. 存储到 JSON 文件中"></a>1. 存储到 JSON 文件中</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入 json 模块</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为新建 json 文件命名</span></span><br><span class="line">filename = <span class="string">&#x27;info.json&#x27;</span></span><br><span class="line"><span class="comment"># 使用json.dump()方法转为json格式数据</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    json.dump(<span class="built_in">list</span>, file)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 读取 json 文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    info = json.load(file)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (info)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>printout:<br><code>[[&#39;小王&#39;, 40,50], [&#39;小贾&#39;, 50,23]]</code></p>
+</blockquote>
+<p>Tips：</p>
+<ul>
+<li>默认会转为二进制数据，目前存储的 Json 文件内容为：<code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code>。读取的时候默认又转到了可读的 Python 对象。所以读取并打印的时候看见的是字符。</li>
+<li>如果希望文件中不使用二进制存储，通过 <code>ensure_ascii=False</code> 设置不转为二进制，即存储文件时：<code>json.dump(list, file, ensure_ascii=False)</code>。</li>
+</ul>
+<h3 id="2-编码成-JSON-字符串"><a href="#2-编码成-JSON-字符串" class="headerlink" title="2. 编码成 JSON 字符串"></a>2. 编码成 JSON 字符串</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用 json.dumps() 方法转为json格式数据</span></span><br><span class="line"><span class="comment"># 注意：默认会转为二进制数据，使用 ensure_ascii=False 设置不转为二进制</span></span><br><span class="line">json_data = json.dumps(<span class="built_in">list</span>, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span> (json_data)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&quot;小王&quot;, 40,50], [&quot;小贾&quot;, 50,23]]</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">json_data = json.dumps(<span class="built_in">list</span>)</span><br><span class="line"><span class="built_in">print</span>(json_data)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&quot;\u5c0f\u738b&quot;, 40,50], [&quot;\u5c0f\u8d3e&quot;, 50,23]]</code></p>
+</blockquote>
+<p><code>json.dumps()</code> 也是默认编码成二进制数据。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打印数据类型</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(json_data))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&lt;class ‘list’&gt;<br>&lt;class ‘str’&gt;</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">py_data = json.loads(json_data)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(py_data))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&lt;class ‘list’&gt;</p>
+</blockquote>
+<h2 id="0x03-将数据存储为-XML-格式，并进行读取"><a href="#0x03-将数据存储为-XML-格式，并进行读取" class="headerlink" title="0x03 将数据存储为 XML 格式，并进行读取"></a>0x03 将数据存储为 XML 格式，并进行读取</h2><h3 id="XML-eXtensible-Markup-Language"><a href="#XML-eXtensible-Markup-Language" class="headerlink" title="XML (eXtensible Markup Language)"></a>XML (eXtensible Markup Language)</h3><p>主要目的是帮助信息系统交换结构化数据，是一种比 JSON 要老一些的技术。</p>
+<p>XML 代码美化工具：Pretty Printer。</p>
+<p>XML 是一种树状结构的数据。</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142247567.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142248500.png"></p>
+<p>And you can think of this as, like folders on your computer.</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203142255711.png"></p>
+<p>我们要做的，就是从根节点，一层一层向下挖掘，找到这些数据。</p>
+<p>更多信息可以参考：<br> <a href="https://www.w3school.com.cn/xml/index.asp">XML 教程</a><br> <a href="https://www.runoob.com/xml/xml-tutorial.html">XML 教程 | 菜鸟教程</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a></p>
+<h3 id="1-存储为-XML-格式"><a href="#1-存储为-XML-格式" class="headerlink" title="1. 存储为 XML 格式"></a>1. 存储为 XML 格式</h3><p>首先将 List 转为字典：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">index = [<span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>] <span class="comment"># 这里要用 str 型</span></span><br><span class="line">d = <span class="built_in">dict</span>(<span class="built_in">zip</span>(index, <span class="built_in">list</span>))</span><br><span class="line"><span class="built_in">print</span>(d)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#123;&#39;0&#39;: (&#39;小王&#39;, 40,50), &#39;1&#39;: (&#39;小贾&#39;, 50,23)&#125;</code></p>
+</blockquote>
+<p>然后定义一个方法将字典转为 XML。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> Element</span><br><span class="line"></span><br><span class="line"><span class="comment"># Turn a simple dict of key/value pairs into XML</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_xml</span>(<span class="params">tag, d</span>):</span><br><span class="line">    elem = Element(tag)</span><br><span class="line">    <span class="keyword">for</span> key, val <span class="keyword">in</span> d.items():</span><br><span class="line">        child = Element(key)</span><br><span class="line">        child.text = <span class="built_in">str</span>(val)</span><br><span class="line">        elem.append(child)</span><br><span class="line">    <span class="keyword">return</span> elem</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">e = dict_to_xml(<span class="string">&#x27;info&#x27;</span>, d)</span><br><span class="line"><span class="built_in">print</span>(e)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&lt;Element &#39;info&#39; at 0x0000018CA90C69A8&gt;</code></p>
+</blockquote>
+<p>或者可以使用 <code>pip3 install dicttoxml</code> 来转换。</p>
+<h3 id="2-读取-XML-格式"><a href="#2-读取-XML-格式" class="headerlink" title="2. 读取 XML 格式"></a>2. 读取 XML 格式</h3><p>转换结果是一个 <code>Element</code> 实例。对于 I&#x2F;O 操作，使用 <code>xml.etree.ElementTree</code> 中的 <code>tostring()</code> 函数很容易就能将它转换成一个字节字符串。例如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> tostring</span><br><span class="line">tostring(e)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>b&quot;&lt;info&gt;&lt;0&gt;(&#39;&amp;#23567;&amp;#29579;&#39;, 40,50)&lt;/0&gt;&lt;1&gt;(&#39;&amp;#23567;&amp;#36158;&#39;, 50,23)&lt;/1&gt;&lt;/info&gt;&quot;</code></p>
+</blockquote>
+<p>目前的 <code>e</code> 就是一个树状结构的示例，探索一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(e.tag)</span><br><span class="line"><span class="built_in">print</span>(e.text)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>info</code><br><code>None</code></p>
+</blockquote>
+<p>相当于目前在 <code>root</code> 节点。</p>
+<p>把子节点打印出来：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    <span class="built_in">print</span>(child.tag)</span><br><span class="line">    <span class="built_in">print</span> (child.text)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>0<br>(‘小王’, 40,50)<br>1<br>(‘小贾’, 50,23)</p>
+</blockquote>
+<p>或者也可以将节点读取出来后，存成字典或者列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">to_dict = &#123;&#125;</span><br><span class="line">to_list = []</span><br><span class="line"><span class="keyword">for</span> child <span class="keyword">in</span> e:</span><br><span class="line">    to_dict[child.tag] = child.text</span><br><span class="line">    </span><br><span class="line">to_list.append(to_dict)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(to_dict)</span><br><span class="line"><span class="built_in">print</span> (to_list)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;</code><br><code>[&#123;&#39;0&#39;: &quot;(&#39;小王&#39;, 40,50)&quot;, &#39;1&#39;: &quot;(&#39;小贾&#39;, 50,23)&quot;&#125;]</code></p>
+</blockquote>
+<p>也可以使用 <code>pip3 install xmltodict</code> 来转换并读取。</p>
+<h2 id="0x04-计算机网络基础"><a href="#0x04-计算机网络基础" class="headerlink" title="0x04 计算机网络基础"></a>0x04 计算机网络基础</h2><p>学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
+<h3 id="1-网络层次分层"><a href="#1-网络层次分层" class="headerlink" title="1. 网络层次分层"></a>1. 网络层次分层</h3><h4 id="OSI-模型"><a href="#OSI-模型" class="headerlink" title="OSI 模型"></a>OSI 模型</h4><ul>
+<li><p>OSI 概念：</p>
+<ul>
+<li>为了使不同计算机厂家生产的计算机能够相互通信，以便在更大的范围内建立计算机网络，国际标准化组织（ISO）在 1978 年提出了”开放系统互联参考模型”，即著名的 OSI&#x2F;RM 模型（Open System Interconnection&#x2F;Reference Model）。“开放性”是指世界上任何地方、任何遵循 OSI 标准的系统，只要连接起来就能互相通信。</li>
+<li>注意：OSI 是一种 <strong>模型</strong>，并不是实际投入使用的协议，而是用来了解和设计网络体系结构的。</li>
+</ul>
+</li>
+<li><p>OSI 模型的目的：</p>
+<ul>
+<li>框架化；SOA。</li>
+<li>规范不同系统的互联标准，使两个不同的系统能够较容易的通信，而不需要改变底层的硬件或者软件的逻辑。</li>
+</ul>
+</li>
+<li><p>OSI 模型分为 7 层：</p>
+<ul>
+<li>将计算机网络体系结构的通信协议划分为七层，自下而上依次为：<ul>
+<li>物理层（Physics Layer）</li>
+<li>数据链路层（Data Link Layer）</li>
+<li>网络层（Network Layer）</li>
+<li>传输层（Transport Layer）</li>
+<li>会话层（Session Layer）</li>
+<li>表示层（Presentation Layer）</li>
+<li>应用层（Application Layer）</li>
+</ul>
+</li>
+<li>其中第四层完成数据传输服务，上面三层面向用户（ User Support Layers）。</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151239418.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151240138.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151240443.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151228935.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151249700.png"></p>
+<h4 id="TCP-x2F-IP-协议"><a href="#TCP-x2F-IP-协议" class="headerlink" title="TCP&#x2F;IP 协议"></a>TCP&#x2F;IP 协议</h4><p>目前使用最多的是 TCP&#x2F;IP 四层协议。</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151129079.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151301087.png"></p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203151135178.png"></p>
+<h4 id="输入-URL-后执行的全过程"><a href="#输入-URL-后执行的全过程" class="headerlink" title="输入 URL 后执行的全过程"></a>输入 URL 后执行的全过程</h4><p>从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？</p>
+<ol>
+<li>DNS 域名解析：客户端浏览器通过 DNS 解析得到 Coggle 网站的 IP 地址。</li>
+<li>客户端与服务端建立 TCP 连接：TCP 三次握手。</li>
+<li>客户端发起 HTTP 请求：建立 TCP 连接后，把客户端信息（携带 cookies）传递给服务端。</li>
+<li>服务端响应 HTTP 请求。</li>
+<li>释放 TCP 连接：TCP 四次挥手。</li>
+<li>浏览器解析 HTML 代码，并请求 HTML 代码中的资源（如图片、音频、视频、CSS、JS 等等）。</li>
+<li>浏览器对页面进行渲染呈现给用户。</li>
+</ol>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>JSON 格式比较好理解，不多赘述。</p>
+<p>XML 格式是一种树状结构的数据表示，数据的写入与读取都是基于这种结构的。所以首先要理解 XML 的这种内在结构，才能明白为什么 XML 的读写操作是这个样子的，否则直接照搬方法也很难清楚为什么这样做。我这里也只是浅尝辄止的了解基础概念，因为工作重心不在这，暂时不需要太深入的研究。</p>
+<p>虽然 XML 的格式看起来跟 HTML 十分相似，但这两种格式是负责不一样的工作的。<strong>XML 被设计用来传输和存储数据。HTML 被设计用来显示数据。</strong> 而且 HTML 中使用的标签（以及 HTML 的结构）是预定义好的；而 <strong>XML 仅仅是纯文本</strong>，允许创作者定义自己的标签和自己的文档结构。也就是说是针对自己的应用自行设计标签与结构，使得能够读懂 XML 的应用程序可以有针对性地处理 XML 的标签。标签的功能性意义依赖于应用程序的特性。</p>
+<p>之前学过的计算机网络基础大部分都还给老师了，只是模糊地记得一些概念，但要我去说每个层或者每种协议里面传输了哪些数据，数据分为哪几种，各自负责什么功能，或者计算一下 IP 已经是想不起来了。这次先复习一下 OSI 和 TCP&#x2F;IP 的基本结构。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>Json 读写：<br> <a href="https://www.cnblogs.com/tizer/p/11067098.html">Python 中如何将数据存储为 json 格式的文件</a><br> <a href="https://www.w3cschool.cn/article/30808038.html">Python json.dumps()函数使用解析 | w3c 笔记</a><br> <a href="https://cloud.tencent.com/developer/article/1181728">Python json 模块 dumps、dump、loads、load 的使用</a></p>
+<p>XML 读写：<br><a href="https://www.w3school.com.cn/xml/xml_intro.asp">XML 简介</a><br> <a href="https://www.coursera.org/learn/python-network-data/lecture/EaR2d/13-2-extensible-markup-language-xml">13.2 eXtensible Markup Language (XML) | Coursera</a><br> <a href="https://zhmou.github.io/2021/10/12/Use-Python-to-Read-and-Write-XML-files/">使用 Python 读写 XML 文件 | Zh 某的备忘录</a><br> <a href="https://www.bilibili.com/video/BV1Sx411Q7zp?from=search&seid=13822148224876736274&spm_id_from=333.337.0.0">【一起学 Python·网络爬虫】XML 简介与解析 | bilibili</a><br> <a href="https://blog.csdn.net/Strive_0902/article/details/119856186">Python 列表转字典</a><br> <a href="https://blog.csdn.net/Jarry_cm/article/details/104925292">字典和列表相互转换</a><br> <a href="https://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p05_turning_dictionary_into_xml.html">6.5 将字典转换为 XML — python3-cookbook 3.0.0 文档</a><br> <a href="https://www.jianshu.com/p/ae932d11f059">使用两个三方库来读写</a></p>
+<p>计算机网络基础：<br> <a href="https://www.bilibili.com/video/BV1FL4y1M7oM?p=17">OSI、TCP&#x2F;IP、计算机基础、操作系统 | bilibili</a><br> <a href="https://www.bilibili.com/video/BV1ZD4y1R7RT/?spm_id_from=333.788.recommend_more_video.0">计算机基础知识 | bilibili</a><br> <a href="https://www.jianshu.com/p/9b9438dff7a2">图解 OSI 七层模型</a><br> <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a></p>
+<p>输入 URL 后执行的全过程：<br> <a href="https://juejin.cn/post/6844903757877084174">这里的三次握手，四次挥手讲的很清楚。</a> ⭐⭐⭐<br> <a href="https://blog.csdn.net/qq_41837249/article/details/117001110">输入 URL 后的全部过程 会用到哪些协议？</a><br> <a href="https://blog.csdn.net/TTTZZZTTTZZZ/article/details/87214111">结合协议来讲，每个步骤在哪一层</a></p>
 ]]></content>
       <categories>
         <category>爬虫与网络编程基础</category>
@@ -824,7 +824,7 @@
   <entry>
     <title>爬虫与网络编程基础_Task03_BS4基础使用</title>
     <url>/2K8XAGY/</url>
-    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p><a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a> 是一个可以从HTML或XML文件中提取数据的Python库。它能够通过你喜欢的转换器实现惯用的文档导航，查找，修改文档的方式。Beautiful Soup 会帮你节省数小时甚至数天的工作时间。</p>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p><a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a> 是一个可以从 HTML 或 XML 文件中提取数据的 Python 库。它能够通过你喜欢的转换器实现惯用的文档导航，查找，修改文档的方式。Beautiful Soup 会帮你节省数小时甚至数天的工作时间。</p>
 <span id="more"></span>
 
 <ul>
@@ -1038,6 +1038,89 @@
       </tags>
   </entry>
   <entry>
+    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
+    <url>/25S7X1E/</url>
+    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
+<li>任务内容：<ul>
+<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
+<li>使用 <code>jieba</code> 对文本进行分词</li>
+<li>使用 <code>TFIDF</code> 对文本进行编码</li>
+<li>思考如何使用 TFIDF 计算文本相似度？</li>
+</ul>
+</li>
+<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
+</ul>
+<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
+<p>首先导入需要用到的包：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
+
+<p>读取数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
+
+<p>取字典 <code>train_query</code> 的前十条数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
+</blockquote>
+<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
+<p>有三种分词模式，这里使用默认的精确模式。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
+<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
+</blockquote>
+<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
+</blockquote>
+<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
+<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
+</blockquote>
+<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
+<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
+<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
+</blockquote>
+<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
+<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Output:</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
+<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
+<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
+]]></content>
+      <categories>
+        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
     <url>/2RYYQJ0/</url>
     <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
@@ -1159,89 +1242,6 @@
         <tag>Hexo</tag>
         <tag>Gitee</tag>
         <tag>Github</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
-    <url>/25S7X1E/</url>
-    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
-<li>任务内容：<ul>
-<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
-<li>使用 <code>jieba</code> 对文本进行分词</li>
-<li>使用 <code>TFIDF</code> 对文本进行编码</li>
-<li>思考如何使用 TFIDF 计算文本相似度？</li>
-</ul>
-</li>
-<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
-</ul>
-<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
-<p>首先导入需要用到的包：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
-
-<p>读取数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
-
-<p>取字典 <code>train_query</code> 的前十条数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
-</blockquote>
-<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
-<p>有三种分词模式，这里使用默认的精确模式。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
-<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
-</blockquote>
-<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
-</blockquote>
-<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
-<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
-</blockquote>
-<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
-<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
-<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
-</blockquote>
-<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
-<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Output:</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
-<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
-<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
-]]></content>
-      <categories>
-        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
