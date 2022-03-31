@@ -1,106 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>矢量语义与嵌入之 TF-IDF 检索</title>
-    <url>/280EQA3/</url>
-    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>自然语言处理就是研究如何让计算机理解人类语言的一门技术。将计算机不能理解的人类语言编码成可以理解的向量化表示，是 NLP 工作的开始与基础。TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。</p>
-<span id="more"></span>
-
-<blockquote>
-<p>这块内容第一次学的时候比较难理解，后来看到 <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">莫烦老师 </a> 讲的才算是彻底明白。补充一下这块内容。</p>
-</blockquote>
-<p>NLP 的首要任务：Vector Semantics and Embedding，也可以说是文本向量化，或着文本特征提取。想要表达的就是，NLP 首先要做的是，将文本语言变成计算机可以理解的语言——向量，否则后面的工作自然是无法开展的。</p>
-<p>在文本向量化的问题中，词袋模型（Bag-of-Words Model）和词嵌入（Word Embedding）是两种最常用的模型。更准确地说，词向量只能表征单个词，如果要表示文本，需要做一些额外的处理。本篇笔记首先学习词袋模型与 TF-IDF。</p>
-<h2 id="0x01-TF-IDF-的使用场景"><a href="#0x01-TF-IDF-的使用场景" class="headerlink" title="0x01 TF-IDF 的使用场景"></a>0x01 <code>TF-IDF</code> 的使用场景</h2><p>以搜索引擎为例，有了批量性地召回相对合适的内容后，比如我已经从 1 亿个网页中召回了 100 万个，但 100 万对于我来说，已经够让我看上好几年了。怎么能再继续提升一下精确度，找到我更在乎的内容呢？</p>
-<p>所以需要对召回的这 100 万个内容，做一个【问题与内容】的相似度排序，只返回那些头部内容（问题指的是用户搜索的词条，内容就是我们召回的网页）。</p>
-<p>因此简单来说，<code>TF-IDF</code> 要做的就是相似度排序，我们取相似度最高的内容返回给用户。从本质上来说，<code>TF-IDF</code> 是一种 <strong>向量表达</strong> 把语言 <strong>向量化</strong>，将词语，句子，文章转为词向量，句向量，文章向量。因为计算机只能理解数字，所以把我们要 <strong>把计算机不能理解的文本转为向量</strong>。等看完后面的内容就会深刻理解为什么 <code>TF-IFDF</code> 是 <strong>向量表达</strong>。</p>
-<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 <code>TF-IDF</code> 的原理</h2><p><code>TF</code> ：词频（Term Frequency）<br><code>IDF</code> ：逆文本频率指数（Inverse Document Frequency）</p>
-<ul>
-<li>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。<ul>
-<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
-<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
-</ul>
-</li>
-<li>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。<ul>
-<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
-<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
-<li>如果你搜索的关键词是“莫烦”，<strong>全网都没有几个</strong> 叫“莫烦”的，那么“莫烦” <code>IDF</code> 就会很大，即“莫烦”的 <strong>区分力更强</strong>。</li>
-</ul>
-</li>
-<li>既然 <code>TF</code> 是以单篇文章为中心的局部词信息，但并不知道如果放到全局（所有文章），哪些 <code>TF</code> 高频词是全局垃圾词（中性词），是搜索时没有意义的词； <code>IDF</code> 是统计所有文章的全局词信息，可以分辨 <code>TF</code> 中的哪些高频词是全局垃圾词，但并不知道每个单篇文章中的高频关键词。那么为什么不把两种指标结合，发挥各自的优势？因此通过 <code>TF-IDF</code> 来表达一篇文章。</li>
-</ul>
-</li>
-<li><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code><ul>
-<li>将两种指数相乘，得到 <code>TF-IDF</code> 表达一篇文章。</li>
-<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
-</ul>
-</li>
-</ul>
-<p>举个例子：比如有以下三篇文章，我们选取图中的四个词来表达这三篇文章。</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211003678.png" alt="|700"></p>
-<p>计算出这四个词的 <code>TF</code> 与 <code>IDF</code> 之后，将两者相乘，得到 <code>TF-IDF</code>。</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211033747.png"></p>
-<p>通过这些词的分数高低，可以判断每篇文章的关键词是什么。比如文章 1，即使“爱”的词频最高，是文章 1 中出现最多的词，但是通过 <code>IDF</code> 判断得知是全局垃圾词，反而“莫烦”的全局区分力更强（即使词频不高），所以根据综合评分 <code>TF-IDF</code> 得知——在文章 1 中，“莫烦” 的权值更重，更能代表这篇文章。</p>
-<p>至此，我们得到了三篇文章的向量化表示，那么如何在搜索中应用这三个文章向量呢？</p>
-<h2 id="0x03-TF-IDF-的应用"><a href="#0x03-TF-IDF-的应用" class="headerlink" title="0x03 TF-IDF 的应用"></a>0x03 <code>TF-IDF</code> 的应用</h2><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211047534.png"></p>
-<p>假设我们搜索“莫烦 Python”，计算机首先通过词表的模式，计算这个搜索问句（“莫烦 Python”）的 <code>IF-IDF</code> 值。然后计算搜索问句与每篇文章的 <code>IF-IDF</code> 值的 <code>cosine</code> 距离。简单来说就是将所有文章，按照词向量的维度放入四维空间（对应四个词），然后将搜索问句向量也放进去，最后查找哪一篇文章离这个搜索问句最近，越近说明相似度越高。由此找到与搜索问句最匹配的文章。图中是用三维空间来说明，一样的意思。</p>
-<p>动手实操一下吧： <a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
-<h2 id="0x04-向量化表达"><a href="#0x04-向量化表达" class="headerlink" title="0x04 向量化表达"></a>0x04 向量化表达</h2><p>向量化是 NLP 工作的基础。将问句，词语，句子或者文章，通过数字的形式投射到空间中，也就是将这些语言转为计算机可以理解的向量，然后按照向量的模式指向空间中的某个位置。</p>
-<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211101372.png"></p>
-<p>如图，比如 <code>0,23,116.5,21</code> 就是文章 1 的向量表达，下面是文章 2 与搜索问题的向量表达。所以 <code>TF-IDF</code> 本质上是一种向量表达。NLP 中还有许多其他的向量表达与应用，<code>TF-IDF</code> 是其中一种比较基础且好用的一种方式。</p>
-<p>在实际应用中，一般不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。因此词袋模型的文本表征，其实是一种稀疏向量表达，因为向量里面的元素大部分都是 0，只有出现在当前文本的词语才有词频的赋值。</p>
-<blockquote>
-<p>拓展：<br><code>TF-IDF</code> 就是一张将 <code>词语重要程度</code> 转换成 <code>向量</code> 的文档展示方式，那么在这些向量中，必定会有主导型元素，而这些元素其实就是这篇文档中很重要的关键词了。因此除了搜索匹配之外，<code>TF-IDF</code> 还有很多的应用，比如将挑选文档中的关键词（将主导元素提取出来）。<br>另外，由于 <code>IDF</code> 是所有文档的全局信息，那么带有不同属性的文档集群可能拥有不同性质的 <code>IDF</code> 分布。比如金融领域的 <code>IDF</code> 与生物领域的 <code>IDF</code> ，如果我要搜索金融相关的信息，却是在生物领域的 <code>IDF</code> 下搜索，那么得到的结果必然是不准确的。因此我需要一个带有金融属性的 <code>IDF</code> 表来优化对金融子领域的搜索。这也是 IDF 比较重要的应用方式之一。</p>
-</blockquote>
-<h2 id="0x05-词袋模型与-TF-IDF"><a href="#0x05-词袋模型与-TF-IDF" class="headerlink" title="0x05 词袋模型与 TF-IDF"></a>0x05 词袋模型与 <code>TF-IDF</code></h2><p>词袋（BoW）模型是数字文本表示的最简单形式。像单词本身一样，我们可以将一个句子表示为一个词向量包（一个数字串）。初入 NLP 可能会对这些概念产生困惑，比如什么是词袋模型，<code>TF-IDF</code> 就是词袋模型吗，下面来解释一下。</p>
-<h3 id="词集与词袋模型"><a href="#词集与词袋模型" class="headerlink" title="词集与词袋模型"></a>词集与词袋模型</h3><p>词袋模型将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。这个模型的主要作用也就是对文本做单词切分，有点从一篇文章里提取关键词这种意思，旨在 <strong>用向量来描述文本的主要内容</strong>，其中包含了词集与词袋两种。</p>
-<p><strong>词集模型</strong>：单词构成的集合，集合中每个元素只有一个，即词集中的每个元素为一个单词，词集中的每个单词只出现一次，不重复。</p>
-<p><strong>词袋模型</strong>：在词集的基础上加入了频率这个维度，即统计单词在文档中出现的次数（令牌化和出现频数统计），通常我们在应用中都选用词袋模型。或者说，在词集的基础上，如果一个单词在文档中出现不止一次，统计其出现的次数。说人话就是，将每篇文章看成一袋子词，并忽略每个词出现的顺序。</p>
-<h3 id="词袋模型与-TF-IDF-联合使用"><a href="#词袋模型与-TF-IDF-联合使用" class="headerlink" title="词袋模型与 TF-IDF 联合使用"></a>词袋模型与 <code>TF-IDF</code> 联合使用</h3><p>词袋创建一组向量，其中包含文档中的单词出现次数，而 <code>TF-IDF</code> 编码可以识别其中每个单词的区分力，然后赋予权重。因此通过词袋模型是一种基础模型， <code>TF-IDF</code> 是一种编码方式，基于词袋模型，我们可以采用 <code>TF-IDF</code> 编码，也可以使用 One-Hot 编码或者其他的编码方式。</p>
-<p>我理解就是，恰好词袋模型实现了词频统计，恰好这正是 <code>TF</code> 要做的事情，所以再加上 <code>IDF</code> 联合起来，基于词袋模型实现了我们要做的  <code>TF-IDF</code> 编码。</p>
-<h2 id="0x06-文本向量化"><a href="#0x06-文本向量化" class="headerlink" title="0x06 文本向量化"></a>0x06 文本向量化</h2><p>刚入门 NLP 想必会对这些专业名词头晕眼花，下面简单列举一下关系：</p>
-<ul>
-<li>文本向量化（文本表征 Word Representation）<ul>
-<li>词袋模型及其编码方法（BoW）<ul>
-<li>One-Hot 编码</li>
-<li>TF 编码</li>
-<li>TF-IDF 编码</li>
-<li>N-gram 编码</li>
-</ul>
-</li>
-<li>词嵌入模型（Word Embedding）<ul>
-<li>Word2Vec<ul>
-<li>Skip-Gram 模型</li>
-<li>CBOW 模型</li>
-</ul>
-</li>
-<li>GloVe</li>
-</ul>
-</li>
-<li>主题模型（Topic Model）<ul>
-<li>LSA 模型</li>
-<li>PLSA 模型</li>
-<li>LDA 模型</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Bag-of-Words Model（BoW）和 <code>TF-IDF</code> 编码都是帮助我们将文本句子转换为向量的技术，是使得机器理解文本的技术。</p>
-<p>但是 BoW 这样的技术会有一些弊端，比如语序关系丢失（忽略上下文），异常依赖于优秀的词汇库，缺乏相似词之间的表达，并且向量稀疏。为了解决这些问题，下一篇笔记学习另一类向量化的方法——Word Embedding 词嵌入。即自然语言中的词语转化为稠密的向量，相似的词会有相似的向量表示，这样的转化方便挖掘文字中词语和句子之间的特征。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
-<p>词袋模型与 TF-IDF:<br> <a href="https://www.jianshu.com/p/0422853b57a8">词袋模型与 TF-IDF</a><br> <a href="https://blog.csdn.net/fendouaini/article/details/108655680">词袋模型和 TF-IDF</a><br> <a href="https://blog.csdn.net/baidu_41797613/article/details/121268152">词袋模型与 TF-IDF 模型</a><br> <a href="https://www.jiqizhixin.com/graph/technologies/87c62b00-48b2-4e2a-8122-9876a3d3e59e">词袋模型 | 机器之心</a></p>
-<p> 词袋模型与词嵌入：<br>  <a href="https://davidchen93.blog.csdn.net/article/details/79993369?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&utm_relevant_index=1">词袋模型和词向量模型概念介绍</a><br>  <a href="https://zhuanlan.zhihu.com/p/71065945">从词袋模型 TF-IDF 到词嵌入 Word Embedding</a></p>
-<p>斯坦福经典 NLP 教材：<br>  <a href="https://web.stanford.edu/~jurafsky/slp3/6.pdf">https://web.stanford.edu/~jurafsky&#x2F;slp3&#x2F;6.pdf</a></p>
-]]></content>
-      <categories>
-        <category>Dive into NLP</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>爬虫与网络编程基础</title>
     <url>/2FSK6BP/</url>
     <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
@@ -261,6 +161,106 @@
         <tag>Coggle 30 Days of ML</tag>
         <tag>Spider</tag>
         <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>矢量语义与嵌入之 TF-IDF 检索</title>
+    <url>/280EQA3/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>自然语言处理就是研究如何让计算机理解人类语言的一门技术。将计算机不能理解的人类语言编码成可以理解的向量化表示，是 NLP 工作的开始与基础。TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>这块内容第一次学的时候比较难理解，后来看到 <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">莫烦老师 </a> 讲的才算是彻底明白。补充一下这块内容。</p>
+</blockquote>
+<p>NLP 的首要任务：Vector Semantics and Embedding，也可以说是文本向量化，或着文本特征提取。想要表达的就是，NLP 首先要做的是，将文本语言变成计算机可以理解的语言——向量，否则后面的工作自然是无法开展的。</p>
+<p>在文本向量化的问题中，词袋模型（Bag-of-Words Model）和词嵌入（Word Embedding）是两种最常用的模型。更准确地说，词向量只能表征单个词，如果要表示文本，需要做一些额外的处理。本篇笔记首先学习词袋模型与 TF-IDF。</p>
+<h2 id="0x01-TF-IDF-的使用场景"><a href="#0x01-TF-IDF-的使用场景" class="headerlink" title="0x01 TF-IDF 的使用场景"></a>0x01 <code>TF-IDF</code> 的使用场景</h2><p>以搜索引擎为例，有了批量性地召回相对合适的内容后，比如我已经从 1 亿个网页中召回了 100 万个，但 100 万对于我来说，已经够让我看上好几年了。怎么能再继续提升一下精确度，找到我更在乎的内容呢？</p>
+<p>所以需要对召回的这 100 万个内容，做一个【问题与内容】的相似度排序，只返回那些头部内容（问题指的是用户搜索的词条，内容就是我们召回的网页）。</p>
+<p>因此简单来说，<code>TF-IDF</code> 要做的就是相似度排序，我们取相似度最高的内容返回给用户。从本质上来说，<code>TF-IDF</code> 是一种 <strong>向量表达</strong> 把语言 <strong>向量化</strong>，将词语，句子，文章转为词向量，句向量，文章向量。因为计算机只能理解数字，所以把我们要 <strong>把计算机不能理解的文本转为向量</strong>。等看完后面的内容就会深刻理解为什么 <code>TF-IFDF</code> 是 <strong>向量表达</strong>。</p>
+<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 <code>TF-IDF</code> 的原理</h2><p><code>TF</code> ：词频（Term Frequency）<br><code>IDF</code> ：逆文本频率指数（Inverse Document Frequency）</p>
+<ul>
+<li>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。<ul>
+<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
+<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
+</ul>
+</li>
+<li>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。<ul>
+<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
+<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
+<li>如果你搜索的关键词是“莫烦”，<strong>全网都没有几个</strong> 叫“莫烦”的，那么“莫烦” <code>IDF</code> 就会很大，即“莫烦”的 <strong>区分力更强</strong>。</li>
+</ul>
+</li>
+<li>既然 <code>TF</code> 是以单篇文章为中心的局部词信息，但并不知道如果放到全局（所有文章），哪些 <code>TF</code> 高频词是全局垃圾词（中性词），是搜索时没有意义的词； <code>IDF</code> 是统计所有文章的全局词信息，可以分辨 <code>TF</code> 中的哪些高频词是全局垃圾词，但并不知道每个单篇文章中的高频关键词。那么为什么不把两种指标结合，发挥各自的优势？因此通过 <code>TF-IDF</code> 来表达一篇文章。</li>
+</ul>
+</li>
+<li><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code><ul>
+<li>将两种指数相乘，得到 <code>TF-IDF</code> 表达一篇文章。</li>
+<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
+</ul>
+</li>
+</ul>
+<p>举个例子：比如有以下三篇文章，我们选取图中的四个词来表达这三篇文章。</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211003678.png" alt="|700"></p>
+<p>计算出这四个词的 <code>TF</code> 与 <code>IDF</code> 之后，将两者相乘，得到 <code>TF-IDF</code>。</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211033747.png"></p>
+<p>通过这些词的分数高低，可以判断每篇文章的关键词是什么。比如文章 1，即使“爱”的词频最高，是文章 1 中出现最多的词，但是通过 <code>IDF</code> 判断得知是全局垃圾词，反而“莫烦”的全局区分力更强（即使词频不高），所以根据综合评分 <code>TF-IDF</code> 得知——在文章 1 中，“莫烦” 的权值更重，更能代表这篇文章。</p>
+<p>至此，我们得到了三篇文章的向量化表示，那么如何在搜索中应用这三个文章向量呢？</p>
+<h2 id="0x03-TF-IDF-的应用"><a href="#0x03-TF-IDF-的应用" class="headerlink" title="0x03 TF-IDF 的应用"></a>0x03 <code>TF-IDF</code> 的应用</h2><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211047534.png"></p>
+<p>假设我们搜索“莫烦 Python”，计算机首先通过词表的模式，计算这个搜索问句（“莫烦 Python”）的 <code>IF-IDF</code> 值。然后计算搜索问句与每篇文章的 <code>IF-IDF</code> 值的 <code>cosine</code> 距离。简单来说就是将所有文章，按照词向量的维度放入四维空间（对应四个词），然后将搜索问句向量也放进去，最后查找哪一篇文章离这个搜索问句最近，越近说明相似度越高。由此找到与搜索问句最匹配的文章。图中是用三维空间来说明，一样的意思。</p>
+<p>动手实操一下吧： <a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<h2 id="0x04-向量化表达"><a href="#0x04-向量化表达" class="headerlink" title="0x04 向量化表达"></a>0x04 向量化表达</h2><p>向量化是 NLP 工作的基础。将问句，词语，句子或者文章，通过数字的形式投射到空间中，也就是将这些语言转为计算机可以理解的向量，然后按照向量的模式指向空间中的某个位置。</p>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203211101372.png"></p>
+<p>如图，比如 <code>0,23,116.5,21</code> 就是文章 1 的向量表达，下面是文章 2 与搜索问题的向量表达。所以 <code>TF-IDF</code> 本质上是一种向量表达。NLP 中还有许多其他的向量表达与应用，<code>TF-IDF</code> 是其中一种比较基础且好用的一种方式。</p>
+<p>在实际应用中，一般不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。因此词袋模型的文本表征，其实是一种稀疏向量表达，因为向量里面的元素大部分都是 0，只有出现在当前文本的词语才有词频的赋值。</p>
+<blockquote>
+<p>拓展：<br><code>TF-IDF</code> 就是一张将 <code>词语重要程度</code> 转换成 <code>向量</code> 的文档展示方式，那么在这些向量中，必定会有主导型元素，而这些元素其实就是这篇文档中很重要的关键词了。因此除了搜索匹配之外，<code>TF-IDF</code> 还有很多的应用，比如将挑选文档中的关键词（将主导元素提取出来）。<br>另外，由于 <code>IDF</code> 是所有文档的全局信息，那么带有不同属性的文档集群可能拥有不同性质的 <code>IDF</code> 分布。比如金融领域的 <code>IDF</code> 与生物领域的 <code>IDF</code> ，如果我要搜索金融相关的信息，却是在生物领域的 <code>IDF</code> 下搜索，那么得到的结果必然是不准确的。因此我需要一个带有金融属性的 <code>IDF</code> 表来优化对金融子领域的搜索。这也是 IDF 比较重要的应用方式之一。</p>
+</blockquote>
+<h2 id="0x05-词袋模型与-TF-IDF"><a href="#0x05-词袋模型与-TF-IDF" class="headerlink" title="0x05 词袋模型与 TF-IDF"></a>0x05 词袋模型与 <code>TF-IDF</code></h2><p>词袋（BoW）模型是数字文本表示的最简单形式。像单词本身一样，我们可以将一个句子表示为一个词向量包（一个数字串）。初入 NLP 可能会对这些概念产生困惑，比如什么是词袋模型，<code>TF-IDF</code> 就是词袋模型吗，下面来解释一下。</p>
+<h3 id="词集与词袋模型"><a href="#词集与词袋模型" class="headerlink" title="词集与词袋模型"></a>词集与词袋模型</h3><p>词袋模型将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。这个模型的主要作用也就是对文本做单词切分，有点从一篇文章里提取关键词这种意思，旨在 <strong>用向量来描述文本的主要内容</strong>，其中包含了词集与词袋两种。</p>
+<p><strong>词集模型</strong>：单词构成的集合，集合中每个元素只有一个，即词集中的每个元素为一个单词，词集中的每个单词只出现一次，不重复。</p>
+<p><strong>词袋模型</strong>：在词集的基础上加入了频率这个维度，即统计单词在文档中出现的次数（令牌化和出现频数统计），通常我们在应用中都选用词袋模型。或者说，在词集的基础上，如果一个单词在文档中出现不止一次，统计其出现的次数。说人话就是，将每篇文章看成一袋子词，并忽略每个词出现的顺序。</p>
+<h3 id="词袋模型与-TF-IDF-联合使用"><a href="#词袋模型与-TF-IDF-联合使用" class="headerlink" title="词袋模型与 TF-IDF 联合使用"></a>词袋模型与 <code>TF-IDF</code> 联合使用</h3><p>词袋创建一组向量，其中包含文档中的单词出现次数，而 <code>TF-IDF</code> 编码可以识别其中每个单词的区分力，然后赋予权重。因此通过词袋模型是一种基础模型， <code>TF-IDF</code> 是一种编码方式，基于词袋模型，我们可以采用 <code>TF-IDF</code> 编码，也可以使用 One-Hot 编码或者其他的编码方式。</p>
+<p>我理解就是，恰好词袋模型实现了词频统计，恰好这正是 <code>TF</code> 要做的事情，所以再加上 <code>IDF</code> 联合起来，基于词袋模型实现了我们要做的  <code>TF-IDF</code> 编码。</p>
+<h2 id="0x06-文本向量化"><a href="#0x06-文本向量化" class="headerlink" title="0x06 文本向量化"></a>0x06 文本向量化</h2><p>刚入门 NLP 想必会对这些专业名词头晕眼花，下面简单列举一下关系：</p>
+<ul>
+<li>文本向量化（文本表征 Word Representation）<ul>
+<li>词袋模型及其编码方法（BoW）<ul>
+<li>One-Hot 编码</li>
+<li>TF 编码</li>
+<li>TF-IDF 编码</li>
+<li>N-gram 编码</li>
+</ul>
+</li>
+<li>词嵌入模型（Word Embedding）<ul>
+<li>Word2Vec<ul>
+<li>Skip-Gram 模型</li>
+<li>CBOW 模型</li>
+</ul>
+</li>
+<li>GloVe</li>
+</ul>
+</li>
+<li>主题模型（Topic Model）<ul>
+<li>LSA 模型</li>
+<li>PLSA 模型</li>
+<li>LDA 模型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Bag-of-Words Model（BoW）和 <code>TF-IDF</code> 编码都是帮助我们将文本句子转换为向量的技术，是使得机器理解文本的技术。</p>
+<p>但是 BoW 这样的技术会有一些弊端，比如语序关系丢失（忽略上下文），异常依赖于优秀的词汇库，缺乏相似词之间的表达，并且向量稀疏。为了解决这些问题，下一篇笔记学习另一类向量化的方法——Word Embedding 词嵌入。即自然语言中的词语转化为稠密的向量，相似的词会有相似的向量表示，这样的转化方便挖掘文字中词语和句子之间的特征。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
+<p>词袋模型与 TF-IDF:<br> <a href="https://www.jianshu.com/p/0422853b57a8">词袋模型与 TF-IDF</a><br> <a href="https://blog.csdn.net/fendouaini/article/details/108655680">词袋模型和 TF-IDF</a><br> <a href="https://blog.csdn.net/baidu_41797613/article/details/121268152">词袋模型与 TF-IDF 模型</a><br> <a href="https://www.jiqizhixin.com/graph/technologies/87c62b00-48b2-4e2a-8122-9876a3d3e59e">词袋模型 | 机器之心</a></p>
+<p> 词袋模型与词嵌入：<br>  <a href="https://davidchen93.blog.csdn.net/article/details/79993369?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1.pc_relevant_default&utm_relevant_index=1">词袋模型和词向量模型概念介绍</a><br>  <a href="https://zhuanlan.zhihu.com/p/71065945">从词袋模型 TF-IDF 到词嵌入 Word Embedding</a></p>
+<p>斯坦福经典 NLP 教材：<br>  <a href="https://web.stanford.edu/~jurafsky/slp3/6.pdf">https://web.stanford.edu/~jurafsky&#x2F;slp3&#x2F;6.pdf</a></p>
+]]></content>
+      <categories>
+        <category>Dive into NLP</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
@@ -1038,89 +1038,6 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
-    <url>/25S7X1E/</url>
-    <content><![CDATA[<h1 id="阿里灵杰-Task01-环境配置、实践数据下载"><a href="#阿里灵杰-Task01-环境配置、实践数据下载" class="headerlink" title="阿里灵杰_Task01_环境配置、实践数据下载"></a>阿里灵杰_Task01_环境配置、实践数据下载</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
-<li>任务内容：<ul>
-<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
-<li>使用 <code>jieba</code> 对文本进行分词</li>
-<li>使用 <code>TFIDF</code> 对文本进行编码</li>
-<li>思考如何使用 TFIDF 计算文本相似度？</li>
-</ul>
-</li>
-<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
-</ul>
-<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
-<p>首先导入需要用到的包：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
-
-<p>读取数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
-
-<p>取字典 <code>train_query</code> 的前十条数据：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
-</blockquote>
-<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
-<p>有三种分词模式，这里使用默认的精确模式。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
-<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
-</blockquote>
-<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
-</blockquote>
-<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
-<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
-</blockquote>
-<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
-<blockquote>
-<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
-</blockquote>
-<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
-<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
-<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
-</blockquote>
-<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
-<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Output:</p>
-</blockquote>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
-
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
-<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
-<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
-]]></content>
-      <categories>
-        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
     <url>/2RYYQJ0/</url>
     <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
@@ -1245,8 +1162,8 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里灵杰_Task02</title>
-    <url>/3ZBJY8Q/</url>
+    <title>阿里灵杰_Task02_词向量介绍与训练</title>
+    <url>/CGCSR4/</url>
     <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
 <li>任务内容：<ul>
 <li>使用任务 1 得到数据使用 <code>gensim</code> 训练词向量</li>
@@ -1338,6 +1255,89 @@
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>水哥讲的太好了，对我这种刚入门 NLP 的小白帮助很大，学到了 NLP 完整的一套训练流程。</p>
 <p>感觉句子编码 <code>pooling</code> 的时候好像也可以做一些技巧。目前是直接用 Word2Vec 得到的词向量，这个比赛本质上是看谁的词向量训练的好，所以后面尝试用 <code>SimCSE</code> 这些深度模型来训练，效果应该会提升一些。当然了，提分的话首先还是从数据入手，比如 <code>corpus</code> 的 <code>title</code> 长度很长，会有一百多个字符，而 <code>query</code> 就是比较短的搜索。所以 <code>corpus</code> 里的那些非核心词（噪声）势必会对训练产生影响。</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://github.com/datawhalechina/team-learning-data-mining/tree/master/ECommerceSearch">team-learning-data-mining&#x2F;ECommerceSearch at master · datawhalechina&#x2F;team-learning-data-mining · GitHub</a><br> <a href="https://www.bilibili.com/video/BV1dU4y1R7a2?spm_id_from=333.999.0.0">天池大神阿水解读：阿里灵杰电商搜索算法赛 | bilibili</a></p>
+]]></content>
+      <categories>
+        <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
+    <url>/25S7X1E/</url>
+    <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
+<li>任务内容：<ul>
+<li>从比赛官网下载数据集，并使用 Python 读取数据</li>
+<li>使用 <code>jieba</code> 对文本进行分词</li>
+<li>使用 <code>TFIDF</code> 对文本进行编码</li>
+<li>思考如何使用 TFIDF 计算文本相似度？</li>
+</ul>
+</li>
+<li>学习资料： <a href="https://coggle.club/blog/tianchi-open-search">https://coggle.club/blog/tianchi-open-search</a><span id="more"></span></li>
+</ul>
+<h2 id="0x01-读取数据"><a href="#0x01-读取数据" class="headerlink" title="0x01 读取数据"></a>0x01 读取数据</h2><p>这里只用 <code>train.query.txt</code> 中的前十条数据。同整个数据集的数据处理同理。</p>
+<p>首先导入需要用到的包：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line"><span class="keyword">import</span> jieba  <span class="comment"># 分词</span></span><br><span class="line"><span class="keyword">from</span> gensim <span class="keyword">import</span> corpora, models, similarities  <span class="comment"># TF-IDF</span></span><br></pre></td></tr></table></figure>
+
+<p>读取数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data/train.query.txt&#x27;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    train_querys = f.readlines()</span><br><span class="line"></span><br><span class="line">train_query = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> train_querys:</span><br><span class="line">    line = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    query_id = line[<span class="number">0</span>]</span><br><span class="line">    query = line[<span class="number">1</span>]</span><br><span class="line">    train_query[<span class="built_in">int</span>(query_id)] = query</span><br></pre></td></tr></table></figure>
+
+<p>取字典 <code>train_query</code> 的前十条数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 字典切片</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dict_slice</span>(<span class="params">adict, start, end</span>):</span><br><span class="line">    keys = adict.keys()</span><br><span class="line">    dict_slice = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(keys)[start:end]:</span><br><span class="line">        dict_slice[k] = adict[k]</span><br><span class="line">    <span class="keyword">return</span> dict_slice</span><br><span class="line"></span><br><span class="line">wordListTop10 = dict_slice (train_query, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">wordListTop10</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{1: ‘美赞臣亲舒一段’,<br>2: ‘慱朗手动料理机’,<br>3: ‘電力貓’,<br>4: ‘掏夹缝工具’,<br>5: ‘飞推 vip’,<br>6: ‘多功能托地把’,<br>7: ‘充气浮力袖’,<br>8: ‘盒马花胶鸡汤锅’,<br>9: ‘塞塞乐’,<br>10: ‘广汽传祺 gs5 挡风遮雨条子’}</p>
+</blockquote>
+<h2 id="0x02-使用-jieba-对文本进行分词"><a href="#0x02-使用-jieba-对文本进行分词" class="headerlink" title="0x02 使用 jieba 对文本进行分词"></a>0x02 使用 <code>jieba</code> 对文本进行分词</h2><p>使用 <code>jieba</code> 中的搜索引擎模式对文本分词。关于 <code>jieba</code> 的更多信息可以参考 <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a> 。</p>
+<p>有三种分词模式，这里使用默认的精确模式。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">seg_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    seg = <span class="built_in">list</span>(jieba.cut(wordListTop10[i],HMM=<span class="literal">True</span>))</span><br><span class="line">    seg_list.append(seg)  <span class="comment"># 把前10个数据的所有分词放进一个列表中</span></span><br><span class="line">seg_list</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<h2 id="0x03-使用-TF-IDF-对文本进行编码"><a href="#0x03-使用-TF-IDF-对文本进行编码" class="headerlink" title="0x03 使用 TF-IDF 对文本进行编码"></a>0x03 使用 <code>TF-IDF</code> 对文本进行编码</h2><h3 id="什么是-TF-IDF-检索"><a href="#什么是-TF-IDF-检索" class="headerlink" title="什么是 TF-IDF 检索"></a>什么是 <code>TF-IDF</code> 检索</h3><blockquote>
+<p>可以查看 <a href="https://1nnoh.github.io/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 进行学习。</p>
+</blockquote>
+<h3 id="使用-TF-IDF-对我们的数据集编码"><a href="#使用-TF-IDF-对我们的数据集编码" class="headerlink" title="使用 TF-IDF 对我们的数据集编码"></a>使用 <code>TF-IDF</code> 对我们的数据集编码</h3><p><a href="https://radimrehurek.com/gensim/models/tfidfmodel.html">models.tfidfmodel – TF-IDF model — gensim</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 制作字典</span></span><br><span class="line">dictionary = corpora.Dictionary(seg_list)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以通过 token2id 得到特征数字</span></span><br><span class="line"><span class="built_in">print</span>(dictionary.token2id)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>{‘一段’: 0, ‘亲舒’: 1, ‘美赞臣’: 2, ‘慱’: 3, ‘手动’: 4, ‘料理’: 5, ‘朗’: 6, ‘机’: 7, ‘電力貓’: 8, ‘夹缝’: 9, ‘工具’: 10, ‘掏’: 11, ‘vip’: 12, ‘推’: 13, ‘飞’: 14, ‘多功能’: 15, ‘托地’: 16, ‘把’: 17, ‘充气’: 18, ‘浮力’: 19, ‘袖’: 20, ‘盒马花胶’: 21, ‘锅’: 22, ‘鸡汤’: 23, ‘乐’: 24, ‘塞塞’: 25, ‘gs5’: 26, ‘广汽传祺’: 27, ‘挡风遮雨’: 28, ‘条子’: 29}</p>
+</blockquote>
+<p>将所有的词存入一个字典，上面打印出了每个词对应的 <code>id</code>。所以上面这一步其实就是将词语都映射为数字，因为机器只能理解数字呀。</p>
+<p>然后首先将这十条数据放入词袋模型，之后再对词袋模型中的数据使用 <code>TF-IDF</code> 计算权值，得到 <code>TF-IDF</code> 编码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Convert corpus to BoW format</span></span><br><span class="line"><span class="comment"># 制作数字向量类型的语料库（doc2bow）</span></span><br><span class="line"><span class="comment"># ----&gt; 将字符串转换成数字向量类型的词袋模型(稀疏向量)</span></span><br><span class="line"><span class="comment"># 源文件不做处理是一个字符串类型的语料库</span></span><br><span class="line">corpus = [dictionary.doc2bow (doc) <span class="keyword">for</span> doc <span class="keyword">in</span> seg_list]  </span><br><span class="line">corpus</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[[(0,1), (1,1), (2,1)], [(3,1), (4,1), (5,1), (6,1), (7,1)], [(8,1)], [(9,1), (10,1), (11,1)], [(12,1), (13,1), (14,1)], [(15,1), (16,1), (17,1)], [(18,1), (19,1), (20,1)], [(21,1), (22,1), (23,1)], [(24,1), (25,1)], [(26,1), (27,1), (28,1), (29,1)]]</code></p>
+</blockquote>
+<p>这里是将十条数据转为词袋模型，下面贴出之前这十条数据的分词结果：</p>
+<blockquote>
+<p><code>[[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;], [&#39;慱&#39;, &#39;朗&#39;, &#39;手动&#39;, &#39;料理&#39;, &#39;机&#39;], [&#39;電力貓&#39;], [&#39;掏&#39;, &#39;夹缝&#39;, &#39;工具&#39;], [&#39;飞&#39;, &#39;推&#39;, &#39;vip&#39;], [&#39;多功能&#39;, &#39;托地&#39;, &#39;把&#39;], [&#39;充气&#39;, &#39;浮力&#39;, &#39;袖&#39;], [&#39;盒马花胶&#39;, &#39;鸡汤&#39;, &#39;锅&#39;], [&#39;塞塞&#39;, &#39;乐&#39;], [&#39;广汽传祺&#39;, &#39;gs5&#39;, &#39;挡风遮雨&#39;, &#39;条子&#39;]]</code></p>
+</blockquote>
+<p>以第一条数据为例：<br>第一条数据的词袋模型：<code>[(0,1), (1,1), (2,1)]</code><br>第一条数据的分词结果：<code>[&#39;美赞臣&#39;, &#39;亲舒&#39;, &#39;一段&#39;]</code><br>第一条数据的 <code>token2id</code> ：  <code>&#39;一段&#39;: 0, &#39;亲舒&#39;: 1, &#39;美赞臣&#39;: 2</code><br>词袋中第一个词 <code>（0，1）</code> 对应着：“一段”（编码为 0），数据中出现一次，所以 <code>（0，1）</code>。第一个数字代表哪一个词，第二个数字代表出现了几次（词频）。后面的两个词同理。三个词放一起，组成词袋，来代表整个第一条数据。</p>
+<p>可以发现，不存在的词是不放入每条数据的词袋的，通过这样的方式来节约内存。这种技术叫稀疏矩阵（Sparse Matrix）：只存储有内容的值，而忽略无内容的值。</p>
+<p>最后得到 <code>TF-IDF</code> 编码（以 <code>corpus</code> 中第一条数据为例 ）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tfidf = models.TfidfModel(corpus)  <span class="comment"># fit model</span></span><br><span class="line">vector = tfidf[corpus[<span class="number">0</span>]]  <span class="comment"># apply model to the first corpus document</span></span><br><span class="line">vector</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>[(0, 0.5773502691896257), (1, 0.5773502691896257), (2, 0.5773502691896257)]</code></p>
+</blockquote>
+<p>你也可以自己动手，看看后面的几条数据编码是什么样子的。</p>
+<h2 id="0x04-使用-TF-IDF-计算文本相似度"><a href="#0x04-使用-TF-IDF-计算文本相似度" class="headerlink" title="0x04 使用 TF-IDF 计算文本相似度"></a>0x04 使用 <code>TF-IDF</code> 计算文本相似度</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">semblance</span>(<span class="params">text, corpus</span>):</span><br><span class="line">    <span class="comment"># 对测试文本分词</span></span><br><span class="line">    dic_text_list = <span class="built_in">list</span>(jieba.cut(text))</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 制作测试文本的词袋</span></span><br><span class="line">    doc_text_vec = dictionary.doc2bow(dic_text_list)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 获取语料库每个文档中每个词的tfidf值，即用tfidf模型训练语料库</span></span><br><span class="line">    tfidf = models.TfidfModel(corpus)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 对稀疏向量建立索引</span></span><br><span class="line">    index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=<span class="built_in">len</span>(dictionary.keys()))</span><br><span class="line">    sim = index[tfidf[doc_text_vec]]  <span class="comment"># 相当于sim = index.get_similarities(tfidf[doc_text_vec])</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度评估：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim)</span><br><span class="line">    <span class="comment"># 按照相似度来排序</span></span><br><span class="line">    sim_sorted = <span class="built_in">sorted</span>(<span class="built_in">enumerate</span>(sim, <span class="number">1</span>), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])  <span class="comment"># enumerate(x, 1) 代表从1开始设立索引</span></span><br><span class="line">    <span class="comment"># 相当于sorted(enumerate(sim), key=lambda x: x[1], reverse=True</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;相似度排序：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(sim_sorted)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">text = <span class="string">&#x27;想喝鸡汤&#x27;</span></span><br><span class="line">semblance (text, corpus)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Output:</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">相似度评估：</span><br><span class="line">[0.         0.         0.         0.         0.         0.</span><br><span class="line"> 0.         0.81649655 0.         0.        ]</span><br><span class="line">10</span><br><span class="line">相似度排序：</span><br><span class="line">[(8, 0.81649655), (1, 0.0), (2, 0.0), (3, 0.0), (4, 0.0), (5, 0.0), (6, 0.0), (7, 0.0), (9, 0.0), (10, 0.0)]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>没有做过 NLP 的东西，趁着做今天的任务大概了解了分词，文本向量化表示之类的内容。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>jieba 分词：<br> <a href="https://github.com/fxsjy/jieba">GitHub - fxsjy&#x2F;jieba: 结巴中文分词</a><br> <a href="https://alvinntnu.github.io/python-notes/corpus/jieba.html">Chinese Word Segmentation (jieba) — Python Notes for Linguistics</a><br> <a href="https://zhuanlan.zhihu.com/p/361052986">中文分词工具 jieba 的简介｜自然语言处理</a><br> <a href="https://zhuanlan.zhihu.com/p/207057233">jieba 分词-强大的 Python 中文分词库</a></p>
+<p>Gensim:<br> <a href="https://gensim.apachecn.org/#/blog/tutorial/README">https://gensim.apachecn.org/#/blog/tutorial/README</a></p>
+<p>TF-IDF:<br> <a href="https://blog.csdn.net/weixin_44799217/article/details/116423520">自然语言处理(NLP)之使用 TF-IDF 模型计算文本相似度</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/intro-search/">你天天用的搜索引擎是怎么工作的 - 自然语言处理 | 莫烦 Python</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/tfidf/">统计学让搜索速度起飞 - 自然语言处理 | 莫烦 Python</a></p>
 ]]></content>
       <categories>
         <category>“阿里灵杰”问天引擎电商搜索算法赛</category>
