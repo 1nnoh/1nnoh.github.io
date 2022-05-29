@@ -422,6 +422,169 @@
       </tags>
   </entry>
   <entry>
+    <title>爬虫与网络编程基础</title>
+    <url>/2FSK6BP/</url>
+    <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
+<h2 id="0x00-内容介绍"><a href="#0x00-内容介绍" class="headerlink" title="0x00 内容介绍"></a>0x00 内容介绍</h2><p>爬虫与网络编程基础这部分的入门学习的要解决的问题如下：</p>
+<ul>
+<li>对网络编程了解较少，不会从 HTML 中提取信息；</li>
+<li>不会爬虫，不会收集数据，也不会部署模型。</li>
+</ul>
+<p>而上述问题都是一个合格算法工程师所必备的。因此借助这个活动来入门。</p>
+<span id="more"></span>
+
+<h2 id="0x01-学习内容"><a href="#0x01-学习内容" class="headerlink" title="0x01 学习内容"></a>0x01 学习内容</h2><p>当今的世界是一个互联的世界，绝大多数的计算机和人都在通过网络和他人传递信息、沟通互联。我们在网络上学习、游戏、工作，我们提供各种各样的网络服务，又有很多人使用着各种各样的网络服务。网络改变了世界，而程序员“定义”了网络。我们在代码中实现了网络的通信，让一切变得可能。网络爬虫是一种按照一定的规则，自动地抓取万维网信息的程序或者脚本。<strong>在本次学习中我们将学习基础的爬虫操作，并学习基础的 HTTP 协议，最后尝试完成基础的网络编程。</strong></p>
+<h2 id="0x02-打卡汇总"><a href="#0x02-打卡汇总" class="headerlink" title="0x02 打卡汇总"></a>0x02 打卡汇总</h2><table>
+<thead>
+<tr>
+<th>任务名称</th>
+<th>难度</th>
+<th>所需技能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任务 1：计算机网络基础</td>
+<td>低、1</td>
+<td>json、xml</td>
+</tr>
+<tr>
+<td>任务 2：HTTP 协议与 requests</td>
+<td>低、1</td>
+<td>requests</td>
+</tr>
+<tr>
+<td>任务 3：bs4 基础使用</td>
+<td>中、2</td>
+<td>bs4</td>
+</tr>
+<tr>
+<td>任务 4：bs4 高阶使用</td>
+<td>高、3</td>
+<td>bs4</td>
+</tr>
+<tr>
+<td>任务 5：正则表达式</td>
+<td>高、3</td>
+<td>re</td>
+</tr>
+<tr>
+<td>任务 6：Python 网络编程基础</td>
+<td>高、3</td>
+<td>scoket</td>
+</tr>
+<tr>
+<td>任务 7：tornado 基础使用</td>
+<td>中、2</td>
+<td>tornado</td>
+</tr>
+<tr>
+<td>任务 8：tornado 用户注册&#x2F;登录</td>
+<td>高、3</td>
+<td>tornado</td>
+</tr>
+<tr>
+<td>任务 9：tornado 部署机器学习模型</td>
+<td>中、2</td>
+<td>tornado</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><a href="network-spider-programming-task01.md">任务 1：计算机网络基础</a></p>
+<ul>
+<li>步骤 1：在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]。</li>
+<li>步骤 2：将步骤 1 的数据存储为 json 格式，并进行读取。</li>
+<li>步骤 3：将步骤 1 的数据存储为 xml 格式，并进行读取。</li>
+<li>步骤 4：学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？将你的思考结果写到博客。</li>
+</ul>
+</li>
+<li><p>任务 2：HTTP 协议与 requests</p>
+<ul>
+<li>步骤 1： <a href="https://www.cnblogs.com/an-wen/p/11180076.html">学习 HTTP 协议</a></li>
+<li>步骤 2：HTTP 的 get 和 post 有什么区别？用处在哪儿？将你的思考写到博客。</li>
+<li>步骤 3：使用 Python 中 requests 中的 get 访问百度。</li>
+</ul>
+</li>
+<li><p>任务 3：bs4 基础使用</p>
+<ul>
+<li>学习资料： <a href="https://beautiful-soup-4.readthedocs.io/en/latest/">https://beautiful-soup-4.readthedocs.io/en/latest/</a></li>
+<li>步骤 1：使用 requests 和 bs4 爬取 <a href="https://scikit-learn.org/stable/modules/classes.html">sklearn api 页面</a>。</li>
+<li>步骤 2：在 api 页面中有多少个模块？有多少个 API？如 sklearn.base.DensityMixin，其中 base 为模块，DensityMixin 为 API。</li>
+<li>步骤 3：将模块名作为 key，api 作为 value 存储为字典。</li>
+</ul>
+</li>
+<li><p>任务 4：bs4 高阶使用</p>
+<ul>
+<li>步骤 1：爬取 <a href="https://scikit-learn.org/stable/glossary.html">sklearn 机器学习名词页面</a> , 爬取所有的名词，如 1d、2d 和 api；</li>
+<li>步骤 2：有一些名词在介绍时，会有额外的链接，请将每个名词介绍对应的链接也找出。</li>
+<li>步骤 3：原始的名词安装本身有类别，如下所示，你能将爬取的结果进行分类吗？</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">General Concepts</span><br><span class="line">Class APIs and Estimator Types</span><br><span class="line">Target Types</span><br><span class="line">Methods</span><br><span class="line">Parameters</span><br><span class="line">Attributes</span><br><span class="line">Data and sample properties</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>任务 5：正则表达式</p>
+<ul>
+<li>步骤 1： <a href="https://www.runoob.com/python/python-reg-expressions.html">学习正则表达式 re 模块使用</a> 。</li>
+<li>步骤 2：使用 re 筛选出机器学习名词，只包含字母的名词；</li>
+<li>步骤 3：使用 re 筛选出机器学习名词，首字母为 A 或 首字母为 B 的名词。</li>
+</ul>
+</li>
+<li><p>任务 6：Python 网络编程基础</p>
+<ul>
+<li>步骤 1： <a href="https://www.runoob.com/python/python-socket.html">学习 Socket 编程</a></li>
+<li>步骤 2：使用编写一个 Socket 聊天机器人，程序 A 发送数据给程序 B，程序 B 也可以发送信息给程序 A；</li>
+<li>步骤 3：使用编写一个 Socket 聊天机器人，程序 A 发送文件内容给 程序 B，程序 B 将文件进行存储。</li>
+</ul>
+</li>
+<li><p>任务 7：tornado 基础使用</p>
+<ul>
+<li>步骤 1：学习 tornado 基础使用<ul>
+<li>tornado 官网： <a href="https://www.tornadoweb.org/en/stable/">https://www.tornadoweb.org/en/stable/</a></li>
+<li>tornado 教程：<ul>
+<li><a href="http://www.ttlsa.com/docs/tornado/">http://www.ttlsa.com/docs/tornado/</a></li>
+<li><a href="http://doc.iplaypy.com/tornado/ch1.html">http://doc.iplaypy.com/tornado/ch1.html</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>步骤 2：编写 tornado 的 hello word 程序。</li>
+<li>步骤 3：编写 tornado 的 handler，分别接受 post 和 get 请求，请求为两个数字，进行求和，然后返回结果。</li>
+</ul>
+</li>
+<li><p>任务 8：tornado 用户注册&#x2F;登录</p>
+<ul>
+<li>步骤 1：使用 sqlite 创建用户信息表，表包含 <code>uid</code>，<code>name</code>，<code>passwd</code> 三个字段。</li>
+<li>步骤 2：编写 tornado 的用户注册 handler，完成用户注册逻辑，具体需要判断用户名和 passwd 合理性（不包含空格 &amp; 最大长度限制），然后插入数据。</li>
+<li>步骤 3：编写 tornado 的用户登录 handler，完成用户登录逻辑，根据 name 和 passwd 判断是否登录成功。</li>
+<li>步骤 4：结合 requests 和 tornado 完成上述逻辑。</li>
+</ul>
+</li>
+<li><p>任务 9：tornado 部署机器学习模型</p>
+<ul>
+<li>步骤 1：读取 <a href="https://mirror.coggle.club/dataset/waimai_10k.csv">外卖评论数据集</a>。</li>
+<li>步骤 2：使用 jieba 进行分词，TFIDF 提取特征，并选择分类器进行训练。</li>
+<li>步骤 3：将文本分类模型使用 tornado 进行部署，客户端 requests 发送文本进行分类。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-学习资料"><a href="#0x03-学习资料" class="headerlink" title="0x03 学习资料"></a>0x03 学习资料</h2><ul>
+<li><a href="https://www.jianshu.com/p/f6292d732217">https://www.jianshu.com/p/f6292d732217</a></li>
+<li><a href="https://www.bilibili.com/video/av59706997/">https://www.bilibili.com/video/av59706997/</a></li>
+<li><a href="https://cuiqingcai.com/1319.html">https://cuiqingcai.com/1319.html</a></li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 30 Days of ML（22 年 3 月） - Coggle 数据科学</a></p>
+]]></content>
+      <categories>
+        <category>爬虫与网络编程基础</category>
+      </categories>
+      <tags>
+        <tag>Coggle 30 Days of ML</tag>
+        <tag>Spider</tag>
+        <tag>Network Programming</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>1.2 TF-IDF 实践</title>
     <url>/8CFDNJ/</url>
     <content><![CDATA[<h1 id="矢量语义-TF-IDF-的实践"><a href="#矢量语义-TF-IDF-的实践" class="headerlink" title="矢量语义 TF-IDF 的实践"></a>矢量语义 TF-IDF 的实践</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。这篇笔记重点在实践 TF-IDF。想了解更多相关理论可以参考 <a href="https://1nnoh.top/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 。</p>
@@ -594,169 +757,6 @@
       <tags>
         <tag>NLP</tag>
         <tag>FunRec</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>爬虫与网络编程基础</title>
-    <url>/2FSK6BP/</url>
-    <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
-<h2 id="0x00-内容介绍"><a href="#0x00-内容介绍" class="headerlink" title="0x00 内容介绍"></a>0x00 内容介绍</h2><p>爬虫与网络编程基础这部分的入门学习的要解决的问题如下：</p>
-<ul>
-<li>对网络编程了解较少，不会从 HTML 中提取信息；</li>
-<li>不会爬虫，不会收集数据，也不会部署模型。</li>
-</ul>
-<p>而上述问题都是一个合格算法工程师所必备的。因此借助这个活动来入门。</p>
-<span id="more"></span>
-
-<h2 id="0x01-学习内容"><a href="#0x01-学习内容" class="headerlink" title="0x01 学习内容"></a>0x01 学习内容</h2><p>当今的世界是一个互联的世界，绝大多数的计算机和人都在通过网络和他人传递信息、沟通互联。我们在网络上学习、游戏、工作，我们提供各种各样的网络服务，又有很多人使用着各种各样的网络服务。网络改变了世界，而程序员“定义”了网络。我们在代码中实现了网络的通信，让一切变得可能。网络爬虫是一种按照一定的规则，自动地抓取万维网信息的程序或者脚本。<strong>在本次学习中我们将学习基础的爬虫操作，并学习基础的 HTTP 协议，最后尝试完成基础的网络编程。</strong></p>
-<h2 id="0x02-打卡汇总"><a href="#0x02-打卡汇总" class="headerlink" title="0x02 打卡汇总"></a>0x02 打卡汇总</h2><table>
-<thead>
-<tr>
-<th>任务名称</th>
-<th>难度</th>
-<th>所需技能</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>任务 1：计算机网络基础</td>
-<td>低、1</td>
-<td>json、xml</td>
-</tr>
-<tr>
-<td>任务 2：HTTP 协议与 requests</td>
-<td>低、1</td>
-<td>requests</td>
-</tr>
-<tr>
-<td>任务 3：bs4 基础使用</td>
-<td>中、2</td>
-<td>bs4</td>
-</tr>
-<tr>
-<td>任务 4：bs4 高阶使用</td>
-<td>高、3</td>
-<td>bs4</td>
-</tr>
-<tr>
-<td>任务 5：正则表达式</td>
-<td>高、3</td>
-<td>re</td>
-</tr>
-<tr>
-<td>任务 6：Python 网络编程基础</td>
-<td>高、3</td>
-<td>scoket</td>
-</tr>
-<tr>
-<td>任务 7：tornado 基础使用</td>
-<td>中、2</td>
-<td>tornado</td>
-</tr>
-<tr>
-<td>任务 8：tornado 用户注册&#x2F;登录</td>
-<td>高、3</td>
-<td>tornado</td>
-</tr>
-<tr>
-<td>任务 9：tornado 部署机器学习模型</td>
-<td>中、2</td>
-<td>tornado</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p><a href="network-spider-programming-task01.md">任务 1：计算机网络基础</a></p>
-<ul>
-<li>步骤 1：在 Pyhon 中创建一个 list，存储以下个人信息（姓名、年龄、成绩）：[小王、40、50]，[小贾、50、23]。</li>
-<li>步骤 2：将步骤 1 的数据存储为 json 格式，并进行读取。</li>
-<li>步骤 3：将步骤 1 的数据存储为 xml 格式，并进行读取。</li>
-<li>步骤 4：学习 <a href="https://www.runoob.com/w3cnote/summary-of-network.html">计算机网络基础</a> ，思考从打开 <a href="https://coggle.club/">coggle.club</a> 到网页展示，有什么步骤？将你的思考结果写到博客。</li>
-</ul>
-</li>
-<li><p>任务 2：HTTP 协议与 requests</p>
-<ul>
-<li>步骤 1： <a href="https://www.cnblogs.com/an-wen/p/11180076.html">学习 HTTP 协议</a></li>
-<li>步骤 2：HTTP 的 get 和 post 有什么区别？用处在哪儿？将你的思考写到博客。</li>
-<li>步骤 3：使用 Python 中 requests 中的 get 访问百度。</li>
-</ul>
-</li>
-<li><p>任务 3：bs4 基础使用</p>
-<ul>
-<li>学习资料： <a href="https://beautiful-soup-4.readthedocs.io/en/latest/">https://beautiful-soup-4.readthedocs.io/en/latest/</a></li>
-<li>步骤 1：使用 requests 和 bs4 爬取 <a href="https://scikit-learn.org/stable/modules/classes.html">sklearn api 页面</a>。</li>
-<li>步骤 2：在 api 页面中有多少个模块？有多少个 API？如 sklearn.base.DensityMixin，其中 base 为模块，DensityMixin 为 API。</li>
-<li>步骤 3：将模块名作为 key，api 作为 value 存储为字典。</li>
-</ul>
-</li>
-<li><p>任务 4：bs4 高阶使用</p>
-<ul>
-<li>步骤 1：爬取 <a href="https://scikit-learn.org/stable/glossary.html">sklearn 机器学习名词页面</a> , 爬取所有的名词，如 1d、2d 和 api；</li>
-<li>步骤 2：有一些名词在介绍时，会有额外的链接，请将每个名词介绍对应的链接也找出。</li>
-<li>步骤 3：原始的名词安装本身有类别，如下所示，你能将爬取的结果进行分类吗？</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">General Concepts</span><br><span class="line">Class APIs and Estimator Types</span><br><span class="line">Target Types</span><br><span class="line">Methods</span><br><span class="line">Parameters</span><br><span class="line">Attributes</span><br><span class="line">Data and sample properties</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>任务 5：正则表达式</p>
-<ul>
-<li>步骤 1： <a href="https://www.runoob.com/python/python-reg-expressions.html">学习正则表达式 re 模块使用</a> 。</li>
-<li>步骤 2：使用 re 筛选出机器学习名词，只包含字母的名词；</li>
-<li>步骤 3：使用 re 筛选出机器学习名词，首字母为 A 或 首字母为 B 的名词。</li>
-</ul>
-</li>
-<li><p>任务 6：Python 网络编程基础</p>
-<ul>
-<li>步骤 1： <a href="https://www.runoob.com/python/python-socket.html">学习 Socket 编程</a></li>
-<li>步骤 2：使用编写一个 Socket 聊天机器人，程序 A 发送数据给程序 B，程序 B 也可以发送信息给程序 A；</li>
-<li>步骤 3：使用编写一个 Socket 聊天机器人，程序 A 发送文件内容给 程序 B，程序 B 将文件进行存储。</li>
-</ul>
-</li>
-<li><p>任务 7：tornado 基础使用</p>
-<ul>
-<li>步骤 1：学习 tornado 基础使用<ul>
-<li>tornado 官网： <a href="https://www.tornadoweb.org/en/stable/">https://www.tornadoweb.org/en/stable/</a></li>
-<li>tornado 教程：<ul>
-<li><a href="http://www.ttlsa.com/docs/tornado/">http://www.ttlsa.com/docs/tornado/</a></li>
-<li><a href="http://doc.iplaypy.com/tornado/ch1.html">http://doc.iplaypy.com/tornado/ch1.html</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>步骤 2：编写 tornado 的 hello word 程序。</li>
-<li>步骤 3：编写 tornado 的 handler，分别接受 post 和 get 请求，请求为两个数字，进行求和，然后返回结果。</li>
-</ul>
-</li>
-<li><p>任务 8：tornado 用户注册&#x2F;登录</p>
-<ul>
-<li>步骤 1：使用 sqlite 创建用户信息表，表包含 <code>uid</code>，<code>name</code>，<code>passwd</code> 三个字段。</li>
-<li>步骤 2：编写 tornado 的用户注册 handler，完成用户注册逻辑，具体需要判断用户名和 passwd 合理性（不包含空格 &amp; 最大长度限制），然后插入数据。</li>
-<li>步骤 3：编写 tornado 的用户登录 handler，完成用户登录逻辑，根据 name 和 passwd 判断是否登录成功。</li>
-<li>步骤 4：结合 requests 和 tornado 完成上述逻辑。</li>
-</ul>
-</li>
-<li><p>任务 9：tornado 部署机器学习模型</p>
-<ul>
-<li>步骤 1：读取 <a href="https://mirror.coggle.club/dataset/waimai_10k.csv">外卖评论数据集</a>。</li>
-<li>步骤 2：使用 jieba 进行分词，TFIDF 提取特征，并选择分类器进行训练。</li>
-<li>步骤 3：将文本分类模型使用 tornado 进行部署，客户端 requests 发送文本进行分类。</li>
-</ul>
-</li>
-</ul>
-<h2 id="0x03-学习资料"><a href="#0x03-学习资料" class="headerlink" title="0x03 学习资料"></a>0x03 学习资料</h2><ul>
-<li><a href="https://www.jianshu.com/p/f6292d732217">https://www.jianshu.com/p/f6292d732217</a></li>
-<li><a href="https://www.bilibili.com/video/av59706997/">https://www.bilibili.com/video/av59706997/</a></li>
-<li><a href="https://cuiqingcai.com/1319.html">https://cuiqingcai.com/1319.html</a></li>
-</ul>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p> <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 30 Days of ML（22 年 3 月） - Coggle 数据科学</a></p>
-]]></content>
-      <categories>
-        <category>爬虫与网络编程基础</category>
-      </categories>
-      <tags>
-        <tag>Coggle 30 Days of ML</tag>
-        <tag>Spider</tag>
-        <tag>Network Programming</tag>
       </tags>
   </entry>
   <entry>
