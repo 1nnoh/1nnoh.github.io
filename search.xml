@@ -101,6 +101,502 @@
       </tags>
   </entry>
   <entry>
+    <title>矢量语义与编码之 TF-IDF 检索</title>
+    <url>/3EGCD4S/</url>
+    <content><![CDATA[<h1 id="矢量语义与编码之词嵌入"><a href="#矢量语义与编码之词嵌入" class="headerlink" title="矢量语义与编码之词嵌入"></a>矢量语义与编码之词嵌入</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>上篇笔记中，我们学习了关于文本表征基于词袋模型得到稀疏向量化文本的内容，比如 One-Hot 编码，比如 TF-IDF 编码。本质上来说，词袋模型其实是一种通过统计学方法，将文档中出现的所有词语根据词频等统计指标，<strong>转为稀疏向量</strong>，从而表达一篇文章的方法。但是，这种稀疏向量的表达会存在一些缺点，比如不考虑语序等等。那么有没有办法得到文本向量化的稠密表达呢？这就是本篇笔记要讲的，Word Embedding 词嵌入。</p>
+<span id="more"></span>
+
+<h2 id="0x01-什么是词嵌入与词向量"><a href="#0x01-什么是词嵌入与词向量" class="headerlink" title="0x01 什么是词嵌入与词向量"></a>0x01 什么是词嵌入与词向量</h2><p><strong>Word Embedding 词嵌入</strong> 是一种 <strong>考虑词语位置关系</strong> 的文本表征模型。词嵌入将文本中的词转换成<strong>稠密的低维数字向量</strong>的表达。低维且稠密的特点提高了网络的学习效率，并且有利于学习词语之间的相似性。</p>
+<p>也就是说，通过学习文本，用词向量的方式表征词的语义信息，即将所有的词，嵌入（Embedding）一个较低维度的连续向量空间中，词嵌入的结果就生成了 <strong>Word Vector 词向量</strong>。Embedding 其实就是一个映射，将单词从原先所属的空间映射到新的多维空间中，也就是把原先词所在空间嵌入到一个新的空间中去。</p>
+<p>之所以说是较低维度，是因为词向量与词袋模型得到的稀疏向量相比，维度是低的多的，对于词袋模型来说，每出现一个词即增加一维向量，假设字典中有 4000 个词，那么就需要 4000 维向量来表达；而词向量所在的连续空间，可以指定维度，可以是 128 维，也可以是 200 维，或者是其他自定义的维度。</p>
+<p>在词向量的连续空间中，词嵌入使得语义上相似的单词在该空间内距离很近，语义不同的单词之间距离更远。词与词之间的相似度（关系），或者说距离，可以通过 <code>cosine</code> 求得。</p>
+<p>听起来好像很复杂，其实只需要明白，区别于之前的词袋模型那种 <strong>稀疏向量表达</strong>：通常都是一个高维的向量，向量里面的元素大部分都是 0，然后通过稀疏矩阵存储，去除没有意义的元素。所以造成每个文档的向量表达的长度是不一样的，也就是他们的向量表达维度是不一样的，不固定的，自然也是不连续的。</p>
+<p>而词嵌入也是用一个向量来表示一个词，但是它是使用一个<strong>较低的维度，稠密地表示</strong>。或者说，词嵌入固定了一个维度（规定好一个连续空间），每个词的都有这么多维度，每个维度都会计算出一个数值，然后每一个词，都通过这样一个固定维度的连续向量来表征。</p>
+<p>以  <code>hello</code> 这个词语为例。</p>
+<p>稀疏向量表示：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203212325688.png"></p>
+<p>稠密向量表示（嵌入表示）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203212326164.png"></p>
+<h2 id="0x02-词嵌入模型背景"><a href="#0x02-词嵌入模型背景" class="headerlink" title="0x02 词嵌入模型背景"></a>0x02 词嵌入模型背景</h2><h3 id="1-词嵌入的优势"><a href="#1-词嵌入的优势" class="headerlink" title="1. 词嵌入的优势"></a>1. 词嵌入的优势</h3><p>上篇笔记讲到的文本表征方法——词袋模型有以下缺点：</p>
+<ul>
+<li>无法表达词语之间的关系，不考虑词语的<strong>有序性</strong>。</li>
+<li>对每个词来说，自身是一个独热向量（相互正交），无法编码词之间的<strong>相似性</strong>。</li>
+<li>过于稀疏的向量表达，导致计算和存储的效率都不高。可以想象，当我们的词表 Vocab 增大到十万时，每个词都需要 $1*10w$ 的向量来表达，严重浪费了内存和计算资源。</li>
+</ul>
+<p>那么本篇笔记要介绍的文本表征方法——词嵌入有哪些优势呢？</p>
+<ul>
+<li>考虑了词语之间的（位置）关系，即考虑到词语的<strong>有序性</strong>。</li>
+<li>语义相似的词在向量空间上也会比较相近，即可学习词语之间的<strong>相似性</strong>。</li>
+<li>可以将文本通过一个低维稠密向量来表达，计算和储存效率相比于词袋模型要高。</li>
+<li>通用性很强，可以用在不同的任务中。</li>
+</ul>
+<h3 id="2-两种主流的-Word-Embedding-算法"><a href="#2-两种主流的-Word-Embedding-算法" class="headerlink" title="2. 两种主流的 Word Embedding 算法"></a>2. 两种主流的 Word Embedding 算法</h3><p>目前主流的词嵌入技术有两种，一种是 Word2Vec，另一种是 GloVe。</p>
+<ul>
+<li>Word2Vec<ul>
+<li>这是一种基于统计方法来获得词向量的方法，于 2013 年由谷歌的 Mikolov 提出的一套新的词嵌入方法。</li>
+<li>这种算法有 2 种训练模式<ul>
+<li><code>CBOW</code> 通过上下文来预测当前词</li>
+<li><code>SKip-Gram</code> 通过当前词来预测上下文</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GloVe (Globel Vectors)<ul>
+<li>GloVe 是<strong>对 Word2Vec 的扩展</strong>，它将全局统计和 Word2vec 的基于上下文的学习结合了起来。</li>
+<li>其实就是 SVD 分解与 Word2Vec 的结合。</li>
+</ul>
+</li>
+</ul>
+<p>本篇笔记主要学习 Word2Vec。<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204280423986.png"></p>
+<blockquote>
+<p>Word2Vec 是一种可以进行高效率词嵌入学习的预测模型。其两种变体分别为：连续词袋模型（CBOW）及 Skip-Gram 模型。</p>
+<p>从算法角度看，这两种方法非常相似，其区别为 CBOW 根据源词上下文词汇（’the cat sits on the’）来预测目标词汇（例如，‘mat’），而 Skip-Gram 模型做法相反，它通过目标词汇（例如，‘mat’）来预测源上下文词汇（’the cat sits on the’）。</p>
+<p>Skip-Gram 模型采取 CBOW 的逆过程的动机在于：CBOW 算法对于很多分布式信息进行了平滑处理（例如将一整段上下文信息视为一个单一观察量）。很多情况下，对于小型的数据集，这一处理是有帮助的。相形之下，Skip-Gram 模型将每个“上下文-目标词汇”的组合视为一个新观察量，这种做法在大型数据集中会更为有效。</p>
+</blockquote>
+<h3 id="3-Word2Vec-的前身"><a href="#3-Word2Vec-的前身" class="headerlink" title="3. Word2Vec 的前身"></a>3. Word2Vec 的前身</h3><p>由于 One-Hot 编码存在两个重要缺陷：<strong>维度灾难</strong>与<strong>语义鸿沟</strong>。因此分布式向量横空出世，将词表示成 short dense vector，弥补了以上两个问题。而后引出了 NNLM (Neural Network Language Model)。</p>
+<blockquote>
+<p>“You shall know a word by the company it keeps”  (J. R. Firth 1957)</p>
+</blockquote>
+<h4 id="Neural-Network-Language-Model"><a href="#Neural-Network-Language-Model" class="headerlink" title="Neural Network Language Model"></a>Neural Network Language Model</h4><p>NNLM 出自 Yoshua Bengio 等人于 2003 年发表的《A Neural Probabilistic Language Model》，针对 N-gram 模型的问题进行了解决。这是第一篇提出神经网络语言模型的论文，它在得到语言模型的同时，<strong>也生成了副产品——词向量</strong>。</p>
+<blockquote>
+<p>什么是语言模型？</p>
+<p>通俗解释：<strong>「语言模型就是判断一句话是不是人话，通常用概率来表示一句话是人话的可能性」</strong></p>
+<p>标准定义：对于语言序列  $w_1,w_2,…,w_n$，语言模型就是计算该序列出现的概率，即 $P(w_1,w_2,…,w_n)$ 。</p>
+</blockquote>
+<p><strong>和 N-gram 类似，NNLM 也假设当前词仅依赖于前 $n-1$ 个词。</strong></p>
+<ul>
+<li><p>神经网络语言模型（Neural Network Language Model）</p>
+<ul>
+<li>首次提出了 Word Embedding 的概念（虽然没有叫这个名字），从而奠定了包括 Word2Vec 在内后续研究的基础。</li>
+<li>模型结构：<img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204281556450.png" alt="|700"></li>
+<li>NNLM 学习任务：输入某个句中单词 $W_t &#x3D; “Bert”$ 前面句子的 $t-1$ 个单词，要求网络正确预测单词 $Bert$。即最大化 $Bert$ 出现的条件概率。</li>
+<li>NNLM 训练过程<ul>
+<li>首先是一个线性的映射层：输入层。<ul>
+<li>任意单词 $W_i$ 用 One-Hot 编码（如：001000）作为原始单词输入。</li>
+<li>输入 N 个 One-Hot 编码，通过一个共享的 $D×V$ 的矩阵 $C$，映射为 N 个分布式的词向量 (Distributed Vector)。即乘以矩阵 $C$ 获得词向量。</li>
+<li>矩阵 $C$ 的维度为 $D×V$ ，$V$ 是词典的大小，$D$ 是 Embedding 向量的维度（一个先验参数）。矩阵 $C$ 每一行内容对应着单词的 Word Embedding。该矩阵的内容通过学习获得。</li>
+<li>为什么矩阵 $C$ 每一行内容正是每个单词的 Word Embedding 呢？因为当我们把 n 个 One-Hot 表征的词向量输入到神经网络中，单层网络进行的运算等效于查表操作，每个词的 One-Hot 编码将各自的词向量从 Embedding 层中原封不动地取出。如下图所示。<img data-src=" https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204280214399.png" style="zoom: 80%;" /></li>
+</ul>
+</li>
+<li>其次是一个简单的前向反馈神经网络。<ul>
+<li>由一个激活函数为 tanh 的隐藏层和一个 Softmax 输出（分类）层组成，因此可以计算出在输入 context 的条件下，词典中所有 word 出现的条件概率。</li>
+<li>即将上一步映射的词向量拼接，然后接隐藏层，再接 Softmax 预测后面应该接哪个词。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>手绘模型：<img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204281649219.png" alt="|700"></p>
+<ul>
+<li>输入的 $W_1$ 维度为 $1×V$，$V$ 是词典 Vocab 的大小。</li>
+<li>输入层：获得词语 Embedding，$n-1$ 为输入词个数，$p$ 为 Embedding 的维度。然后将所有 Embedding 拼接到一起。</li>
+<li>隐藏层：长度为 $H$。</li>
+<li>输出层：维度为 $1×V$。由 Softmax 激活得到归一化的概率。</li>
+<li>模型参数：三个转移矩阵：词语 One-Hot 向量 &#x3D;》输入层 &#x3D;》隐藏层 &#x3D;》输出层。其中由输入层到隐藏层的转移矩阵参数量是巨大的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-Word2Vec-的两个模型"><a href="#0x03-Word2Vec-的两个模型" class="headerlink" title="0x03 Word2Vec  的两个模型"></a>0x03 Word2Vec  的两个模型</h2><h3 id="1-Word2Vec-之-CBOW-Continues-Bag-of-Words-Model"><a href="#1-Word2Vec-之-CBOW-Continues-Bag-of-Words-Model" class="headerlink" title="1. Word2Vec 之 CBOW (Continues Bag-of-Words Model)"></a>1. Word2Vec 之 CBOW (Continues Bag-of-Words Model)</h3><p><strong>思路：输入中间词前后的 $C$ 个词，预测中间词。</strong></p>
+<blockquote>
+<p>既然 NNLM 的复杂度主要来自隐藏层，那么 Word2Vec 提出了 CBOW 与 Skip-Gram，将 NNLM 的隐藏层拿掉，输入层不再对 Embedding 拼接，而是求平均。</p>
+</blockquote>
+<p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204280404098.png"></p>
+<ul>
+<li>手绘模型<img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204281720104.png"><ul>
+<li>对原始 NNLM 做简化，将 NNLM 中的隐藏层拿掉</li>
+<li>CBOW 的隐藏层：获得上下文词语的 Embedding 后做平均，直接输出到 Softmax。不需要激活。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-Word2Vec-之-Skip-Gram"><a href="#2-Word2Vec-之-Skip-Gram" class="headerlink" title="2. Word2Vec 之 Skip-Gram"></a>2. Word2Vec 之 Skip-Gram</h3><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204280406149.png"></p>
+<p>实际情况中，Skip-Gram 用的较多。CBOW 在小数据集上表现较好，Skip-Gram 在大的数据集上表现更好。</p>
+<ul>
+<li>手绘模型<img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202204281820027.png"></li>
+</ul>
+<h2 id="0x04-Word2Vec-的两个提速手段"><a href="#0x04-Word2Vec-的两个提速手段" class="headerlink" title="0x04 Word2Vec 的两个提速手段"></a>0x04 Word2Vec 的两个提速手段</h2><p>然而，每当计算一个词的概率都要对词典里的 V 个词计算相似度，然后进行归一化，这基本上时不现实的。为此，Mikolov 引入了两个提速手段：层次 Softmax（Hierarchical Softmax）和负采样（Negative Sampling）。普遍认为 Hierarchical Softmax 对低频词效果较好；Negative Sampling 对高频词效果较好，向量维度较低时效果更好。</p>
+<ul>
+<li>Hierarchical Softmax</li>
+<li>Nagative Sampling</li>
+</ul>
+<h2 id="0x05-Word2Vec-的优缺点"><a href="#0x05-Word2Vec-的优缺点" class="headerlink" title="0x05 Word2Vec 的优缺点"></a>0x05 Word2Vec 的优缺点</h2><ul>
+<li>优点<ul>
+<li><strong>考虑上下文信息</strong>，效果优于之前的 One-Hot 编码等 Embedding 方法。</li>
+<li><strong>由稀疏长向量（基于词袋模型构建）转为稠密短向量。</strong> 较短长度的向量更有利于模型的学习，减少了需要学习的参数量。稠密的特点便于更好的捕捉相同语义。</li>
+<li>通用性强，可以用在各种 NLP 任务中。</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>**Word2Vec 是静态编码 (Static Embedding)**，意味着这种方法只能学到一种固定的 Embedding，存在 Vocab 中。也就是说 <strong>Word2Vec 不能解决多义词的问题</strong>，不能联系上下文动态解释当前词语的含义。以后会介绍学习动态上下文嵌入 (Dynamic Contextual Embedding) 的方法，比如当下流行的 BERT 表示，每个词的 Vector 会根据不同的上下文内容而改变。</li>
+<li>由于词和向量是一对一的关系，所以<strong>不能学习到词语的多层特性</strong>。一个好的语言表示除了建模一词多义现象以外，还需要能够体现词的复杂特性，包括语法 (syntax)、语义 (semantics) 等。Word2Vec 等词嵌入方法本身不具备这种优点——因为它太简单了。</li>
+<li>仅考虑了局部语料，没有考虑到全局信息。</li>
+<li>英文语料的分词简单，每个词为独立的个体。但中文语料首先需要解决分词问题，分词效果严重影响词向量的质量。因此 Word2Vec 对中文不是那么友好。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>需要说明的是：Word2vec 是上一代的产物（18 年之前）， 18 年之后想要得到最好的效果，已经不使用  Word2vec 这种方法。</p>
+</blockquote>
+<h2 id="0x06-从-Word-Embedding-到-BERT"><a href="#0x06-从-Word-Embedding-到-BERT" class="headerlink" title="0x06 从 Word Embedding 到 BERT"></a>0x06 从 Word Embedding 到 BERT</h2><blockquote>
+<p>Word2Vec 和  BERT 都是语言表示中里程碑式的工作，前者是词嵌入范式的代表，后者是预训练范式的代表。</p>
+</blockquote>
+<ul>
+<li><p>Word Embedding</p>
+<ul>
+<li>统计语言模型 N-gram<ul>
+<li>解决无序性问题，用之前的 $n-1$ 个文本来计算当前文本 $W_n$ 的条件概率。即<strong>考虑上文，前 $n-1$ 个词</strong>。</li>
+<li>未解决文本表征问题，仍使用 One-Hot 向量来表示。由此带来一系列弊端，如维度灾难，无法描述词语语义相似度等。</li>
+<li>由于模型复杂度和预测精度的限制，我们很少会考虑 $N&gt;3$ 的模型。因此无法处理更长程的 context ($N&gt;3$)。</li>
+<li>复杂度<ul>
+<li>（需要计算每个词，和其他所有词，共同出现的次数） $&#x2F;$ （该词出现的词频）</li>
+<li>如果词典大小为 $N$，考虑前 $n$ 个单词，则模型参数量级为 $O(N^n)$。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分布式表征 (Distribution)<ul>
+<li>分布假说 (Distributional Hypothesis)：上下文环境相似的两个词有着相近的语义。</li>
+<li>分布式表征是指将数 <strong>据嵌入到低维连续空间</strong>，通常称这种表征为嵌入 (Embedding) 或向量 (Vector)。</li>
+</ul>
+</li>
+<li>基于 SVD 的词向量方法<ul>
+<li>词袋假说 (Bag of Words Hypothesis)：一篇文档的词频（而不是词序）代表了文档的主题。</li>
+<li>使用奇异值分解 (SVD) 的方法对词袋模型生成的矩阵降维并且分解。</li>
+</ul>
+</li>
+<li>神经网络语言模型（Neural Network Language Model）<ul>
+<li>首次提出了 Word Embedding 的概念（虽然没有叫这个名字），从而奠定了包括 Word2Vec 在内后续研究的基础。</li>
+<li><strong>解决了 N-gram 模型的两个重要缺陷（由 One-Hot 表示造成的）</strong>：维度灾难，无法描述词语语义相似度。</li>
+<li><strong>考虑上文，前 $n-1$ 个词。</strong></li>
+</ul>
+</li>
+<li>Word2Vec<ul>
+<li>CBOW：从一个句子里面把一个词抠掉，用这个词的<strong>上文和下文</strong>去预测被抠掉的这个词。</li>
+<li>Skip-Gram：输入某个单词，要求网络<strong>预测它的上下文单词</strong>。</li>
+<li><strong>与 N-gram 的不同：Word2Vec 并不关心相邻单词之前一起出现的频数，而是仅仅关心，这个单词是不是属于另一个单词的上下文</strong>。也就是说，Word2Vec 不关心根据这个词预测出的下一个词语是什么，而是只关心这两个词语之间是不是有上下文关系。</li>
+</ul>
+</li>
+<li>Glove<ul>
+<li>对 Word2Vec 的补充和拓展，将全局统计融入 Word2Vec。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ELMO (Embedding from Language Models)：<strong>基于上下文</strong>的 Embedding</p>
+<ul>
+<li>Deep contextualized word representation. 根据当前上下文对 Word Embedding 动态调整。解决了一词多义的问题。</li>
+<li>两阶段模型<ul>
+<li>预训练阶段<ul>
+<li>使用双层双向的 LSTM 作为特征抽取器。</li>
+<li>预训练阶段获得三种 Embedding。<ul>
+<li>最底层的词向量特征。</li>
+<li>第一层双向 LSTM 获得的句法特征。</li>
+<li>第二层双向 LSTM 获得的语义特征。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>下游任务应用阶段<ul>
+<li>做下游应用时作为特征提取器。将三层 Embedding 根据不同的权重拼接起来用于下游任务，作为新特征补充。</li>
+<li>权重根据下游任务训练得到。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ELMO 的缺点<ul>
+<li>LSTM 抽取特征能力远弱于 Transformer。</li>
+<li>通过拼接方式获得融合特征，这种方式对特征融合的能力偏弱。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>GPT (Generative Pre-Training)：Pretrain + Finetune</p>
+<ul>
+<li>两阶段模型<ul>
+<li>预训练阶段<ul>
+<li>使用 Transformer 作为特征抽取器，其特征抽取能力强于 RNN。</li>
+<li>采用单向的语言模型，只采用单词的 Context-before 上文来进行预测，抛开了下文（现在来看是不明智的选择）。白白丢失了许多信息。</li>
+</ul>
+</li>
+<li>微调阶段（下游任务应用阶段）<ul>
+<li>将预训练模型应用到下游任务时，需保持模型结构和预训练模型一致。借此，通过预训练学到的语言学知识就被引入到当前的任务中来了。</li>
+<li>以预训练模型参数作为初始参数，用当前的任务去训练这个网络，对网络参数进行 Fine-Tuning。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GPT 的缺点<ul>
+<li>语言模型是单向的。没有考虑下文信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>BERT：新星的诞生</p>
+<ul>
+<li>两阶段模型<ul>
+<li>Pre-Training<ul>
+<li>Transformer 作为特征抽取器。</li>
+<li>双向的语言模型。</li>
+<li>多任务训练<ul>
+<li>Masked LM，基于掩码的语言模型。<ul>
+<li>类似 CBOW，进行了一定改造。</li>
+<li>将 15% 字符进行 mask 操作，其中 80% 进行真正的掩码，10% 随机替换成其他字符，剩下的 10% 保留真正的字符不变。</li>
+</ul>
+</li>
+<li>Next Sentence Prediction<ul>
+<li>为了使模型能够理解两个句子之间的关系。</li>
+<li>将文档中连续的语句拼接起来作为正样本，其他还会随机选择两句话进行拼接作为负样本用于训练，主要是因为一些句子序列任务会需要。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Fine-Tuning</li>
+</ul>
+</li>
+<li>与 ELMO 的区别<ul>
+<li>ELMO 是分别看上文和下文，然后将上文得到的结果和下文得到的结果进行拼接。</li>
+<li>BERT 是同时看上下文中的每个词，效果上也比 ELMO 要好。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Word2Vec 的基本理念是构造一个假的学习任务，我们并不关注这个任务的输出结果如何，而是关注它的中间产物。从 Word Embedding 到 BERT 其实都是预训练模型的发展与壮大。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>语言模型：<br> <a href="https://blog.csdn.net/qq_44951759/article/details/120428103">《自然语言处理学习之路》 08 语言模型</a> ——这里解释了为什么 N-gram 模型计算量巨大<br> <a href="https://zhuanlan.zhihu.com/p/195698474">【语言模型】从 N-gram 模型讲起 - 知乎</a><br> <a href="https://zhuanlan.zhihu.com/p/206878986">【语言模型】NNLM(神经网络语言模型) - 知乎</a><br> <a href="https://www.bilibili.com/video/BV1Lb411p7FD?p=1">word2vec：神经语言模型(NNLM), CBOW, skip-gram_bilibili</a> ——手绘模型<br>Word2Vec:<br><a href="https://blog.csdn.net/Morganfs/article/details/124417008">基于深度学习的语言模型</a><br> <a href="https://www.cnblogs.com/sandwichnlp/p/11596848.html#word2vec">词向量(one-hot&#x2F;SVD&#x2F;NNLM&#x2F;Word2Vec&#x2F;GloVe) - 西多士 NLP</a><br> <a href="https://blog.csdn.net/nemoyy/article/details/80603438">word2vec: 理解 nnlm, cbow, skip-gram</a><br> <a href="https://zhuanlan.zhihu.com/p/27234078">理解 Word2Vec 之 Skip-Gram 模型 - 知乎</a><br> <a href="https://zhuanlan.zhihu.com/p/51648675">深度学习第 42 讲：自然语言处理之词嵌入和词向量</a><br> <a href="https://blog.csdn.net/weixin_42468475/article/details/121522295">词袋模型和词嵌入模型</a><br> <a href="https://easyai.tech/ai-definition/word-embedding/">一文看懂词嵌入</a><br> <a href="https://www.jianshu.com/p/2fbd0dde8804">词嵌入</a><br> <a href="https://blog.csdn.net/stupid_3/article/details/83184807">矢量语义——从 TF-IDF 到 Word2Vec 你所需要知道的一切！</a><br> <a href="https://lilianweng.github.io/posts/2017-10-15-word-embedding/">Learning Word Embedding | Lil’Log</a><br> <a href="https://mofanpy.com/tutorials/machine-learning/nlp/cbow/">Continuous Bag of Words (CBOW) - 自然语言处理 | 莫烦 Python</a><br> <a href="https://www.bilibili.com/video/BV1fp4y147Lc?spm_id_from=333.337.search-card.all.click">RNN 模型与 NLP 应用(2&#x2F;9)：文本处理与词嵌入_bilibili</a><br> <a href="https://blog.csdn.net/itplus/article/details/37969519">word2vec 中的数学原理详解</a><br> 拓展：<br> <a href="https://www.zhihu.com/question/352468546">Bert 比之 Word2Vec,有哪些进步呢？</a><br> <a href="https://zhuanlan.zhihu.com/p/49271699">从 Word Embedding 到 Bert 模型—自然语言处理中的预训练技术发展史</a> ⭐⭐⭐<br> <a href="https://zhuanlan.zhihu.com/p/105989051">广告行业中那些趣事系列 3：NLP 中的巨星 BERT</a> ⭐⭐⭐——分析了 BERT 如何吸取各种模型精华于一身，从而构造出这样一颗新星。</p>
+]]></content>
+      <categories>
+        <category>Dive into NLP</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1.1 框架式思维——漏斗思维</title>
+    <url>/6S0ESX/</url>
+    <content><![CDATA[<h1 id="框架式思维——漏斗思维"><a href="#框架式思维——漏斗思维" class="headerlink" title="框架式思维——漏斗思维"></a>框架式思维——漏斗思维</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>漏斗思维，是一个非常高效的思维方式，是一种线性的思考逻辑，一般按照任务的完成路径，识别出几个关键的行为转化节点；然后分析行为点间的转化与流失情况，进而定位问题，指导决策。</p>
+<p>这种思维其实已经渗透在各行各业中，虽然平时并没有很好的觉察，但是，把他单独抽象出来，会让你更加容易洞悉到问题本质</p>
+<span id="more"></span>
+
+<h3 id="举一些例子"><a href="#举一些例子" class="headerlink" title="举一些例子"></a>举一些例子</h3><p><strong>以面试为例</strong>（层层筛选）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205212209588.png"></p>
+<p><strong>以咨询为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221951849.png"></p>
+<p><strong>以电商为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221959021.png"></p>
+<p><strong>以广告为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222118804.png"></p>
+<p><strong>以 AISAS 模型为例</strong>（小红书）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222002116.png"></p>
+<h2 id="0x01-搜索引擎系统漏斗"><a href="#0x01-搜索引擎系统漏斗" class="headerlink" title="0x01 搜索引擎系统漏斗"></a>0x01 搜索引擎系统漏斗</h2><p>当我们在百度或者淘宝这些软件中，输入 Query 搜索自己想要的答案或者商品。搜索引擎如何从上千万乃至上亿的数据中，一步一步，返回满足用户需求的结果？</p>
+<p>以百度搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222033968.png"></p>
+<p>在这个过程中，关键环节在于其中的：召回 —&gt; 粗排 —&gt; 精排。</p>
+<p>以淘宝搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222040679.png"></p>
+<blockquote>
+<p> ——摘抄自《阿里粗排技术体系与最新进展》<br> <a href="https://zhuanlan.zhihu.com/p/364141120">https://zhuanlan.zhihu.com/p/364141120</a></p>
+</blockquote>
+<p>在排序的过程中，往往会有一步重排。为什么从 粗排 —&gt; 精排 之后还需要一步重排呢？</p>
+<ul>
+<li>为什么要重排？<ul>
+<li>保证结果的<strong>多样性</strong>：以短视频推荐为例，如果推荐的总是单一类型的视频（比如汽车），那么即使用户喜欢汽车，也会感到疲劳。所以通过重排，推荐一些相似领域，相关领域的视频，丰富推荐结果的多样性。</li>
+<li><strong>多轮优选</strong>：Listwise，把所有的排列组合都考虑一遍。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x02-检索系统架构"><a href="#0x02-检索系统架构" class="headerlink" title="0x02 检索系统架构"></a>0x02 检索系统架构</h2><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291244344.png"></p>
+<h2 id="0x03-作业"><a href="#0x03-作业" class="headerlink" title="0x03 作业"></a>0x03 作业</h2><ul>
+<li>我们的生活中，还有什么场景会涉及漏斗思维的地方？<ul>
+<li>营销、注册转化</li>
+</ul>
+</li>
+<li>在纸上自己画一下今天的图（系统架构图、广告漏斗转化模型，搜索系统漏斗图）<ul>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205241940531.png"></li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242009540.png"></li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242010805.png"></li>
+</ul>
+</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="https://zhuanlan.zhihu.com/p/200899462">如何理解并应用漏斗模型？ - 知乎</a><br><a href="https://zhuanlan.zhihu.com/p/364141120">阿里粗排技术体系与最新进展 - 知乎</a></p>
+]]></content>
+      <categories>
+        <category>FunRec</category>
+        <category>01-自然语言文本处理基础</category>
+      </categories>
+      <tags>
+        <tag>FunRec</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1.2 TF-IDF 实践</title>
+    <url>/8CFDNJ/</url>
+    <content><![CDATA[<h1 id="矢量语义-TF-IDF-的实践"><a href="#矢量语义-TF-IDF-的实践" class="headerlink" title="矢量语义 TF-IDF 的实践"></a>矢量语义 TF-IDF 的实践</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。这篇笔记重点在实践 TF-IDF。想了解更多相关理论可以参考 <a href="https://1nnoh.top/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 。</p>
+<span id="more"></span>
+
+<h2 id="0x01-Count-Vector"><a href="#0x01-Count-Vector" class="headerlink" title="0x01 Count Vector"></a>0x01 Count Vector</h2><ul>
+<li>词袋模型 Bow<ul>
+<li>目的：最基础的文本特征提取方法，将文本转为计数矩阵</li>
+<li>原理：类似 One-Hot</li>
+<li>优点：<ul>
+<li>简单、直接</li>
+<li>易于理解</li>
+</ul>
+</li>
+<li>不足：<ul>
+<li>稀疏</li>
+<li>相当于只统计了词频<ul>
+<li>但是像“你我他，的地得”这种词，每个文章中都会出现</li>
+<li>所以需要如何把这种词的权重降下来？</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ol>
+<li>手撸 Count Vector</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">texts = [<span class="string">&quot;He is a boy&quot;</span>, <span class="string">&quot;She is a girl, good girl&quot;</span>]</span><br><span class="line"></span><br><span class="line">word_set = <span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存储词典</span></span><br><span class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> text.strip().split(<span class="string">&#x27; &#x27;</span>):</span><br><span class="line">        word_set.add(word.strip(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(word_set)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &#123;&#x27;He&#x27;, &#x27;girl&#x27;, &#x27;is&#x27;, &#x27;good&#x27;, &#x27;She&#x27;, &#x27;a&#x27;, &#x27;boy&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 给词典中所有词语赋一个 id 值</span></span><br><span class="line">word_id_dict = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> <span class="built_in">enumerate</span>(word_set):</span><br><span class="line">    word_id_dict[word[<span class="number">1</span>]] = word[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(word_id_dict)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &#123;&#x27;He&#x27;: 0, &#x27;girl&#x27;: 1, &#x27;is&#x27;: 2, &#x27;good&#x27;: 3, &#x27;She&#x27;: 4, &#x27;a&#x27;: 5, &#x27;boy&#x27;: 6&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据上一步生成的 word_id_dict，将文档 texts 中的词语替换成对应的 id</span></span><br><span class="line">res_list = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</span><br><span class="line">    t_list = []</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> text.strip().split(<span class="string">&#x27; &#x27;</span>):</span><br><span class="line">        word = word.strip(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> word_id_dict:</span><br><span class="line">            t_list.append(word_id_dict[word])</span><br><span class="line">    res_list.append(t_list)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(res_list)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># [[0, 2, 5, 6], [4, 2, 5, 1, 3, 1]]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将文档 texts 转为向量</span></span><br><span class="line"><span class="comment"># tests 中有两个文档，每个文档的向量长度为词典长度</span></span><br><span class="line"><span class="comment"># 根据 word_id_dict，出现的词语在 id 对应的列表位置 +1</span></span><br><span class="line"><span class="keyword">for</span> res <span class="keyword">in</span> res_list:</span><br><span class="line">    result = [<span class="number">0</span>] * <span class="built_in">len</span>(word_set)</span><br><span class="line">    <span class="keyword">for</span> word_id <span class="keyword">in</span> res:</span><br><span class="line">        result[word_id] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># [1, 0, 1, 0, 0, 1, 1]</span></span><br><span class="line"><span class="comment"># [0, 2, 1, 1, 1, 1, 0]</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>调用 Sklearn<br><a href="https://blog.csdn.net/weixin_38278334/article/details/82320307">sklearn——CountVectorizer 详解</a></li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Count Vector 方法只考虑了 TF，很片面！由此引出TF*IDF方法。</p>
+<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 TF-IDF 的原理</h2><ul>
+<li><p>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。</p>
+<ul>
+<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
+<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
+</ul>
+</li>
+<li><p>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。</p>
+<ul>
+<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
+<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
+<li>也就是说，在 <strong>所有文档</strong> 中都经常出现的词语，区分力小；而不常出现的词，区分力强。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code></p>
+<ul>
+<li>将两种指数相乘，得到 <code>TF-IDF</code>，表达一篇文档。</li>
+<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
+<li>对于一个 word，在文档出现的频率高，但在语料库里出现频率低，那么这个 word 对该文档的重要性比较高。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">TF(词频 - Term Frequency)：指的是某一个给定的词语在该文件中出现的次数，这个数字通常会被归一化(一般是词频除以文章总词数), 以防止它偏向长的文件。</span><br><span class="line"></span><br><span class="line">IDF(逆文本频率指数 - Inverse Document Frequency)：包含指定词语的文档越少，IDF越大。某个词语的IDF，由总文件数目除以包含该词语之文件的数目，再将得到的商取对数得到，即：</span><br><span class="line">IDF=log(N/n)</span><br><span class="line">-   N代表语料库中文档的总数</span><br><span class="line">-   n代表某个word在几个文档中出现过；</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-前置知识点：文本相似度"><a href="#1-前置知识点：文本相似度" class="headerlink" title="1. 前置知识点：文本相似度"></a>1. 前置知识点：文本相似度</h3><ul>
+<li><p>余弦相似度——最常用的相似度计算方法</p>
+<ul>
+<li>一个向量空间中两个向量夹角的余弦值作为衡量两个个体之间差异的大小</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251854838.png"></li>
+<li><strong>余弦值接近 1，夹角趋于 0，表明两个向量越相似！</strong></li>
+</ul>
+</li>
+<li><p>Jaccard 相似度——用于比较有限样本集之间的相似性与差异性</p>
+<ul>
+<li>Jaccard 系数定义为 A 与 B <strong>交集的大小</strong> 同 A 与 B <strong>并集的大小</strong>的比值</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251902319.png"></li>
+<li>Jaccard Similarity 得分在 0 到 1 的范围内。如果两个文档相同，则 Jaccard Similarity 为 1。如果两个文档之间没有共同词，则 Jaccard 相似度得分为 0。</li>
+<li>当 A 和 B 都为空，J(A,B) &#x3D; 1</li>
+</ul>
+</li>
+<li><p>欧氏距离相似度——最常见的距离度量方法</p>
+<ul>
+<li>n 维空间中计算两点间距离</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251915186.png"></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>适用场景</strong>：<br>比如向量 A(1,1,1)，向量 B(5,5,5)，两个向量虽然余弦相似度一致（夹角为 0），但是在空间上，两个向量并非一致。类比到用户 A 购买了三个 1 元的物品，用户 B 购买了三个 5 元的物品，衡量这两个用户的消费能力时，显然用余弦相似度是不合适的，欧氏距离更加合适。</p>
+<p>欧氏距离能够体现个体数值特征的绝对差异，所以更多的用于需要从维度的数值大小中体现差异的分析，比如使用用户行为作为指标分析用户价值的相似情况（比较不同用户的消费能力），这属于价值度量；而余弦相似度对绝对数值不敏感，更多的用于使用用户对内容的评分来分析用户兴趣的相似程度（用户是否喜欢某商品），这属于定性度量。</p>
+<p>需要注意的是，欧氏距离和余弦相似度都需要保证各维度处于相同的刻度级别（量纲），所以一般需要对数据先进行标准化处理，否则很可能会引起偏差。比如用户对内容评分，假设为 5 分制，对用户甲来说评分 3 分以上就是自己喜欢的，而对于用户乙，评分 4 分以上才是自己喜欢的，这样就无法很好地衡量两个用户评分之间的相似程度。如果将评分数值减去平均值，那么就可以很好地解决问题。此时，就相当于用皮尔逊相关系数来度量相似程度。</p>
+</blockquote>
+<h4 id="实践：计算两个字符串的相似度"><a href="#实践：计算两个字符串的相似度" class="headerlink" title="实践：计算两个字符串的相似度"></a>实践：计算两个字符串的相似度</h4><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251937573.jpg"></p>
+<p>首先生成文本的向量化表达：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics.pairwise <span class="keyword">import</span> cosine_similarity</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">texts = [<span class="string">&#x27;这只皮靴号码大了，那只号码合适&#x27;</span>,<span class="string">&#x27;这只皮靴号码不小，那只更合适&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分词</span></span><br><span class="line">texts_cut = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cut_word</span>(<span class="params">sentence</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;/&#x27;</span>.join(jieba.lcut(sentence))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> text <span class="keyword">in</span> texts:</span><br><span class="line">    <span class="comment">#text = text.replace(&#x27;，&#x27;, &#x27;&#x27;)</span></span><br><span class="line">    texts_cut.append(cut_word(text))</span><br><span class="line">    <span class="comment"># strip() 只能移除字符串头尾指定的字符序列，不能删除中间部分的字符</span></span><br><span class="line"><span class="built_in">print</span>(texts_cut)</span><br><span class="line"><span class="comment"># 输出：分词结果</span></span><br><span class="line"><span class="comment"># [&#x27;这/只/皮靴/号码/大/了/，/那/只/号码/合适&#x27;, &#x27;这/只/皮靴/号码/不小/，/那/只/更/合适&#x27;]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建词袋数据结构</span></span><br><span class="line"><span class="comment"># CountVectorizer 参数中，默认的正则表达式选择 2 个及以上的字母或数字作为 token</span></span><br><span class="line"><span class="comment"># 那么会导致分词为单个字的词语被忽略</span></span><br><span class="line"><span class="comment"># 所以这里需要修改正则表达式参数</span></span><br><span class="line">cv = CountVectorizer(token_pattern=<span class="string">r&quot;(?u)\b\w+\b&quot;</span>)  <span class="comment"># 修改正则表达式参数</span></span><br><span class="line"></span><br><span class="line">cv_fit = cv.fit_transform(texts_cut)</span><br><span class="line"><span class="comment"># 上行代码等价于下面两行</span></span><br><span class="line"><span class="comment"># cv.fit(texts)</span></span><br><span class="line"><span class="comment"># cv_fit=cv.transform(texts)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 列表形式呈现文章生成的词典</span></span><br><span class="line"><span class="built_in">print</span>(cv.get_feature_names())</span><br><span class="line"><span class="comment"># 输出：词典</span></span><br><span class="line"><span class="comment"># [&#x27;不小&#x27;, &#x27;了&#x27;, &#x27;只&#x27;, &#x27;号码&#x27;, &#x27;合适&#x27;, &#x27;大&#x27;, &#x27;更&#x27;, &#x27;皮靴&#x27;, &#x27;这&#x27;, &#x27;那&#x27;]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 字典形式的词典，带有词语 id</span></span><br><span class="line"><span class="built_in">print</span>(cv.vocabulary_)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># &#123;&#x27;这&#x27;: 8, &#x27;只&#x27;: 2, &#x27;皮靴&#x27;: 7, &#x27;号码&#x27;: 3, &#x27;大&#x27;: 5, &#x27;了&#x27;: 1, &#x27;那&#x27;: 9, &#x27;合适&#x27;: 4, &#x27;不小&#x27;: 0, &#x27;更&#x27;: 6&#125;</span></span><br><span class="line"><span class="comment"># 字典形式，key：词，value:该词（特征）的索引</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有文本的词频</span></span><br><span class="line"><span class="built_in">print</span>(cv_fit)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># (0, 8)  1  第 0 个文档中，词典索引为 8 的元素（这），词频为 1</span></span><br><span class="line"><span class="comment"># (0, 2)  2</span></span><br><span class="line"><span class="comment"># (0, 7)  1</span></span><br><span class="line"><span class="comment"># (0, 3)  2</span></span><br><span class="line"><span class="comment"># (0, 5)  1</span></span><br><span class="line"><span class="comment"># (0, 1)  1</span></span><br><span class="line"><span class="comment"># (0, 9)  1</span></span><br><span class="line"><span class="comment"># (0, 4)  1</span></span><br><span class="line"><span class="comment"># (1, 8)  1</span></span><br><span class="line"><span class="comment"># (1, 2)  2</span></span><br><span class="line"><span class="comment"># (1, 7)  1</span></span><br><span class="line"><span class="comment"># (1, 3)  1</span></span><br><span class="line"><span class="comment"># (1, 9)  1</span></span><br><span class="line"><span class="comment"># (1, 4)  1</span></span><br><span class="line"><span class="comment"># (1, 0)  1</span></span><br><span class="line"><span class="comment"># (1, 6)  1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># toarray() 将结果转为稀疏矩阵的表达</span></span><br><span class="line"><span class="built_in">print</span>(cv_fit.toarray())</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># [[0 1 2 2 1 1 0 1 1 1]</span></span><br><span class="line"><span class="comment">#  [1 0 2 1 1 0 1 1 1 1]]</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用余弦相似度计算<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251939761.png"></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 计算余弦相似度</span></span><br><span class="line">texts_countvector = cv_fit.toarray()</span><br><span class="line">cos_sim = cosine_similarity(texts_countvector[<span class="number">0</span>].reshape(<span class="number">1</span>,-<span class="number">1</span>), texts_countvector[<span class="number">1</span>].reshape(<span class="number">1</span>,-<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Cosine Similarity = %f&#x27;</span>%cos_sim)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 Jaccard 相似度计算</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 计算 jaccard 相似度</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">jaccard_sim</span>(<span class="params">a,b</span>):</span><br><span class="line">    unions = <span class="built_in">len</span>(<span class="built_in">set</span>(a).union(<span class="built_in">set</span>(b)))</span><br><span class="line">    intersections = <span class="built_in">len</span>(<span class="built_in">set</span>(a).intersection(<span class="built_in">set</span>(b)))</span><br><span class="line">    <span class="keyword">return</span> intersections / unions</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Jaccard Similarity = %f&#x27;</span>%jaccard_sim(texts_cut[<span class="number">0</span>],texts_cut[<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>使用欧氏距离相似度计算</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 计算欧氏距离相似度</span></span><br><span class="line"><span class="comment"># calculating Euclidean distance</span></span><br><span class="line"><span class="comment"># using linalg.norm()</span></span><br><span class="line">point1 = texts_countvector[<span class="number">0</span>]</span><br><span class="line">point2 = texts_countvector[<span class="number">1</span>]</span><br><span class="line">dist = np.linalg.norm(point1 - point2)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Euclidean Distance = %f&#x27;</span>%dist)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-TF-标准计算公式"><a href="#2-TF-标准计算公式" class="headerlink" title="2. TF 标准计算公式"></a>2. TF 标准计算公式</h3><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205261635717.png"></p>
+<p>上一节中计算相似度使用的向量化方式其实就是 TF。一开始学习的 Count Vector 其实也是 TF，只是没有做归一化。</p>
+<h3 id="3-IDF-标准计算公式"><a href="#3-IDF-标准计算公式" class="headerlink" title="3. IDF 标准计算公式"></a>3. IDF 标准计算公式</h3><p>$$逆文档频率指数 (IDF)&#x3D; log( \frac{语料库的文档总数} {包含该词的文档数 + 1} )$$</p>
+<p>分母加 1 为了防止式子除 0。<br>对整个式子取 log，为了防止小数过长。</p>
+<h3 id="4-TF-IDF-总结"><a href="#4-TF-IDF-总结" class="headerlink" title="4. TF-IDF 总结"></a>4. TF-IDF 总结</h3><ul>
+<li>TF-IDF<ul>
+<li>目的</li>
+<li>原理：<code>TF</code> × <code>IDF</code><ul>
+<li>特点：稀疏</li>
+</ul>
+</li>
+<li>优点<ul>
+<li>考虑了词的重要性</li>
+<li>简单快速，而且容易理解</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>稀疏——计算、存储效率</li>
+<li>每个词之间相互独立<ul>
+<li>只考虑词频信息，比较片面</li>
+<li>不考虑词语的有序性（位置信息）</li>
+<li>不能衡量词之间的相似度</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-TF-IDF-的实践"><a href="#0x03-TF-IDF-的实践" class="headerlink" title="0x03 TF-IDF 的实践"></a>0x03 TF-IDF 的实践</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">docA = <span class="string">&quot;The cat sat on my face&quot;</span></span><br><span class="line">docB = <span class="string">&quot;The dog sat on my bed&quot;</span></span><br><span class="line"></span><br><span class="line">bowA = docA.split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">bowB = docB.split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line"></span><br><span class="line">wordSet = <span class="built_in">set</span>(bowA).union(<span class="built_in">set</span>(bowB))</span><br><span class="line"></span><br><span class="line">wordDictA = <span class="built_in">dict</span>.fromkeys(wordSet, <span class="number">0</span>)</span><br><span class="line">wordDictB = <span class="built_in">dict</span>.fromkeys(wordSet, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> bowA:</span><br><span class="line">    wordDictA[word] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> bowB:</span><br><span class="line">    wordDictB[word] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(pd.DataFrame([wordDictA, wordDictB]))</span><br><span class="line"><span class="comment"># 输出：文本向量化</span></span><br><span class="line"><span class="comment">#    my  The  cat  on  bed  dog  sat  face</span></span><br><span class="line"><span class="comment"># 0   1    1    1   1    0    0    1     1</span></span><br><span class="line"><span class="comment"># 1   1    1    0   1    1    1    1     0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">computeTF</span>(<span class="params">wordDict, bow</span>):</span><br><span class="line">    tfDict = &#123;&#125;</span><br><span class="line">    bowCount = <span class="built_in">len</span>(bow)</span><br><span class="line">    <span class="keyword">for</span> word, count <span class="keyword">in</span> wordDict.items():</span><br><span class="line">        tfDict[word] = count / <span class="built_in">float</span>(bowCount)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tfDict</span><br><span class="line"></span><br><span class="line">tfDictA = computeTF(wordDictA, bowA)</span><br><span class="line">tfDictB = computeTF(wordDictB, bowB)</span><br><span class="line"></span><br><span class="line"><span class="comment"># IDF = log(语料库的文档总数 / (包含该词的文档数 + 1))</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">computeIDF</span>(<span class="params">docList</span>):</span><br><span class="line">    idfDict = &#123;&#125;</span><br><span class="line">    N = <span class="built_in">len</span>(docList)</span><br><span class="line"></span><br><span class="line">    idfDict = <span class="built_in">dict</span>.fromkeys(docList[<span class="number">0</span>].keys(), <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> doc <span class="keyword">in</span> docList:</span><br><span class="line">        <span class="keyword">for</span> word, val <span class="keyword">in</span> doc.items():</span><br><span class="line">            <span class="keyword">if</span> val &gt; <span class="number">0</span>:</span><br><span class="line">                idfDict[word] += <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;N:&#x27;</span>, N)</span><br><span class="line">    <span class="built_in">print</span>(idfDict)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> word, val <span class="keyword">in</span> idfDict.items():</span><br><span class="line">        idfDict[word] = math.log10(N /( <span class="built_in">float</span>(val)+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> idfDict</span><br><span class="line"></span><br><span class="line">idfs = computeIDF([wordDictA, wordDictB])</span><br><span class="line"><span class="built_in">print</span>(idfs)</span><br><span class="line"><span class="comment"># 输出：</span></span><br><span class="line"><span class="comment"># N: 2（总文档数为 2）</span></span><br><span class="line"><span class="comment"># 统计每个词在所有文档中出现的次数：</span></span><br><span class="line"><span class="comment"># &#123;&#x27;my&#x27;: 2, &#x27;The&#x27;: 2, &#x27;cat&#x27;: 1, &#x27;on&#x27;: 2, &#x27;bed&#x27;: 1, &#x27;dog&#x27;: 1, &#x27;sat&#x27;: 2, &#x27;face&#x27;: 1&#125;</span></span><br><span class="line"><span class="comment"># 计算得到的 idf：</span></span><br><span class="line"><span class="comment"># &#123;&#x27;my&#x27;: -0.17609125905568127, &#x27;The&#x27;: -0.17609125905568127, &#x27;cat&#x27;: 0.0, &#x27;on&#x27;: -0.17609125905568127, &#x27;bed&#x27;: 0.0, &#x27;dog&#x27;: 0.0, &#x27;sat&#x27;: -0.17609125905568127, &#x27;face&#x27;: 0.0&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意!!! 为什么有的 idf 是 0 ?</span></span><br><span class="line"><span class="comment"># 因为只出现一次的词语通过计算得到 log(2/1+1) = 0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">computeTFIDF</span>(<span class="params">tfDict, idfs</span>):</span><br><span class="line">    tfidfDict = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> word, val <span class="keyword">in</span> tfDict.items():</span><br><span class="line">        tfidfDict[word] = val * idfs[word]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tfidfDict</span><br><span class="line"></span><br><span class="line">tfidfDictA = computeTFIDF(tfDictA, idfs)</span><br><span class="line">tfidfDictB = computeTFIDF(tfDictB, idfs)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(pd.DataFrame([tfidfDictA, tfidfDictB]))</span><br><span class="line"><span class="comment"># 输出：所有文档的 TF-IDF</span></span><br><span class="line"><span class="comment">#          my       The  cat        on  bed  dog       sat  face</span></span><br><span class="line"><span class="comment"># 0 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0</span></span><br><span class="line"><span class="comment"># 1 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="0x04-项目1：《文章关键信息提取》"><a href="#0x04-项目1：《文章关键信息提取》" class="headerlink" title="0x04 项目1：《文章关键信息提取》"></a>0x04 项目1：《文章关键信息提取》</h2><p>目标：对一个数据集中的所有文章做关键信息提取。</p>
+<p>首先将 <code>input_tfidf_dir</code> 中的所有文章整个到一个文件里。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -----------</span></span><br><span class="line"><span class="comment"># convert.py</span></span><br><span class="line"><span class="comment"># -----------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 「argv」是「argument variable」参数变量的简写形式，一般在命令行调用的时候由系统传递给程序。这个变量其实是一个List列表，argv[0] 一般是“被调用的脚本文件名或全路径”，这个与操作系统有关，argv[1]和以后就是传入的系统命令参数。</span></span><br><span class="line">file_path_dir = sys.argv[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">file_handler</span>(<span class="params">file_path</span>):</span><br><span class="line">    f = <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> f</span><br><span class="line"></span><br><span class="line">file_name = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(file_path_dir):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> f.startswith(<span class="string">&#x27;.&#x27;</span>):  <span class="comment"># 筛除 以 “.” 开头的隐藏文件</span></span><br><span class="line">        file_path = file_path_dir + <span class="string">&quot;/&quot;</span> + f</span><br><span class="line">        content_list = []</span><br><span class="line"></span><br><span class="line">        file = file_handler(file_path)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> file:</span><br><span class="line">            content_list.append(line.strip())</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\t&#x27;</span>.join([<span class="built_in">str</span>(file_name), <span class="string">&#x27; &#x27;</span>.join(content_list)]))</span><br><span class="line"></span><br><span class="line">        file_name += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看一下输出</span></span><br><span class="line">python convert.py input_tfidf_dir</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将输出存入文件</span></span><br><span class="line">python convert.py input_tfidf_dir &gt; tfidf_input.data</span><br></pre></td></tr></table></figure>
+
+<p>MapReduce 要做下面的事情：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291138183.png"></p>
+<p>将左边乱序的输出排序，相同的 word 放一起。执行 <code>reduce.py</code> 的时候，要考虑到如右图——最后一个 word 只有一行的情况。</p>
+<p>将文档里出现的词打印出来。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -----------</span></span><br><span class="line"><span class="comment"># map.py</span></span><br><span class="line"><span class="comment"># -----------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    ss = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(ss) != <span class="number">2</span>:  <span class="comment"># 检查</span></span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    file_name, file_content = ss</span><br><span class="line">    word_list = file_content.strip().split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line"></span><br><span class="line">    word_set = <span class="built_in">set</span>(word_list)  <span class="comment"># 去除一篇文档中重复的单词</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> word_set:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\t&#x27;</span>.join([word, <span class="string">&#x27;1&#x27;</span>]))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>检验一下 <code>map.py</code> 文件做了什么，可以做什么。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出每个文档中出行啊的词</span></span><br><span class="line">cat tfidf_input.data | python map.py</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打印输出的结果</span></span><br><span class="line">cat tfidf_input.data | python map.py | grep &#x27;设计&#x27;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">统计个数</span></span><br><span class="line">cat tfidf_input.data | python map.py | grep -c &#x27;设计&#x27;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将输出结果做个排序</span></span><br><span class="line"> cat tfidf_input.data | python map.py | sort -k1 -nr</span><br></pre></td></tr></table></figure>
+
+<p>计算 idf。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -----------</span></span><br><span class="line"><span class="comment"># reduce.py</span></span><br><span class="line"><span class="comment"># -----------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line">docs_cnt = <span class="number">508</span></span><br><span class="line"></span><br><span class="line">current_word = <span class="literal">None</span></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">    ss = line.strip().split(<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(ss) != <span class="number">2</span>:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    word, val = ss</span><br><span class="line">    <span class="keyword">if</span> current_word == <span class="literal">None</span>:</span><br><span class="line">        current_word = word</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> current_word != word:</span><br><span class="line">        idf = math.log10(docs_cnt / (<span class="built_in">float</span>(count) + <span class="number">1.0</span>))  <span class="comment"># 计算 idf</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\t&#x27;</span>.join([current_word, <span class="built_in">str</span>(idf)]))</span><br><span class="line">        count = <span class="number">0</span>  <span class="comment"># 重置 count</span></span><br><span class="line">        current_word = word  <span class="comment"># 换到下一个 word</span></span><br><span class="line"></span><br><span class="line">    count += <span class="built_in">int</span>(val)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 防止最后一类只有一行，导致最后一类没有输出</span></span><br><span class="line">idf = math.log10(docs_cnt / (<span class="built_in">float</span>(count) + <span class="number">1.0</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\t&#x27;</span>.join([current_word, <span class="built_in">str</span>(idf)]))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将计算的 idf 存储到 result_idf.data 文件里</span></span><br><span class="line">cat tfidf_input.data | python map.py | sort -k1 -nr | python reduce.py &gt; result_idf.data</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看一下 “的” 的 idf</span></span><br><span class="line">cat result_idf.data | grep &#x27;的&#x27;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输出：</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">的  0.0008557529505832833</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05-项目2：文本相似度计算"><a href="#0x05-项目2：文本相似度计算" class="headerlink" title="0x05 项目2：文本相似度计算"></a>0x05 项目2：文本相似度计算</h2><p><a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886&#x2F;sentence-similarity: 对四种句子&#x2F;文本相似度计算方法进行实验与比较</a></p>
+<p>使用 Word2Vec 的方法将所有句子生成句向量，然后利用四种方法计算文本相似度。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>配置 Vim：<br> <a href="https://bynss.com/linux/827013.html">怎样在 Ubuntu 上安装最新的 Vim | 月灯依旧</a><br> <a href="https://blog.csdn.net/weixin_36338224/article/details/120985361">保姆级教程！将 Vim 打造一个 IDE （Python 篇）</a><br> <a href="https://zhuanlan.zhihu.com/p/127933244">Vim-Python 环境 - 知乎</a><br> <a href="https://zhuanlan.zhihu.com/p/30022074">Vim - 配置 IDE 一般的 python 环境 - 知乎</a><br> <a href="https://blog.csdn.net/qq_34128332/article/details/115820865?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&utm_relevant_index=2">Vim 插件 YouCompleteMe 安装归纳</a></p>
+<p>文本相似度：<br> <a href="https://zhuanlan.zhihu.com/p/155960197">推荐算法原理（二）欧几里得距离计算物品间相似度 - 知乎</a><br> <a href="https://www.cnblogs.com/HuZihu/p/10178165.html">相似度度量：欧氏距离与余弦相似度</a><br> <a href="https://blog.csdn.net/steven_ffd/article/details/84881063">sklearn中CountVectorizer里token_pattern默认参数解读</a></p>
+<p>相似度计算：<br> <a href="https://www.delftstack.com/zh/howto/python/cosine-similarity-between-lists-python/">Python 中的余弦相似度 | D栈 - Delft Stack</a><br> <a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886&#x2F;sentence-similarity: 对四种句子&#x2F;文本相似度计算方法进行实验与比较</a></p>
+]]></content>
+      <categories>
+        <category>FunRec</category>
+        <category>01-自然语言文本处理基础</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+        <tag>FunRec</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬虫与网络编程基础</title>
     <url>/2FSK6BP/</url>
     <content><![CDATA[<p>跟着 <a href="https://coggle.club/blog/30days-of-ml-202203">Coggle 三月份的学习活动</a> 补充一下这方面的技能。恰好最近收集数据集也比较需要这方面的知识。</p>
@@ -802,7 +1298,7 @@
 <p>随便选取一个 GET 请求，复制请求标头里的用户代理 User-Agent 信息。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>agent = &#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>kv = &#123;<span class="string">&#x27;wd&#x27;</span>: <span class="string">&#x27;Python&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get (<span class="string">&#x27; https://www.baidu.com/s &#x27;</span>, params=kv, headers=agent)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.url  <span class="comment"># 查看发出的 HTTP 请求的 URL</span></span><br><span class="line"><span class="string">&#x27;https://www.baidu.com/s?wd=Python&#x27;</span></span><br><span class="line"><span class="comment"># 可以看到，搜素关键词添加到了后面</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.request.headers</span><br><span class="line">&#123;<span class="string">&#x27;user-agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0&#x27;</span>, <span class="string">&#x27;Accept-Encoding&#x27;</span>: <span class="string">&#x27;gzip, deflate&#x27;</span>, <span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;*/*&#x27;</span>, <span class="string">&#x27;Connection&#x27;</span>: <span class="string">&#x27;keep-alive&#x27;</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">len</span>(r.text)  <span class="comment"># 查看返回内容的长度</span></span><br><span class="line"><span class="number">786376</span></span><br><span class="line"><span class="comment"># 这就说明返回成功了</span></span><br><span class="line"><span class="comment"># 修改 User-Agent 不正确时，返回的长度只有 227，即代表被百度服务器阻止访问了</span></span><br></pre></td></tr></table></figure>
 
-<p><strong>总结：伪装最好还是伪装的真实些。</strong></p>
+<p><strong>总结：在实际应用时，可能会涉及各种伪装技巧，反反爬也是要考虑的一方面。</strong></p>
 <h3 id="Case-3-网络图片的爬取和存储"><a href="#Case-3-网络图片的爬取和存储" class="headerlink" title="Case 3. 网络图片的爬取和存储"></a>Case 3. 网络图片的爬取和存储</h3><p>在国家地理的网站上随便找 <a href="http://www.ngchina.com.cn/news/detail?newsId=47344">一幅图</a>，通过查看网页源码找到这幅图的 URL。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> requests</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>path = <span class="string">&quot;city.jpg&quot;</span>  <span class="comment"># 给图片一个存储位置，存在当前目录下，命名为 city</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">&#x27;https://ngimages.oss-cn-beijing.aliyuncs.com/2022/03/16/fabe20d0-01cc-400d-ae07-8f56516a556a.jpg&#x27;</span>  <span class="comment"># 源码中找到的图的 URL</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span>  <span class="comment"># 成功</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:  <span class="comment"># 将图片以二进制形式写入文件</span></span><br><span class="line">	    f.write(r.content)</span><br></pre></td></tr></table></figure>
 
@@ -1038,6 +1534,130 @@
       </tags>
   </entry>
   <entry>
+    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
+    <url>/2RYYQJ0/</url>
+    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
+<span id="more"></span>
+
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
+<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
+<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
+<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
+<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta prompt_">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
+
+<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
+
+<p>切回后可以使用。</p>
+<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
+
+<p>全部默认，四次回车，显示以下则建立成功。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
+
+<p>查看 ssh 密钥并且复制到 Github：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
+
+<p>检查 ssh 是否绑定成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>Success：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
+<ul>
+<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
+<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
+</ul>
+<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
+<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
+<ul>
+<li>仓库名称：可以随便填，比如 <code>blog</code></li>
+<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
+<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
+<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
+</ul>
+<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
+
+<p>随后本地生成 hexo 界面：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
+
+<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
+<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>修改文档末尾的 deploy 设置：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
+<p>Tips：</p>
+<ul>
+<li>repository 是 GitHub 上建立的博客仓库</li>
+<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
+</ul>
+<p>更改完成后保存。</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
+<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
+<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
+<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
+<p><strong>token 备份</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
+
+
+<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
+<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
+<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
+<p>点击即可进入博客网站。</p>
+<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
+<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
+<ul>
+<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
+</ul>
+<p>还有其他比较优秀的主题比如：</p>
+<ul>
+<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
+<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
+<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
+</ul>
+<p>后面这三款会有更加丰富的一些外观设计。</p>
+<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
+<p>报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
+
+<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
+<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
+<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
+<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
+<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
+<p>主题美化：</p>
+<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
+<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
+<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
+<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Gitee</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>阿里灵杰_Task01_环境配置与实践数据下载</title>
     <url>/25S7X1E/</url>
     <content><![CDATA[<h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><ul>
@@ -1194,8 +1814,8 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm_notebook</span><br><span class="line"><span class="comment"># [corpus_w2v_ids[x] for x in qrels[&#x27;doc&#x27;].values[:100] - 1]</span></span><br><span class="line"></span><br><span class="line">corpus_mean_feat = [</span><br><span class="line">    unsuper_w2c_encoding(s) <span class="keyword">for</span> s <span class="keyword">in</span> tqdm_notebook(corpus_w2v_ids[:<span class="number">1000</span>])</span><br><span class="line">]</span><br><span class="line">corpus_mean_feat = np.vstack(corpus_mean_feat)</span><br><span class="line"></span><br><span class="line">train_mean_feat = [</span><br><span class="line">    unsuper_w2c_encoding(s) <span class="keyword">for</span> s <span class="keyword">in</span> tqdm_notebook(train_w2v_ids[:<span class="number">100</span>])</span><br><span class="line">]</span><br><span class="line">train_mean_feat = np.vstack(train_mean_feat)</span><br><span class="line"></span><br><span class="line">dev_mean_feat = [</span><br><span class="line">    unsuper_w2c_encoding(s) <span class="keyword">for</span> s <span class="keyword">in</span> tqdm_notebook(dev_w2v_ids[:<span class="number">100</span>])</span><br><span class="line">]</span><br><span class="line">dev_mean_feat = np.vstack(dev_mean_feat)</span><br></pre></td></tr></table></figure>
 
 <img data-src=" https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202203221710025.png" style="zoom: 67%;" />
-这里只用 `corpus` 的前 1000 条，`train` 和 `dev` 的前 100 条作为演示。对整个数据集编码的话，去掉切片即可。
 
+<p>这里只用 <code>corpus</code> 的前 1000 条，<code>train</code> 和 <code>dev</code> 的前 100 条作为演示。对整个数据集编码的话，去掉切片即可。</p>
 <h2 id="0x04-检索"><a href="#0x04-检索" class="headerlink" title="0x04 检索"></a>0x04 检索</h2><p>既然已经计算得到的词向量，那么就可以用词向量来计算 <code>train.query.txt</code> 和 <code>corpus.tsv</code> 文本的相似度，然后再做一个相似度排序就可以实现检索。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> normalize</span><br><span class="line"></span><br><span class="line"><span class="comment"># 归一化</span></span><br><span class="line">corpus_mean_feat = normalize(corpus_mean_feat)</span><br><span class="line">train_mean_feat = normalize(train_mean_feat)</span><br><span class="line">dev_mean_feat = normalize(dev_mean_feat)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算 Loss</span></span><br><span class="line">mrr = []</span><br><span class="line"><span class="keyword">for</span> idx <span class="keyword">in</span> tqdm_notebook(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>)):</span><br><span class="line">    <span class="comment"># 首先计算 train 与 corpus 的相似度，然后排序</span></span><br><span class="line">    dis = np.dot(train_mean_feat[idx - <span class="number">1</span>], corpus_mean_feat.T)</span><br><span class="line">    <span class="comment">#print(dis)</span></span><br><span class="line">    ids = np.argsort(dis)[::<span class="number">1</span>]</span><br><span class="line">    <span class="comment">#print(ids)</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(train_title[idx-<span class="number">1</span>], corpus_data.loc[qrels.loc[idx].ravel()[<span class="number">0</span>]][<span class="string">&quot;title&quot;</span>],  dis[qrels.loc[idx].ravel()-<span class="number">1</span>])</span><br><span class="line">    <span class="built_in">print</span>(corpus_title[ids[<span class="number">0</span>]])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算每个检索的 MRR Loss（赛题中评价指标是用的 MRR）</span></span><br><span class="line">    mrr.append(<span class="number">1</span>/(np.where(ids == qrels.loc[idx].ravel()[<span class="number">0</span>] - <span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>] + <span class="number">1</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印平均 MRR</span></span><br><span class="line"><span class="built_in">print</span>(np.mean(mrr))</span><br></pre></td></tr></table></figure>
 
@@ -1220,130 +1840,6 @@
       </categories>
       <tags>
         <tag>NLP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>搭建Hexo博客&amp;在GitHub+Gitee双重部署</title>
-    <url>/2RYYQJ0/</url>
-    <content><![CDATA[<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>大致记录了如何快速搭建一个简单的个人博客，并且部署到 GitHub 与 Gitee。中间也碰到了一些坑，记录一下，帮助后面可能会碰到这些问题的同学。</p>
-<span id="more"></span>
-
-<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><p>这里使用的是 WSL2 的 Ubuntu18.04 系统<br>首先设置代理，使得可以使用 windows 的 clash 代理。详见 <a href="wsl2%20%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%90%86.md">wsl2 子系统代理</a></p>
-<h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="- 安装 node.js"></a>- 安装 node.js</h3><p><a href="https://docs.microsoft.com/zh-cn/windows/dev-environment/javascript/nodejs-on-wsl">在 WSL 2 上设置 Node.js | Microsoft Docs</a><br><a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a><br><a href="https://dkvirus.gitbooks.io/-npm/content/di-sanzhang-npm-chuang-jian-xiang-mu/31-npm-init-shi-yong.html">3.1 npm init 使用 · 通俗易懂的 npm 入门教程</a></p>
-<p>我使用的是微软子系统官方文档里的方法安装 <code>nvm</code>，照着做就行。</p>
-<h3 id="安装-git"><a href="#安装-git" class="headerlink" title="- 安装 git"></a>- 安装 git</h3><p><a href="https://git-scm.com/downloads">Git - Downloads</a></p>
-<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">验证安装成功</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="Tips："><a href="#Tips：" class="headerlink" title="Tips："></a>Tips：</h4><p>这里有个坑，<code>nvm</code> 是用来管理 <code>node.js</code> 版本的。但是当我用 <code>nvm</code> 下载了另一个更新版本的 <code>node.js</code> 并且切换之后，<code>hexo</code> 这个命令就找不到了（应该是因为当时 <code>hexo</code> 安装在旧版的 <code>node.js</code> ），切回之前使用的版本才找得到。所以安装后尽量就不要换 <code>node.js</code> 的版本了。</p>
-<p>比如我安装了一个新版的，之前有一个老版的，如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  inno:[/mnt/w/github_blog] nvm ls</span><br><span class="line"><span class="meta">-&gt; </span><span class="language-bash">    v16.13.2</span></span><br><span class="line">       v16.14.0</span><br><span class="line">default -&gt; v16.13.2</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">unstable -&gt; N/A (default)</span><br><span class="line">node -&gt; stable (-&gt; v16.14.0) (default)</span><br><span class="line">stable -&gt; 16.14 (-&gt; v16.14.0) (default)</span><br><span class="line">lts/* -&gt; lts/gallium (-&gt; v16.14.0)</span><br></pre></td></tr></table></figure>
-
-<p>安装新版之后，每次默认启动的都是新版的，所以 <code>hexo</code> 是找不到的，要切回之前版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm use v16.13.2</span><br></pre></td></tr></table></figure>
-
-<p>切回后可以使用。</p>
-<p>为了避免每次都要切换  <code>node.js</code>，更改默认版本：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvm alias default v16.13.2</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-搭建仓库"><a href="#2-搭建仓库" class="headerlink" title="2. 搭建仓库"></a>2. 搭建仓库</h2><h3 id="生成-SSH-Keys"><a href="#生成-SSH-Keys" class="headerlink" title="- 生成 SSH Keys"></a>- 生成 SSH Keys</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱账号&quot; # 不带双引号</span><br></pre></td></tr></table></figure>
-
-<p>全部默认，四次回车，显示以下则建立成功。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/home/inno/.ssh/id_rsa):</span><br><span class="line">Created directory &#x27;/home/inno/.ssh&#x27;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /home/inno/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /home/inno/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:llz0nPfP************Ua0/as4********I9g4 jh.hour@gmail.com</span><br><span class="line">The key&#x27;s randomart image is:</span><br><span class="line">+---[RSA 2048]----+</span><br><span class="line">|         .=      |</span><br><span class="line">|         *****   |</span><br><span class="line">|        = * B .  |</span><br><span class="line">|       ***** + . |</span><br><span class="line">|        E *.o . o|</span><br><span class="line">|       . * *o. +o|</span><br><span class="line">|          O. +o o|</span><br><span class="line">|         *****+ .|</span><br><span class="line">|        ..S**+.o |</span><br><span class="line">+----[SHA256]-----+</span><br></pre></td></tr></table></figure>
-
-<p>查看 ssh 密钥并且复制到 Github：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line"></span><br><span class="line">ll</span><br><span class="line"><span class="meta"># </span><span class="language-bash">目录文件如下</span></span><br><span class="line">	drwx------ 2 inno inno 4096 Jan 24 16:44 .</span><br><span class="line">	drwxr-xr-x 9 inno inno 4096 Jan 24 16:49 ..</span><br><span class="line">	-rw------- 1 inno inno 1675 Jan 24 16:44 id_rsa</span><br><span class="line">	-rw-r--r-- 1 inno inno  399 Jan 24 16:44 id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">vim 打开 id_rsa.pub 文件</span></span><br><span class="line">vim  id_rsa.pub</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">全选复制 然后粘贴到 GitHub 的 [SSH keys](https://github.com/settings/keys) / Add new</span></span><br></pre></td></tr></table></figure>
-
-<p>检查 ssh 是否绑定成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>Success：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAM********trVc98/R1*****3/L*******M.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line"></span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi 1nnoh! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="- 新建仓库"></a>- 新建仓库</h3><h4 id="Github"><a href="#Github" class="headerlink" title="- Github"></a>- Github</h4><p>在 GitHub 新建一个仓库（public），命名如下：</p>
-<ul>
-<li>我的仓库地址是: <code>1nnoh/1nnoh.github.io</code></li>
-<li>仓库命名规则为 前面是用户名（GitHub用户名，点击右上角头像即可看到: signed as xxx），后面为 <code>.github.io</code></li>
-</ul>
-<p>更详细的内容可以看 <a href="#Reference">Reference</a> 里初级建站那个视频。</p>
-<h4 id="Gitee"><a href="#Gitee" class="headerlink" title="- Gitee"></a>- Gitee</h4><p>在 Gitee 新建仓库（开源或私有都可以），命名如下：</p>
-<ul>
-<li>仓库名称：可以随便填，比如 <code>blog</code></li>
-<li>仓库路径：填入用户名，跟 GitHub 一样，只是后面不用加 <code>.github.io</code>。至于为什么这样设置，可以自己试试其他的路径，然后看看 服务选项中 Gitee Pages 服务 生成的网站地址的区别。</li>
-<li>开启 Gitee Pages 服务：进入仓库选择 服务，选择 Gitee Pages。第一次使用需要身份验证，一般半天可以通过人工审核。选取 强制使用 HTTPS，然后生成网站。</li>
-<li>Tips：Github 的 Pages 服务可以自动更新，但Gitee 的 Pages 服务不能自动更新（开启的话需要付费）。所以每次从本地部署网站到线上之后，需要在 Gitee Pages 服务 中更新网站。</li>
-</ul>
-<h2 id="3-本地生成博客内容"><a href="#3-本地生成博客内容" class="headerlink" title="3. 本地生成博客内容"></a>3. 本地生成博客内容</h2><p>进入想要生成博客内容的目录，然后生成：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">初始化 hexo 博客</span></span><br><span class="line">mkdir hexo-blog</span><br><span class="line">hexo init</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output</span></span><br><span class="line">	INFO  Cloning hexo-starter https://github.com/hexojs/hexo-starter.git</span><br><span class="line">	INFO  Install dependencies</span><br><span class="line">	INFO  Start blogging with Hexo!</span><br></pre></td></tr></table></figure>
-
-<p>随后本地生成 hexo 界面：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s # hexo server 启动本地服务器</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">Output 点击链接可以进入</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Validating config</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Start processing</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">INFO  Hexo is running at http://localhost:4000/ . Press Ctrl+C to stop.</span></span><br></pre></td></tr></table></figure>
-
-<p>Press Ctrl+C 点击生成的本地地址即可访问初步建好的 Hexo博客。或者将 <code>http://localhost:4000/</code> 复制到浏览器地址栏打开。</p>
-<h2 id="4-发布到-GitHub-与-Gitee"><a href="#4-发布到-GitHub-与-Gitee" class="headerlink" title="4. 发布到 GitHub 与 Gitee"></a>4. 发布到 GitHub 与 Gitee</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="- 修改  _config.yml"></a>- 修改  _config.yml</h3><p>进入上节生成博客的目录，打开 _config.yml  文件（或者在上节中生成博客的目录中找到该文件，用记事本或 VS Code 等代码编辑器打开）：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>修改文档末尾的 deploy 设置：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只配置 Github</span></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment"># Docs: https://hexo.io/docs/one-command-deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span> <span class="comment"># GitHub 的分支改成 main 了， Gitee 是 master</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Github 与 Gitee 一起部署</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"> <span class="attr">repository:</span></span><br><span class="line">	 <span class="attr">gitee:</span> <span class="string">git@gitee.com:innoh/innoh.git,master</span></span><br><span class="line">	 <span class="attr">github:</span> <span class="string">https://github.com/1nnoh/1nnoh.github.io.git,main</span></span><br></pre></td></tr></table></figure>
-<p>Tips：</p>
-<ul>
-<li>repository 是 GitHub 上建立的博客仓库</li>
-<li>进入仓库后，点击 Code 即可看到 https 地址（就是 clone 的地方）。</li>
-</ul>
-<p>更改完成后保存。</p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="- 安装依赖"></a>- 安装依赖</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-
-<p>部署：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash">hexo generate</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">hexo deploy 部署到服务器</span></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">输入 GitHub用户名 与 token（是用户名，不是邮箱；是token，不是登录密码！）</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>重点！！！：输入密码的时候，去 GitHub 生成 token，把 token 作为部署时登录密码</strong></p>
-<p>&#x3D;&#x3D;<strong>以后每次推送的时候，如果需要输入密码，记得也是输入令牌！！！</strong>&#x3D;&#x3D;</p>
-<p>进入 GitHub 的 Settings &#x2F; Developer settings: 选择 Personal access tokens</p>
-<p>生成 tokens，权限全选。生成令牌后复制，并粘贴输入密码。</p>
-<p><strong>token 备份</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ghp_DIvVJ*******************83i</span><br></pre></td></tr></table></figure>
-
-
-<p>&#x3D;&#x3D;<strong>这个 token令牌 是有一个有效期的，默认为 30 天，所以每三十天记得更新一下令牌权限，否则推送的时候会出现错误！！！另外，每次更新之后，令牌也会变，记得重新复制保存！</strong>&#x3D;&#x3D;</p>
-<h3 id="检验发布"><a href="#检验发布" class="headerlink" title="- 检验发布"></a>- 检验发布</h3><p>到博客仓库 1nnoh &#x2F; 1nnoh.github.io 进入 Settings。</p>
-<p>最下面有一个 GitHub Pages：Pages settings now has its own dedicated tab! Check it out here!</p>
-<p>点击即可进入博客网站。</p>
-<p>Gitee 则是从 Gitee Pages 服务 中生成的网站地址进入。</p>
-<h2 id="5-修改主题"><a href="#5-修改主题" class="headerlink" title="5. 修改主题"></a>5. 修改主题</h2><p>我使用的是一款简约整洁的主题：</p>
-<ul>
-<li><a href="https://github.com/next-theme/hexo-theme-next">GitHub - next-theme&#x2F;hexo-theme-next: 🎉 Elegant and powerful theme for Hexo.</a></li>
-</ul>
-<p>还有其他比较优秀的主题比如：</p>
-<ul>
-<li><a href="https://github.com/blinkfox/hexo-theme-matery">GitHub - blinkfox&#x2F;hexo-theme-matery: A beautiful hexo blog theme with material design and responsive design.一个基于材料设计和响应式设计而成的全面、美观的Hexo主题。国内访问：http://blinkfox.com</a></li>
-<li><a href="https://github.com/fluid-dev/hexo-theme-fluid">GitHub - fluid-dev&#x2F;hexo-theme-fluid: 一款 Material Design 风格的 Hexo 主题 &#x2F; An elegant Material-Design theme for Hexo</a></li>
-<li><a href="https://github.com/jerryc127/hexo-theme-butterfly">GitHub - jerryc127&#x2F;hexo-theme-butterfly: 🦋 A Hexo Theme: Butterfly</a></li>
-</ul>
-<p>后面这三款会有更加丰富的一些外观设计。</p>
-<h2 id="6-后记"><a href="#6-后记" class="headerlink" title="6. 后记"></a>6. 后记</h2><p>最近两天打算在 Gitee 和 Github 同时推送，但 Github 一直推送不成功，还以为是 <code>_config.yml</code> 里 deploy 那一块儿的格式问题。</p>
-<p>报错：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fatal: Authentication failed for &#x27;https://github.com/1nnoh/1nnoh.github.io.git/&#x27;</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Error: Spawn failed</span><br><span class="line">      at ChildProcess.&lt;anonymous&gt; (/mnt/w/github_blog/node_modules/hexo-util/lib/spawn.js:51:21)</span><br><span class="line">      at ChildProcess.emit (node:events:390:28)</span><br><span class="line">      at Process.ChildProcess._handle.onexit (node:internal/child_process:290:12) &#123;</span><br><span class="line">    code: 128</span><br><span class="line">  &#125;</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br></pre></td></tr></table></figure>
-
-<p>找了两天原因，最后才发现，推送的时候输入的是 GitHub 的用户名与 token，而 token 默认是只有 30 天的有效期，过期了之后要重新生成，并且 token 也会变，需要重新复制保存。</p>
-<p>当时美化 Next 主题也是花了很多时间，因为 Hexo 和 Next 经历好多版本的更新，很多老一点的教程都是不适用的。调各种细节，增加一些统计或者评论的模块，都还蛮繁琐的。我就不重复造轮子了，在 References 里贴出一些我参考的教程。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>初级建站：<a href="https://www.bilibili.com/video/BV1mU4y1j72n?p=4">【2021最新版】保姆级Hexo+github搭建个人博客_哔哩哔哩_bilibili</a></p>
-<p>后续更改主题可参考：<a href="https://voyage-li.github.io/2021/12/26/experience/">建站经历 | Twilight</a> <a href="https://www.bilibili.com/read/cv4499195/#:~:text=Hexo%E4%B8%BB%E9%A2%98%E6%8E%A8%E8%8D%90%201%20%E3%80%81%20Butterfly%202%20%E3%80%81NexT%203%20%E3%80%81,5%20%E3%80%81Material%20X%206%20%E3%80%81%20Pure%207%20%E3%80%81Icarus">Hexo主题推荐 - 哔哩哔哩</a></p>
-<p>查找适合主题：<a href="https://hexo.io/themes/">Themes | Hexo</a></p>
-<p>Hexo 官网：<a href="https://hexo.io/zh-cn/docs/#%E5%AE%89%E8%A3%85-Hexo">文档 | Hexo</a></p>
-<p>主题美化：</p>
-<p><a href="https://theme-next.js.org/docs/theme-settings/">https://theme-next.js.org/docs/theme-settings/</a> </p>
-<p><a href="https://www.techgrow.cn/posts/755ff30d.html">https://www.techgrow.cn/posts/755ff30d.html</a></p>
-<p><a href="https://iitii.github.io/2021/05/28/1/">https://iitii.github.io/2021/05/28/1/</a></p>
-<p><a href="https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE">https://happyseashell.gitee.io/2021/09/26/hexo3/#%E4%B8%BB%E9%A2%98%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE</a></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>Gitee</tag>
-        <tag>Github</tag>
       </tags>
   </entry>
 </search>
