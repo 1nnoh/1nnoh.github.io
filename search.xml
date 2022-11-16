@@ -101,6 +101,56 @@
       </tags>
   </entry>
   <entry>
+    <title>1.1 框架式思维——漏斗思维</title>
+    <url>/6S0ESX/</url>
+    <content><![CDATA[<h1 id="框架式思维——漏斗思维"><a href="#框架式思维——漏斗思维" class="headerlink" title="框架式思维——漏斗思维"></a>框架式思维——漏斗思维</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>漏斗思维，是一个非常高效的思维方式，是一种线性的思考逻辑，一般按照任务的完成路径，识别出几个关键的行为转化节点；然后分析行为点间的转化与流失情况，进而定位问题，指导决策。</p>
+<p>这种思维其实已经渗透在各行各业中，虽然平时并没有很好的觉察，但是，把他单独抽象出来，会让你更加容易洞悉到问题本质</p>
+<span id="more"></span>
+
+<h3 id="举一些例子"><a href="#举一些例子" class="headerlink" title="举一些例子"></a>举一些例子</h3><p><strong>以面试为例</strong>（层层筛选）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205212209588.png"></p>
+<p><strong>以咨询为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221951849.png"></p>
+<p><strong>以电商为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221959021.png"></p>
+<p><strong>以广告为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222118804.png"></p>
+<p><strong>以 AISAS 模型为例</strong>（小红书）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222002116.png"></p>
+<h2 id="0x01-搜索引擎系统漏斗"><a href="#0x01-搜索引擎系统漏斗" class="headerlink" title="0x01 搜索引擎系统漏斗"></a>0x01 搜索引擎系统漏斗</h2><p>当我们在百度或者淘宝这些软件中，输入 Query 搜索自己想要的答案或者商品。搜索引擎如何从上千万乃至上亿的数据中，一步一步，返回满足用户需求的结果？</p>
+<p>以百度搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222033968.png"></p>
+<p>在这个过程中，关键环节在于其中的：召回 —&gt; 粗排 —&gt; 精排。</p>
+<p>以淘宝搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222040679.png"></p>
+<blockquote>
+<p> ——摘抄自《阿里粗排技术体系与最新进展》<br> <a href="https://zhuanlan.zhihu.com/p/364141120">https://zhuanlan.zhihu.com/p/364141120</a></p>
+</blockquote>
+<p>在排序的过程中，往往会有一步重排。为什么从 粗排 —&gt; 精排 之后还需要一步重排呢？</p>
+<ul>
+<li>为什么要重排？<ul>
+<li>保证结果的<strong>多样性</strong>：以短视频推荐为例，如果推荐的总是单一类型的视频（比如汽车），那么即使用户喜欢汽车，也会感到疲劳。所以通过重排，推荐一些相似领域，相关领域的视频，丰富推荐结果的多样性。</li>
+<li><strong>多轮优选</strong>：Listwise，把所有的排列组合都考虑一遍。</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x02-检索系统架构"><a href="#0x02-检索系统架构" class="headerlink" title="0x02 检索系统架构"></a>0x02 检索系统架构</h2><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291244344.png"></p>
+<h2 id="0x03-作业"><a href="#0x03-作业" class="headerlink" title="0x03 作业"></a>0x03 作业</h2><ul>
+<li>我们的生活中，还有什么场景会涉及漏斗思维的地方？<ul>
+<li>营销、注册转化</li>
+</ul>
+</li>
+<li>在纸上自己画一下今天的图（系统架构图、广告漏斗转化模型，搜索系统漏斗图）<ul>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205241940531.png"></li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242009540.png"></li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242010805.png"></li>
+</ul>
+</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="https://zhuanlan.zhihu.com/p/200899462">如何理解并应用漏斗模型？ - 知乎</a><br><a href="https://zhuanlan.zhihu.com/p/364141120">阿里粗排技术体系与最新进展 - 知乎</a></p>
+]]></content>
+      <categories>
+        <category>FunRec</category>
+        <category>01-自然语言文本处理基础</category>
+      </categories>
+      <tags>
+        <tag>FunRec</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>矢量语义与编码之 TF-IDF 检索</title>
     <url>/3EGCD4S/</url>
     <content><![CDATA[<h1 id="矢量语义与编码之词嵌入"><a href="#矢量语义与编码之词嵌入" class="headerlink" title="矢量语义与编码之词嵌入"></a>矢量语义与编码之词嵌入</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>上篇笔记中，我们学习了关于文本表征基于词袋模型得到稀疏向量化文本的内容，比如 One-Hot 编码，比如 TF-IDF 编码。本质上来说，词袋模型其实是一种通过统计学方法，将文档中出现的所有词语根据词频等统计指标，<strong>转为稀疏向量</strong>，从而表达一篇文章的方法。但是，这种稀疏向量的表达会存在一些缺点，比如不考虑语序等等。那么有没有办法得到文本向量化的稠密表达呢？这就是本篇笔记要讲的，Word Embedding 词嵌入。</p>
@@ -391,543 +441,6 @@
       </categories>
       <tags>
         <tag>NLP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>1.1 框架式思维——漏斗思维</title>
-    <url>/6S0ESX/</url>
-    <content><![CDATA[<h1 id="框架式思维——漏斗思维"><a href="#框架式思维——漏斗思维" class="headerlink" title="框架式思维——漏斗思维"></a>框架式思维——漏斗思维</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>漏斗思维，是一个非常高效的思维方式，是一种线性的思考逻辑，一般按照任务的完成路径，识别出几个关键的行为转化节点；然后分析行为点间的转化与流失情况，进而定位问题，指导决策。</p>
-<p>这种思维其实已经渗透在各行各业中，虽然平时并没有很好的觉察，但是，把他单独抽象出来，会让你更加容易洞悉到问题本质</p>
-<span id="more"></span>
-
-<h3 id="举一些例子"><a href="#举一些例子" class="headerlink" title="举一些例子"></a>举一些例子</h3><p><strong>以面试为例</strong>（层层筛选）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205212209588.png"></p>
-<p><strong>以咨询为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221951849.png"></p>
-<p><strong>以电商为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205221959021.png"></p>
-<p><strong>以广告为例</strong>：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222118804.png"></p>
-<p><strong>以 AISAS 模型为例</strong>（小红书）：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222002116.png"></p>
-<h2 id="0x01-搜索引擎系统漏斗"><a href="#0x01-搜索引擎系统漏斗" class="headerlink" title="0x01 搜索引擎系统漏斗"></a>0x01 搜索引擎系统漏斗</h2><p>当我们在百度或者淘宝这些软件中，输入 Query 搜索自己想要的答案或者商品。搜索引擎如何从上千万乃至上亿的数据中，一步一步，返回满足用户需求的结果？</p>
-<p>以百度搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222033968.png"></p>
-<p>在这个过程中，关键环节在于其中的：召回 —&gt; 粗排 —&gt; 精排。</p>
-<p>以淘宝搜索为例：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205222040679.png"></p>
-<blockquote>
-<p> ——摘抄自《阿里粗排技术体系与最新进展》<br> <a href="https://zhuanlan.zhihu.com/p/364141120">https://zhuanlan.zhihu.com/p/364141120</a></p>
-</blockquote>
-<p>在排序的过程中，往往会有一步重排。为什么从 粗排 —&gt; 精排 之后还需要一步重排呢？</p>
-<ul>
-<li>为什么要重排？<ul>
-<li>保证结果的<strong>多样性</strong>：以短视频推荐为例，如果推荐的总是单一类型的视频（比如汽车），那么即使用户喜欢汽车，也会感到疲劳。所以通过重排，推荐一些相似领域，相关领域的视频，丰富推荐结果的多样性。</li>
-<li><strong>多轮优选</strong>：Listwise，把所有的排列组合都考虑一遍。</li>
-</ul>
-</li>
-</ul>
-<h2 id="0x02-检索系统架构"><a href="#0x02-检索系统架构" class="headerlink" title="0x02 检索系统架构"></a>0x02 检索系统架构</h2><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291244344.png"></p>
-<h2 id="0x03-作业"><a href="#0x03-作业" class="headerlink" title="0x03 作业"></a>0x03 作业</h2><ul>
-<li>我们的生活中，还有什么场景会涉及漏斗思维的地方？<ul>
-<li>营销、注册转化</li>
-</ul>
-</li>
-<li>在纸上自己画一下今天的图（系统架构图、广告漏斗转化模型，搜索系统漏斗图）<ul>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205241940531.png"></li>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242009540.png"></li>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205242010805.png"></li>
-</ul>
-</li>
-</ul>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="https://zhuanlan.zhihu.com/p/200899462">如何理解并应用漏斗模型？ - 知乎</a><br><a href="https://zhuanlan.zhihu.com/p/364141120">阿里粗排技术体系与最新进展 - 知乎</a></p>
-]]></content>
-      <categories>
-        <category>FunRec</category>
-        <category>01-自然语言文本处理基础</category>
-      </categories>
-      <tags>
-        <tag>FunRec</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>1.2 TF-IDF 实践</title>
-    <url>/8CFDNJ/</url>
-    <content><![CDATA[<h1 id="矢量语义-TF-IDF-的实践"><a href="#矢量语义-TF-IDF-的实践" class="headerlink" title="矢量语义 TF-IDF 的实践"></a>矢量语义 TF-IDF 的实践</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。这篇笔记重点在实践 TF-IDF。想了解更多相关理论可以参考 <a href="https://1nnoh.top/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 。</p>
-<span id="more"></span>
-
-<h2 id="0x01-Count-Vector"><a href="#0x01-Count-Vector" class="headerlink" title="0x01 Count Vector"></a>0x01 Count Vector</h2><ul>
-<li>词袋模型 Bow<ul>
-<li>目的：最基础的文本特征提取方法，将文本转为计数矩阵</li>
-<li>原理：类似 One-Hot</li>
-<li>优点：<ul>
-<li>简单、直接</li>
-<li>易于理解</li>
-</ul>
-</li>
-<li>不足：<ul>
-<li>稀疏</li>
-<li>相当于只统计了词频<ul>
-<li>但是像“你我他，的地得”这种词，每个文章中都会出现</li>
-<li>所以需要如何把这种词的权重降下来？</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ol>
-<li>手撸 Count Vector</li>
-</ol>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">texts = ["He is a boy", "She is a girl, good girl"]
-
-word_set = set()
-
-# 存储词典
-for text in texts:
-    for word in text.strip().split(' '):
-        word_set.add(word.strip(','))
-
-print(word_set)
-# 输出：
-# {'He', 'girl', 'is', 'good', 'She', 'a', 'boy'}
-
-# 给词典中所有词语赋一个 id 值
-word_id_dict = {}
-for word in enumerate(word_set):
-    word_id_dict[word[1]] = word[0]
-
-print(word_id_dict)
-# 输出：
-# {'He': 0, 'girl': 1, 'is': 2, 'good': 3, 'She': 4, 'a': 5, 'boy': 6}
-
-# 根据上一步生成的 word_id_dict，将文档 texts 中的词语替换成对应的 id
-res_list = []
-
-for text in texts:
-    t_list = []
-    for word in text.strip().split(' '):
-        word = word.strip(',')
-        if word in word_id_dict:
-            t_list.append(word_id_dict[word])
-    res_list.append(t_list)
-
-print(res_list)
-# 输出：
-# [[0, 2, 5, 6], [4, 2, 5, 1, 3, 1]]
-
-# 将文档 texts 转为向量
-# tests 中有两个文档，每个文档的向量长度为词典长度
-# 根据 word_id_dict，出现的词语在 id 对应的列表位置 +1
-for res in res_list:
-    result = [0] * len(word_set)
-    for word_id in res:
-        result[word_id] += 1
-
-    print(result)
-# 输出：
-# [1, 0, 1, 0, 0, 1, 1]
-# [0, 2, 1, 1, 1, 1, 0]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<ol start="2">
-<li>调用 Sklearn<br><a href="https://blog.csdn.net/weixin_38278334/article/details/82320307">sklearn——CountVectorizer 详解</a></li>
-</ol>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Count Vector 方法只考虑了 TF，很片面！由此引出 TF-IDF（两者相乘）方法。</p>
-<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 TF-IDF 的原理</h2><ul>
-<li><p>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。</p>
-<ul>
-<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
-<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
-</ul>
-</li>
-<li><p>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。</p>
-<ul>
-<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
-<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
-<li>也就是说，在 <strong>所有文档</strong> 中都经常出现的词语，区分力小；而不常出现的词，区分力强。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code></p>
-<ul>
-<li>将两种指数相乘，得到 <code>TF-IDF</code>，表达一篇文档。</li>
-<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
-<li>对于一个 word，在文档出现的频率高，但在语料库里出现频率低，那么这个 word 对该文档的重要性比较高。</li>
-</ul>
-</li>
-</ul>
-<pre class="line-numbers language-ad-note" data-language="ad-note"><code class="language-ad-note">TF(词频 - Term Frequency)：指的是某一个给定的词语在该文件中出现的次数，这个数字通常会被归一化(一般是词频除以文章总词数), 以防止它偏向长的文件。
-
-IDF(逆文本频率指数 - Inverse Document Frequency)：包含指定词语的文档越少，IDF越大。某个词语的IDF，由总文件数目除以包含该词语之文件的数目，再将得到的商取对数得到，即：
-IDF=log(N/n)
--   N代表语料库中文档的总数
--   n代表某个word在几个文档中出现过；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="1-前置知识点：文本相似度"><a href="#1-前置知识点：文本相似度" class="headerlink" title="1. 前置知识点：文本相似度"></a>1. 前置知识点：文本相似度</h3><ul>
-<li><p>余弦相似度——最常用的相似度计算方法</p>
-<ul>
-<li>一个向量空间中两个向量夹角的余弦值作为衡量两个个体之间差异的大小</li>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251854838.png"></li>
-<li><strong>余弦值接近 1，夹角趋于 0，表明两个向量越相似！</strong></li>
-</ul>
-</li>
-<li><p>Jaccard 相似度——用于比较有限样本集之间的相似性与差异性</p>
-<ul>
-<li>Jaccard 系数定义为 A 与 B <strong>交集的大小</strong> 同 A 与 B <strong>并集的大小</strong>的比值</li>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251902319.png"></li>
-<li>Jaccard Similarity 得分在 0 到 1 的范围内。如果两个文档相同，则 Jaccard Similarity 为 1。如果两个文档之间没有共同词，则 Jaccard 相似度得分为 0。</li>
-<li>当 A 和 B 都为空，J(A,B) = 1</li>
-</ul>
-</li>
-<li><p>欧氏距离相似度——最常见的距离度量方法</p>
-<ul>
-<li>n 维空间中计算两点间距离</li>
-<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251915186.png"></li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p><strong>适用场景</strong>：<br>比如向量 A(1,1,1)，向量 B(5,5,5)，两个向量虽然余弦相似度一致（夹角为 0），但是在空间上，两个向量并非一致。类比到用户 A 购买了三个 1 元的物品，用户 B 购买了三个 5 元的物品，衡量这两个用户的消费能力时，显然用余弦相似度是不合适的，欧氏距离更加合适。</p>
-<p>欧氏距离能够体现个体数值特征的绝对差异，所以更多的用于需要从维度的数值大小中体现差异的分析，比如使用用户行为作为指标分析用户价值的相似情况（比较不同用户的消费能力），这属于价值度量；而余弦相似度对绝对数值不敏感，更多的用于使用用户对内容的评分来分析用户兴趣的相似程度（用户是否喜欢某商品），这属于定性度量。</p>
-<p>需要注意的是，欧氏距离和余弦相似度都需要保证各维度处于相同的刻度级别（量纲），所以一般需要对数据先进行标准化处理，否则很可能会引起偏差。比如用户对内容评分，假设为 5 分制，对用户甲来说评分 3 分以上就是自己喜欢的，而对于用户乙，评分 4 分以上才是自己喜欢的，这样就无法很好地衡量两个用户评分之间的相似程度。如果将评分数值减去平均值，那么就可以很好地解决问题。此时，就相当于用皮尔逊相关系数来度量相似程度。</p>
-</blockquote>
-<h4 id="实践：计算两个字符串的相似度"><a href="#实践：计算两个字符串的相似度" class="headerlink" title="实践：计算两个字符串的相似度"></a>实践：计算两个字符串的相似度</h4><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251937573.jpg"></p>
-<p>首先生成文本的向量化表达：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">import jieba
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-
-texts = ['这只皮靴号码大了，那只号码合适','这只皮靴号码不小，那只更合适']
-
-# 分词
-texts_cut = []
-
-def cut_word(sentence):
-    return '/'.join(jieba.lcut(sentence))
-
-for text in texts:
-    #text = text.replace('，', '')
-    texts_cut.append(cut_word(text))
-    # strip() 只能移除字符串头尾指定的字符序列，不能删除中间部分的字符
-print(texts_cut)
-# 输出：分词结果
-# ['这/只/皮靴/号码/大/了/，/那/只/号码/合适', '这/只/皮靴/号码/不小/，/那/只/更/合适']
-
-# 创建词袋数据结构
-# CountVectorizer 参数中，默认的正则表达式选择 2 个及以上的字母或数字作为 token
-# 那么会导致分词为单个字的词语被忽略
-# 所以这里需要修改正则表达式参数
-cv = CountVectorizer(token_pattern=r"(?u)\b\w+\b")  # 修改正则表达式参数
-
-cv_fit = cv.fit_transform(texts_cut)
-# 上行代码等价于下面两行
-# cv.fit(texts)
-# cv_fit=cv.transform(texts)
-
-# 列表形式呈现文章生成的词典
-print(cv.get_feature_names())
-# 输出：词典
-# ['不小', '了', '只', '号码', '合适', '大', '更', '皮靴', '这', '那']
-
-# 字典形式的词典，带有词语 id
-print(cv.vocabulary_)
-# 输出：
-# {'这': 8, '只': 2, '皮靴': 7, '号码': 3, '大': 5, '了': 1, '那': 9, '合适': 4, '不小': 0, '更': 6}
-# 字典形式，key：词，value:该词（特征）的索引
-
-# 所有文本的词频
-print(cv_fit)
-# 输出：
-# (0, 8)  1  第 0 个文档中，词典索引为 8 的元素（这），词频为 1
-# (0, 2)  2
-# (0, 7)  1
-# (0, 3)  2
-# (0, 5)  1
-# (0, 1)  1
-# (0, 9)  1
-# (0, 4)  1
-# (1, 8)  1
-# (1, 2)  2
-# (1, 7)  1
-# (1, 3)  1
-# (1, 9)  1
-# (1, 4)  1
-# (1, 0)  1
-# (1, 6)  1
-
-# toarray() 将结果转为稀疏矩阵的表达
-print(cv_fit.toarray())
-# 输出：
-# [[0 1 2 2 1 1 0 1 1 1]
-#  [1 0 2 1 1 0 1 1 1 1]]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<ol>
-<li>使用余弦相似度计算<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251939761.png"></li>
-</ol>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算余弦相似度
-texts_countvector = cv_fit.toarray()
-cos_sim = cosine_similarity(texts_countvector[0].reshape(1,-1), texts_countvector[1].reshape(1,-1))
-
-print('Cosine Similarity = %f'%cos_sim)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<ol start="2">
-<li>使用 Jaccard 相似度计算</li>
-</ol>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算 jaccard 相似度
-def jaccard_sim(a,b):
-    unions = len(set(a).union(set(b)))
-    intersections = len(set(a).intersection(set(b)))
-    return intersections / unions
-
-print('Jaccard Similarity = %f'%jaccard_sim(texts_cut[0],texts_cut[1]))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<ol start="3">
-<li>使用欧氏距离相似度计算</li>
-</ol>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算欧氏距离相似度
-# calculating Euclidean distance
-# using linalg.norm()
-point1 = texts_countvector[0]
-point2 = texts_countvector[1]
-dist = np.linalg.norm(point1 - point2)
-
-print('Euclidean Distance = %f'%dist)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="2-TF-标准计算公式"><a href="#2-TF-标准计算公式" class="headerlink" title="2. TF 标准计算公式"></a>2. TF 标准计算公式</h3><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205261635717.png"></p>
-<p>上一节中计算相似度使用的向量化方式其实就是 TF。一开始学习的 Count Vector 其实也是 TF，只是没有做归一化。</p>
-<h3 id="3-IDF-标准计算公式"><a href="#3-IDF-标准计算公式" class="headerlink" title="3. IDF 标准计算公式"></a>3. IDF 标准计算公式</h3><p><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -2.059ex;" xmlns="http://www.w3.org/2000/svg" width="52.925ex" height="5.285ex" role="img" focusable="false" viewBox="0 -1426 23393 2336"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">逆</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">频</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">率</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">指</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g><g data-mml-node="mo" transform="translate(7000,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(7389,0)"><path data-c="1D43C" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"></path></g><g data-mml-node="mi" transform="translate(7893,0)"><path data-c="1D437" d="M287 628Q287 635 230 637Q207 637 200 638T193 647Q193 655 197 667T204 682Q206 683 403 683Q570 682 590 682T630 676Q702 659 752 597T803 431Q803 275 696 151T444 3L430 1L236 0H125H72Q48 0 41 2T33 11Q33 13 36 25Q40 41 44 43T67 46Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628ZM703 469Q703 507 692 537T666 584T629 613T590 629T555 636Q553 636 541 636T512 636T479 637H436Q392 637 386 627Q384 623 313 339T242 52Q242 48 253 48T330 47Q335 47 349 47T373 46Q499 46 581 128Q617 164 640 212T683 339T703 469Z"></path></g><g data-mml-node="mi" transform="translate(8721,0)"><path data-c="1D439" d="M48 1Q31 1 31 11Q31 13 34 25Q38 41 42 43T65 46Q92 46 125 49Q139 52 144 61Q146 66 215 342T285 622Q285 629 281 629Q273 632 228 634H197Q191 640 191 642T193 659Q197 676 203 680H742Q749 676 749 669Q749 664 736 557T722 447Q720 440 702 440H690Q683 445 683 453Q683 454 686 477T689 530Q689 560 682 579T663 610T626 626T575 633T503 634H480Q398 633 393 631Q388 629 386 623Q385 622 352 492L320 363H375Q378 363 398 363T426 364T448 367T472 374T489 386Q502 398 511 419T524 457T529 475Q532 480 548 480H560Q567 475 567 470Q567 467 536 339T502 207Q500 200 482 200H470Q463 206 463 212Q463 215 468 234T473 274Q473 303 453 310T364 317H309L277 190Q245 66 245 60Q245 46 334 46H359Q365 40 365 39T363 19Q359 6 353 0H336Q295 2 185 2Q120 2 86 2T48 1Z"></path></g><g data-mml-node="mo" transform="translate(9470,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(10136.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(11192.6,0)"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path></g><g data-mml-node="mi" transform="translate(11490.6,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(11975.6,0)"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mo" transform="translate(12452.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mfrac" transform="translate(12841.6,0)"><g data-mml-node="mrow" transform="translate(1081.2,676)"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">语</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">料</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">库</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">总</text></g><g data-mml-node="mi" transform="translate(7000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g></g><g data-mml-node="mrow" transform="translate(220,-710)"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">包</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">含</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">该</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">词</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(7000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g><g data-mml-node="mo" transform="translate(8222.2,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(9222.4,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><rect width="9922.4" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(23004,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container></p>
-<p>分母加 1 为了防止式子除 0。<br>对整个式子取 log，为了防止小数过长。</p>
-<h3 id="4-TF-IDF-总结"><a href="#4-TF-IDF-总结" class="headerlink" title="4. TF-IDF 总结"></a>4. TF-IDF 总结</h3><ul>
-<li>TF-IDF<ul>
-<li>目的</li>
-<li>原理：<code>TF</code> × <code>IDF</code><ul>
-<li>特点：稀疏</li>
-</ul>
-</li>
-<li>优点<ul>
-<li>考虑了词的重要性</li>
-<li>简单快速，而且容易理解</li>
-</ul>
-</li>
-<li>缺点<ul>
-<li>稀疏——计算、存储效率</li>
-<li>每个词之间相互独立<ul>
-<li>只考虑词频信息，比较片面</li>
-<li>不考虑词语的有序性（位置信息）</li>
-<li>不能衡量词之间的相似度</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="0x03-TF-IDF-的实践"><a href="#0x03-TF-IDF-的实践" class="headerlink" title="0x03 TF-IDF 的实践"></a>0x03 TF-IDF 的实践</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">import math
-import pandas as pd
-
-docA = "The cat sat on my face"
-docB = "The dog sat on my bed"
-
-bowA = docA.split(' ')
-bowB = docB.split(' ')
-
-wordSet = set(bowA).union(set(bowB))
-
-wordDictA = dict.fromkeys(wordSet, 0)
-wordDictB = dict.fromkeys(wordSet, 0)
-
-for word in bowA:
-    wordDictA[word] += 1
-
-for word in bowB:
-    wordDictB[word] += 1
-
-print(pd.DataFrame([wordDictA, wordDictB]))
-# 输出：文本向量化
-#    my  The  cat  on  bed  dog  sat  face
-# 0   1    1    1   1    0    0    1     1
-# 1   1    1    0   1    1    1    1     0
-
-def computeTF(wordDict, bow):
-    tfDict = {}
-    bowCount = len(bow)
-    for word, count in wordDict.items():
-        tfDict[word] = count / float(bowCount)
-
-    return tfDict
-
-tfDictA = computeTF(wordDictA, bowA)
-tfDictB = computeTF(wordDictB, bowB)
-
-# IDF = log(语料库的文档总数 / (包含该词的文档数 + 1))
-def computeIDF(docList):
-    idfDict = {}
-    N = len(docList)
-
-    idfDict = dict.fromkeys(docList[0].keys(), 0)
-    for doc in docList:
-        for word, val in doc.items():
-            if val &gt; 0:
-                idfDict[word] += 1
-    print('N:', N)
-    print(idfDict)
-
-    for word, val in idfDict.items():
-        idfDict[word] = math.log10(N /( float(val)+1))
-
-    return idfDict
-
-idfs = computeIDF([wordDictA, wordDictB])
-print(idfs)
-# 输出：
-# N: 2（总文档数为 2）
-# 统计每个词在所有文档中出现的次数：
-# {'my': 2, 'The': 2, 'cat': 1, 'on': 2, 'bed': 1, 'dog': 1, 'sat': 2, 'face': 1}
-# 计算得到的 idf：
-# {'my': -0.17609125905568127, 'The': -0.17609125905568127, 'cat': 0.0, 'on': -0.17609125905568127, 'bed': 0.0, 'dog': 0.0, 'sat': -0.17609125905568127, 'face': 0.0}
-
-# 注意!!! 为什么有的 idf 是 0 ?
-# 因为只出现一次的词语通过计算得到 log(2/1+1) = 0
-
-def computeTFIDF(tfDict, idfs):
-    tfidfDict = {}
-    for word, val in tfDict.items():
-        tfidfDict[word] = val * idfs[word]
-
-    return tfidfDict
-
-tfidfDictA = computeTFIDF(tfDictA, idfs)
-tfidfDictB = computeTFIDF(tfDictB, idfs)
-
-print(pd.DataFrame([tfidfDictA, tfidfDictB]))
-# 输出：所有文档的 TF-IDF
-#          my       The  cat        on  bed  dog       sat  face
-# 0 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0
-# 1 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<hr>
-<h2 id="0x04-项目1：《文章关键信息提取》"><a href="#0x04-项目1：《文章关键信息提取》" class="headerlink" title="0x04 项目1：《文章关键信息提取》"></a>0x04 项目1：《文章关键信息提取》</h2><p>目标：对一个数据集中的所有文章做关键信息提取。</p>
-<p>首先将 <code>input_tfidf_dir</code> 中的所有文章整个到一个文件里。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
-# convert.py
-# -----------
-
-import os
-import sys
-
-# 「argv」是「argument variable」参数变量的简写形式，一般在命令行调用的时候由系统传递给程序。这个变量其实是一个List列表，argv[0] 一般是“被调用的脚本文件名或全路径”，这个与操作系统有关，argv[1]和以后就是传入的系统命令参数。
-file_path_dir = sys.argv[1]
-
-def file_handler(file_path):
-    f = open(file_path, 'r')
-    return f
-
-file_name = 0
-for f in os.listdir(file_path_dir):
-    if not f.startswith('.'):  # 筛除 以 “.” 开头的隐藏文件
-        file_path = file_path_dir + "/" + f
-        content_list = []
-
-        file = file_handler(file_path)
-        for line in file:
-            content_list.append(line.strip())
-
-        print('\t'.join([str(file_name), ' '.join(content_list)]))
-
-        file_name += 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 查看一下输出
-python convert.py input_tfidf_dir
-# 将输出存入文件
-python convert.py input_tfidf_dir &gt; tfidf_input.data<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>MapReduce 要做下面的事情：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291138183.png"></p>
-<p>将左边乱序的输出排序，相同的 word 放一起。执行 <code>reduce.py</code> 的时候，要考虑到如右图——最后一个 word 只有一行的情况。</p>
-<p>将文档里出现的词打印出来。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
-# map.py
-# -----------
-
-import sys
-
-for line in sys.stdin:
-    ss = line.strip().split('\t')
-    if len(ss) != 2:  # 检查
-        continue
-
-    file_name, file_content = ss
-    word_list = file_content.strip().split(' ')
-
-    word_set = set(word_list)  # 去除一篇文档中重复的单词
-
-    for word in word_set:
-        print('\t'.join([word, '1']))
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>检验一下 <code>map.py</code> 文件做了什么，可以做什么。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 输出每个文档中出行啊的词
-cat tfidf_input.data | python map.py
-
-# 打印输出的结果
-cat tfidf_input.data | python map.py | grep '设计'
-
-# 统计个数
-cat tfidf_input.data | python map.py | grep -c '设计'
-
-# 将输出结果做个排序
- cat tfidf_input.data | python map.py | sort -k1 -nr<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>计算 idf。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
-# reduce.py
-# -----------
-
-import sys
-import math
-
-docs_cnt = 508
-
-current_word = None
-count = 0
-
-for line in sys.stdin:
-    ss = line.strip().split('\t')
-    if len(ss) != 2:
-
-        continue
-    word, val = ss
-    if current_word == None:
-        current_word = word
-
-    if current_word != word:
-        idf = math.log10(docs_cnt / (float(count) + 1.0))  # 计算 idf
-        print('\t'.join([current_word, str(idf)]))
-        count = 0  # 重置 count
-        current_word = word  # 换到下一个 word
-
-    count += int(val)
-
-# 防止最后一类只有一行，导致最后一类没有输出
-idf = math.log10(docs_cnt / (float(count) + 1.0))
-print('\t'.join([current_word, str(idf)]))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 将计算的 idf 存储到 result_idf.data 文件里
-cat tfidf_input.data | python map.py | sort -k1 -nr | python reduce.py &gt; result_idf.data
-
-# 查看一下 “的” 的 idf
-cat result_idf.data | grep '的'
-# 输出：
-# 的  0.0008557529505832833<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="0x05-项目2：文本相似度计算"><a href="#0x05-项目2：文本相似度计算" class="headerlink" title="0x05 项目2：文本相似度计算"></a>0x05 项目2：文本相似度计算</h2><p><a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886/sentence-similarity: 对四种句子/文本相似度计算方法进行实验与比较</a></p>
-<p>使用 Word2Vec 的方法将所有句子生成句向量，然后利用四种方法计算文本相似度。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>配置 Vim：<br> <a href="https://bynss.com/linux/827013.html">怎样在 Ubuntu 上安装最新的 Vim | 月灯依旧</a><br> <a href="https://blog.csdn.net/weixin_36338224/article/details/120985361">保姆级教程！将 Vim 打造一个 IDE （Python 篇）</a><br> <a href="https://zhuanlan.zhihu.com/p/127933244">Vim-Python 环境 - 知乎</a><br> <a href="https://zhuanlan.zhihu.com/p/30022074">Vim - 配置 IDE 一般的 python 环境 - 知乎</a><br> <a href="https://blog.csdn.net/qq_34128332/article/details/115820865?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&utm_relevant_index=2">Vim 插件 YouCompleteMe 安装归纳</a></p>
-<p>文本相似度：<br> <a href="https://zhuanlan.zhihu.com/p/155960197">推荐算法原理（二）欧几里得距离计算物品间相似度 - 知乎</a><br> <a href="https://www.cnblogs.com/HuZihu/p/10178165.html">相似度度量：欧氏距离与余弦相似度</a><br> <a href="https://blog.csdn.net/steven_ffd/article/details/84881063">sklearn中CountVectorizer里token_pattern默认参数解读</a></p>
-<p>相似度计算：<br> <a href="https://www.delftstack.com/zh/howto/python/cosine-similarity-between-lists-python/">Python 中的余弦相似度 | D栈 - Delft Stack</a><br> <a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886/sentence-similarity: 对四种句子/文本相似度计算方法进行实验与比较</a></p>
-]]></content>
-      <categories>
-        <category>FunRec</category>
-        <category>01-自然语言文本处理基础</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-        <tag>FunRec</tag>
       </tags>
   </entry>
   <entry>
@@ -1439,6 +952,493 @@ curl http://0.0.0.0:8888/\?content\=%E5%8D%97%E4%BA%AC%E5%B8%82%E9%95%BF%E6%B1%9
 <p>并且也对以上的方法都进行了实践。不过批量分词里配置这个 Hadoop 集群环境真的，搞得太开心了 –!</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>算法：<br><a href="https://zhuanlan.zhihu.com/p/103392455">中文分词算法之–最大匹配法 - 知乎</a><br><a href="https://zhuanlan.zhihu.com/p/32829048">自然语言处理中N-Gram模型介绍 - 知乎</a><br><a href="https://zhuanlan.zhihu.com/p/161436964">维特比算法(viterbi)原理以及简单实现 - 知乎</a></p>
 <p>环境配置：<br><a href="https://blog.csdn.net/u012757419/article/details/105431254">VMware虚拟机中Centos7网络配置及ping不通思路</a><br><a href="https://blog.csdn.net/ren9436/article/details/118864737">虚拟机Linux网络配置——Net模式（CentOS7）</a><br><a href="https://blog.csdn.net/weixin_45827423/article/details/122656775?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-122656775-blog-114282900.pc_relevant_antiscanv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-122656775-blog-114282900.pc_relevant_antiscanv3&utm_relevant_index=1">【2022】Centos7.4安装anaconda3</a><br><a href="https://blog.csdn.net/weixin_44768806/article/details/118365402">secureCRT连接不上虚拟机解决方案</a><br><a href="https://blog.csdn.net/weixin_40165004/article/details/121717405">SecureCRT连接虚拟机连接不上问题记录与解决</a></p>
+]]></content>
+      <categories>
+        <category>FunRec</category>
+        <category>01-自然语言文本处理基础</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+        <tag>FunRec</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1.2 TF-IDF 实践</title>
+    <url>/8CFDNJ/</url>
+    <content><![CDATA[<h1 id="矢量语义-TF-IDF-的实践"><a href="#矢量语义-TF-IDF-的实践" class="headerlink" title="矢量语义 TF-IDF 的实践"></a>矢量语义 TF-IDF 的实践</h1><h2 id="0x00-Abstract"><a href="#0x00-Abstract" class="headerlink" title="0x00 Abstract"></a>0x00 Abstract</h2><p>TF-IDF 是 NLP 入门的基础知识。通过对这种编码方式的学习，可以使我们更加容易理解 NLP 工作的本质。这篇笔记重点在实践 TF-IDF。想了解更多相关理论可以参考 <a href="https://1nnoh.top/280EQA3/">矢量语义与嵌入之 TF-IDF 检索</a> 。</p>
+<span id="more"></span>
+
+<h2 id="0x01-Count-Vector"><a href="#0x01-Count-Vector" class="headerlink" title="0x01 Count Vector"></a>0x01 Count Vector</h2><ul>
+<li>词袋模型 Bow<ul>
+<li>目的：最基础的文本特征提取方法，将文本转为计数矩阵</li>
+<li>原理：类似 One-Hot</li>
+<li>优点：<ul>
+<li>简单、直接</li>
+<li>易于理解</li>
+</ul>
+</li>
+<li>不足：<ul>
+<li>稀疏</li>
+<li>相当于只统计了词频<ul>
+<li>但是像“你我他，的地得”这种词，每个文章中都会出现</li>
+<li>所以需要如何把这种词的权重降下来？</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ol>
+<li>手撸 Count Vector</li>
+</ol>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">texts = ["He is a boy", "She is a girl, good girl"]
+
+word_set = set()
+
+# 存储词典
+for text in texts:
+    for word in text.strip().split(' '):
+        word_set.add(word.strip(','))
+
+print(word_set)
+# 输出：
+# {'He', 'girl', 'is', 'good', 'She', 'a', 'boy'}
+
+# 给词典中所有词语赋一个 id 值
+word_id_dict = {}
+for word in enumerate(word_set):
+    word_id_dict[word[1]] = word[0]
+
+print(word_id_dict)
+# 输出：
+# {'He': 0, 'girl': 1, 'is': 2, 'good': 3, 'She': 4, 'a': 5, 'boy': 6}
+
+# 根据上一步生成的 word_id_dict，将文档 texts 中的词语替换成对应的 id
+res_list = []
+
+for text in texts:
+    t_list = []
+    for word in text.strip().split(' '):
+        word = word.strip(',')
+        if word in word_id_dict:
+            t_list.append(word_id_dict[word])
+    res_list.append(t_list)
+
+print(res_list)
+# 输出：
+# [[0, 2, 5, 6], [4, 2, 5, 1, 3, 1]]
+
+# 将文档 texts 转为向量
+# tests 中有两个文档，每个文档的向量长度为词典长度
+# 根据 word_id_dict，出现的词语在 id 对应的列表位置 +1
+for res in res_list:
+    result = [0] * len(word_set)
+    for word_id in res:
+        result[word_id] += 1
+
+    print(result)
+# 输出：
+# [1, 0, 1, 0, 0, 1, 1]
+# [0, 2, 1, 1, 1, 1, 0]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol start="2">
+<li>调用 Sklearn<br><a href="https://blog.csdn.net/weixin_38278334/article/details/82320307">sklearn——CountVectorizer 详解</a></li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Count Vector 方法只考虑了 TF，很片面！由此引出 TF-IDF（两者相乘）方法。</p>
+<h2 id="0x02-TF-IDF-的原理"><a href="#0x02-TF-IDF-的原理" class="headerlink" title="0x02 TF-IDF 的原理"></a>0x02 TF-IDF 的原理</h2><ul>
+<li><p>词频 <code>TF</code> ：反应文章的 <strong>局部信息</strong>。</p>
+<ul>
+<li>在一篇文章中，越重要的内容，出现（强调）的次数越多，那么词频 <code>TF</code> 就会越高。所以这些高词频的词，就可以代表这篇文章。</li>
+<li>但伴随而来的问题是，文章中许多的语气词或者“你我他”这种词或者标点符号，同样也会出现很多次，但这些词往往也是高频词，但是没有意义。如何解决这种情况？那就需要 <code>IDF</code>。</li>
+</ul>
+</li>
+<li><p>逆文本频率指数 <code>IDF</code> ：反应系统的 <strong>全局信息</strong>。</p>
+<ul>
+<li><code>IDF</code> 可以帮助我们判断词语在系统中的 <strong>区分力</strong> 大小。<ul>
+<li>比如，如果 <strong>每篇文章</strong> 中都有“我”，那么它在所有文章中的 <strong>区分力都不强</strong>。</li>
+<li>也就是说，在 <strong>所有文档</strong> 中都经常出现的词语，区分力小；而不常出现的词，区分力强。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>TF-IDF</code> : <code>TF</code> × <code>IDF</code></p>
+<ul>
+<li>将两种指数相乘，得到 <code>TF-IDF</code>，表达一篇文档。</li>
+<li>降低没有意义的词的重要性，突出文章中真正具有关键意义的内容（词语）。</li>
+<li>对于一个 word，在文档出现的频率高，但在语料库里出现频率低，那么这个 word 对该文档的重要性比较高。</li>
+</ul>
+</li>
+</ul>
+<pre class="line-numbers language-ad-note" data-language="ad-note"><code class="language-ad-note">TF(词频 - Term Frequency)：指的是某一个给定的词语在该文件中出现的次数，这个数字通常会被归一化(一般是词频除以文章总词数), 以防止它偏向长的文件。
+
+IDF(逆文本频率指数 - Inverse Document Frequency)：包含指定词语的文档越少，IDF越大。某个词语的IDF，由总文件数目除以包含该词语之文件的数目，再将得到的商取对数得到，即：
+IDF=log(N/n)
+-   N代表语料库中文档的总数
+-   n代表某个word在几个文档中出现过；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="1-前置知识点：文本相似度"><a href="#1-前置知识点：文本相似度" class="headerlink" title="1. 前置知识点：文本相似度"></a>1. 前置知识点：文本相似度</h3><ul>
+<li><p>余弦相似度——最常用的相似度计算方法</p>
+<ul>
+<li>一个向量空间中两个向量夹角的余弦值作为衡量两个个体之间差异的大小</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251854838.png"></li>
+<li><strong>余弦值接近 1，夹角趋于 0，表明两个向量越相似！</strong></li>
+</ul>
+</li>
+<li><p>Jaccard 相似度——用于比较有限样本集之间的相似性与差异性</p>
+<ul>
+<li>Jaccard 系数定义为 A 与 B <strong>交集的大小</strong> 同 A 与 B <strong>并集的大小</strong>的比值</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251902319.png"></li>
+<li>Jaccard Similarity 得分在 0 到 1 的范围内。如果两个文档相同，则 Jaccard Similarity 为 1。如果两个文档之间没有共同词，则 Jaccard 相似度得分为 0。</li>
+<li>当 A 和 B 都为空，J(A,B) = 1</li>
+</ul>
+</li>
+<li><p>欧氏距离相似度——最常见的距离度量方法</p>
+<ul>
+<li>n 维空间中计算两点间距离</li>
+<li><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251915186.png"></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>适用场景</strong>：<br>比如向量 A(1,1,1)，向量 B(5,5,5)，两个向量虽然余弦相似度一致（夹角为 0），但是在空间上，两个向量并非一致。类比到用户 A 购买了三个 1 元的物品，用户 B 购买了三个 5 元的物品，衡量这两个用户的消费能力时，显然用余弦相似度是不合适的，欧氏距离更加合适。</p>
+<p>欧氏距离能够体现个体数值特征的绝对差异，所以更多的用于需要从维度的数值大小中体现差异的分析，比如使用用户行为作为指标分析用户价值的相似情况（比较不同用户的消费能力），这属于价值度量；而余弦相似度对绝对数值不敏感，更多的用于使用用户对内容的评分来分析用户兴趣的相似程度（用户是否喜欢某商品），这属于定性度量。</p>
+<p>需要注意的是，欧氏距离和余弦相似度都需要保证各维度处于相同的刻度级别（量纲），所以一般需要对数据先进行标准化处理，否则很可能会引起偏差。比如用户对内容评分，假设为 5 分制，对用户甲来说评分 3 分以上就是自己喜欢的，而对于用户乙，评分 4 分以上才是自己喜欢的，这样就无法很好地衡量两个用户评分之间的相似程度。如果将评分数值减去平均值，那么就可以很好地解决问题。此时，就相当于用皮尔逊相关系数来度量相似程度。</p>
+</blockquote>
+<h4 id="实践：计算两个字符串的相似度"><a href="#实践：计算两个字符串的相似度" class="headerlink" title="实践：计算两个字符串的相似度"></a>实践：计算两个字符串的相似度</h4><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251937573.jpg"></p>
+<p>首先生成文本的向量化表达：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">import jieba
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+texts = ['这只皮靴号码大了，那只号码合适','这只皮靴号码不小，那只更合适']
+
+# 分词
+texts_cut = []
+
+def cut_word(sentence):
+    return '/'.join(jieba.lcut(sentence))
+
+for text in texts:
+    #text = text.replace('，', '')
+    texts_cut.append(cut_word(text))
+    # strip() 只能移除字符串头尾指定的字符序列，不能删除中间部分的字符
+print(texts_cut)
+# 输出：分词结果
+# ['这/只/皮靴/号码/大/了/，/那/只/号码/合适', '这/只/皮靴/号码/不小/，/那/只/更/合适']
+
+# 创建词袋数据结构
+# CountVectorizer 参数中，默认的正则表达式选择 2 个及以上的字母或数字作为 token
+# 那么会导致分词为单个字的词语被忽略
+# 所以这里需要修改正则表达式参数
+cv = CountVectorizer(token_pattern=r"(?u)\b\w+\b")  # 修改正则表达式参数
+
+cv_fit = cv.fit_transform(texts_cut)
+# 上行代码等价于下面两行
+# cv.fit(texts)
+# cv_fit=cv.transform(texts)
+
+# 列表形式呈现文章生成的词典
+print(cv.get_feature_names())
+# 输出：词典
+# ['不小', '了', '只', '号码', '合适', '大', '更', '皮靴', '这', '那']
+
+# 字典形式的词典，带有词语 id
+print(cv.vocabulary_)
+# 输出：
+# {'这': 8, '只': 2, '皮靴': 7, '号码': 3, '大': 5, '了': 1, '那': 9, '合适': 4, '不小': 0, '更': 6}
+# 字典形式，key：词，value:该词（特征）的索引
+
+# 所有文本的词频
+print(cv_fit)
+# 输出：
+# (0, 8)  1  第 0 个文档中，词典索引为 8 的元素（这），词频为 1
+# (0, 2)  2
+# (0, 7)  1
+# (0, 3)  2
+# (0, 5)  1
+# (0, 1)  1
+# (0, 9)  1
+# (0, 4)  1
+# (1, 8)  1
+# (1, 2)  2
+# (1, 7)  1
+# (1, 3)  1
+# (1, 9)  1
+# (1, 4)  1
+# (1, 0)  1
+# (1, 6)  1
+
+# toarray() 将结果转为稀疏矩阵的表达
+print(cv_fit.toarray())
+# 输出：
+# [[0 1 2 2 1 1 0 1 1 1]
+#  [1 0 2 1 1 0 1 1 1 1]]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol>
+<li>使用余弦相似度计算<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205251939761.png"></li>
+</ol>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算余弦相似度
+texts_countvector = cv_fit.toarray()
+cos_sim = cosine_similarity(texts_countvector[0].reshape(1,-1), texts_countvector[1].reshape(1,-1))
+
+print('Cosine Similarity = %f'%cos_sim)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol start="2">
+<li>使用 Jaccard 相似度计算</li>
+</ol>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算 jaccard 相似度
+def jaccard_sim(a,b):
+    unions = len(set(a).union(set(b)))
+    intersections = len(set(a).intersection(set(b)))
+    return intersections / unions
+
+print('Jaccard Similarity = %f'%jaccard_sim(texts_cut[0],texts_cut[1]))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol start="3">
+<li>使用欧氏距离相似度计算</li>
+</ol>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># 计算欧氏距离相似度
+# calculating Euclidean distance
+# using linalg.norm()
+point1 = texts_countvector[0]
+point2 = texts_countvector[1]
+dist = np.linalg.norm(point1 - point2)
+
+print('Euclidean Distance = %f'%dist)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-TF-标准计算公式"><a href="#2-TF-标准计算公式" class="headerlink" title="2. TF 标准计算公式"></a>2. TF 标准计算公式</h3><p><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205261635717.png"></p>
+<p>上一节中计算相似度使用的向量化方式其实就是 TF。一开始学习的 Count Vector 其实也是 TF，只是没有做归一化。</p>
+<h3 id="3-IDF-标准计算公式"><a href="#3-IDF-标准计算公式" class="headerlink" title="3. IDF 标准计算公式"></a>3. IDF 标准计算公式</h3><p><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -2.059ex;" xmlns="http://www.w3.org/2000/svg" width="52.925ex" height="5.285ex" role="img" focusable="false" viewBox="0 -1426 23393 2336"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">逆</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">频</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">率</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">指</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g><g data-mml-node="mo" transform="translate(7000,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(7389,0)"><path data-c="1D43C" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"></path></g><g data-mml-node="mi" transform="translate(7893,0)"><path data-c="1D437" d="M287 628Q287 635 230 637Q207 637 200 638T193 647Q193 655 197 667T204 682Q206 683 403 683Q570 682 590 682T630 676Q702 659 752 597T803 431Q803 275 696 151T444 3L430 1L236 0H125H72Q48 0 41 2T33 11Q33 13 36 25Q40 41 44 43T67 46Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628ZM703 469Q703 507 692 537T666 584T629 613T590 629T555 636Q553 636 541 636T512 636T479 637H436Q392 637 386 627Q384 623 313 339T242 52Q242 48 253 48T330 47Q335 47 349 47T373 46Q499 46 581 128Q617 164 640 212T683 339T703 469Z"></path></g><g data-mml-node="mi" transform="translate(8721,0)"><path data-c="1D439" d="M48 1Q31 1 31 11Q31 13 34 25Q38 41 42 43T65 46Q92 46 125 49Q139 52 144 61Q146 66 215 342T285 622Q285 629 281 629Q273 632 228 634H197Q191 640 191 642T193 659Q197 676 203 680H742Q749 676 749 669Q749 664 736 557T722 447Q720 440 702 440H690Q683 445 683 453Q683 454 686 477T689 530Q689 560 682 579T663 610T626 626T575 633T503 634H480Q398 633 393 631Q388 629 386 623Q385 622 352 492L320 363H375Q378 363 398 363T426 364T448 367T472 374T489 386Q502 398 511 419T524 457T529 475Q532 480 548 480H560Q567 475 567 470Q567 467 536 339T502 207Q500 200 482 200H470Q463 206 463 212Q463 215 468 234T473 274Q473 303 453 310T364 317H309L277 190Q245 66 245 60Q245 46 334 46H359Q365 40 365 39T363 19Q359 6 353 0H336Q295 2 185 2Q120 2 86 2T48 1Z"></path></g><g data-mml-node="mo" transform="translate(9470,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mo" transform="translate(10136.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(11192.6,0)"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path></g><g data-mml-node="mi" transform="translate(11490.6,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path></g><g data-mml-node="mi" transform="translate(11975.6,0)"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path></g><g data-mml-node="mo" transform="translate(12452.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mfrac" transform="translate(12841.6,0)"><g data-mml-node="mrow" transform="translate(1081.2,676)"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">语</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">料</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">库</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">总</text></g><g data-mml-node="mi" transform="translate(7000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g></g><g data-mml-node="mrow" transform="translate(220,-710)"><g data-mml-node="mi"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">包</text></g><g data-mml-node="mi" transform="translate(1000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">含</text></g><g data-mml-node="mi" transform="translate(2000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">该</text></g><g data-mml-node="mi" transform="translate(3000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">词</text></g><g data-mml-node="mi" transform="translate(4000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">的</text></g><g data-mml-node="mi" transform="translate(5000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">文</text></g><g data-mml-node="mi" transform="translate(6000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">档</text></g><g data-mml-node="mi" transform="translate(7000,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">数</text></g><g data-mml-node="mo" transform="translate(8222.2,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(9222.4,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><rect width="9922.4" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(23004,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container></p>
+<p>分母加 1 为了防止式子除 0。<br>对整个式子取 log，为了防止小数过长。</p>
+<h3 id="4-TF-IDF-总结"><a href="#4-TF-IDF-总结" class="headerlink" title="4. TF-IDF 总结"></a>4. TF-IDF 总结</h3><ul>
+<li>TF-IDF<ul>
+<li>目的</li>
+<li>原理：<code>TF</code> × <code>IDF</code><ul>
+<li>特点：稀疏</li>
+</ul>
+</li>
+<li>优点<ul>
+<li>考虑了词的重要性</li>
+<li>简单快速，而且容易理解</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>稀疏——计算、存储效率</li>
+<li>每个词之间相互独立<ul>
+<li>只考虑词频信息，比较片面</li>
+<li>不考虑词语的有序性（位置信息）</li>
+<li>不能衡量词之间的相似度</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="0x03-TF-IDF-的实践"><a href="#0x03-TF-IDF-的实践" class="headerlink" title="0x03 TF-IDF 的实践"></a>0x03 TF-IDF 的实践</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">import math
+import pandas as pd
+
+docA = "The cat sat on my face"
+docB = "The dog sat on my bed"
+
+bowA = docA.split(' ')
+bowB = docB.split(' ')
+
+wordSet = set(bowA).union(set(bowB))
+
+wordDictA = dict.fromkeys(wordSet, 0)
+wordDictB = dict.fromkeys(wordSet, 0)
+
+for word in bowA:
+    wordDictA[word] += 1
+
+for word in bowB:
+    wordDictB[word] += 1
+
+print(pd.DataFrame([wordDictA, wordDictB]))
+# 输出：文本向量化
+#    my  The  cat  on  bed  dog  sat  face
+# 0   1    1    1   1    0    0    1     1
+# 1   1    1    0   1    1    1    1     0
+
+def computeTF(wordDict, bow):
+    tfDict = {}
+    bowCount = len(bow)
+    for word, count in wordDict.items():
+        tfDict[word] = count / float(bowCount)
+
+    return tfDict
+
+tfDictA = computeTF(wordDictA, bowA)
+tfDictB = computeTF(wordDictB, bowB)
+
+# IDF = log(语料库的文档总数 / (包含该词的文档数 + 1))
+def computeIDF(docList):
+    idfDict = {}
+    N = len(docList)
+
+    idfDict = dict.fromkeys(docList[0].keys(), 0)
+    for doc in docList:
+        for word, val in doc.items():
+            if val &gt; 0:
+                idfDict[word] += 1
+    print('N:', N)
+    print(idfDict)
+
+    for word, val in idfDict.items():
+        idfDict[word] = math.log10(N /( float(val)+1))
+
+    return idfDict
+
+idfs = computeIDF([wordDictA, wordDictB])
+print(idfs)
+# 输出：
+# N: 2（总文档数为 2）
+# 统计每个词在所有文档中出现的次数：
+# {'my': 2, 'The': 2, 'cat': 1, 'on': 2, 'bed': 1, 'dog': 1, 'sat': 2, 'face': 1}
+# 计算得到的 idf：
+# {'my': -0.17609125905568127, 'The': -0.17609125905568127, 'cat': 0.0, 'on': -0.17609125905568127, 'bed': 0.0, 'dog': 0.0, 'sat': -0.17609125905568127, 'face': 0.0}
+
+# 注意!!! 为什么有的 idf 是 0 ?
+# 因为只出现一次的词语通过计算得到 log(2/1+1) = 0
+
+def computeTFIDF(tfDict, idfs):
+    tfidfDict = {}
+    for word, val in tfDict.items():
+        tfidfDict[word] = val * idfs[word]
+
+    return tfidfDict
+
+tfidfDictA = computeTFIDF(tfDictA, idfs)
+tfidfDictB = computeTFIDF(tfDictB, idfs)
+
+print(pd.DataFrame([tfidfDictA, tfidfDictB]))
+# 输出：所有文档的 TF-IDF
+#          my       The  cat        on  bed  dog       sat  face
+# 0 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0
+# 1 -0.029349 -0.029349  0.0 -0.029349  0.0  0.0 -0.029349   0.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="0x04-项目1：《文章关键信息提取》"><a href="#0x04-项目1：《文章关键信息提取》" class="headerlink" title="0x04 项目1：《文章关键信息提取》"></a>0x04 项目1：《文章关键信息提取》</h2><p>目标：对一个数据集中的所有文章做关键信息提取。</p>
+<p>首先将 <code>input_tfidf_dir</code> 中的所有文章整个到一个文件里。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
+# convert.py
+# -----------
+
+import os
+import sys
+
+# 「argv」是「argument variable」参数变量的简写形式，一般在命令行调用的时候由系统传递给程序。这个变量其实是一个List列表，argv[0] 一般是“被调用的脚本文件名或全路径”，这个与操作系统有关，argv[1]和以后就是传入的系统命令参数。
+file_path_dir = sys.argv[1]
+
+def file_handler(file_path):
+    f = open(file_path, 'r')
+    return f
+
+file_name = 0
+for f in os.listdir(file_path_dir):
+    if not f.startswith('.'):  # 筛除 以 “.” 开头的隐藏文件
+        file_path = file_path_dir + "/" + f
+        content_list = []
+
+        file = file_handler(file_path)
+        for line in file:
+            content_list.append(line.strip())
+
+        print('\t'.join([str(file_name), ' '.join(content_list)]))
+
+        file_name += 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 查看一下输出
+python convert.py input_tfidf_dir
+# 将输出存入文件
+python convert.py input_tfidf_dir &gt; tfidf_input.data<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>MapReduce 要做下面的事情：<br><img data-src="https://inno-figurebed.oss-cn-hangzhou.aliyuncs.com/img/202205291138183.png"></p>
+<p>将左边乱序的输出排序，相同的 word 放一起。执行 <code>reduce.py</code> 的时候，要考虑到如右图——最后一个 word 只有一行的情况。</p>
+<p>将文档里出现的词打印出来。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
+# map.py
+# -----------
+
+import sys
+
+for line in sys.stdin:
+    ss = line.strip().split('\t')
+    if len(ss) != 2:  # 检查
+        continue
+
+    file_name, file_content = ss
+    word_list = file_content.strip().split(' ')
+
+    word_set = set(word_list)  # 去除一篇文档中重复的单词
+
+    for word in word_set:
+        print('\t'.join([word, '1']))
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>检验一下 <code>map.py</code> 文件做了什么，可以做什么。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 输出每个文档中出行啊的词
+cat tfidf_input.data | python map.py
+
+# 打印输出的结果
+cat tfidf_input.data | python map.py | grep '设计'
+
+# 统计个数
+cat tfidf_input.data | python map.py | grep -c '设计'
+
+# 将输出结果做个排序
+ cat tfidf_input.data | python map.py | sort -k1 -nr<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>计算 idf。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"># -----------
+# reduce.py
+# -----------
+
+import sys
+import math
+
+docs_cnt = 508
+
+current_word = None
+count = 0
+
+for line in sys.stdin:
+    ss = line.strip().split('\t')
+    if len(ss) != 2:
+
+        continue
+    word, val = ss
+    if current_word == None:
+        current_word = word
+
+    if current_word != word:
+        idf = math.log10(docs_cnt / (float(count) + 1.0))  # 计算 idf
+        print('\t'.join([current_word, str(idf)]))
+        count = 0  # 重置 count
+        current_word = word  # 换到下一个 word
+
+    count += int(val)
+
+# 防止最后一类只有一行，导致最后一类没有输出
+idf = math.log10(docs_cnt / (float(count) + 1.0))
+print('\t'.join([current_word, str(idf)]))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 将计算的 idf 存储到 result_idf.data 文件里
+cat tfidf_input.data | python map.py | sort -k1 -nr | python reduce.py &gt; result_idf.data
+
+# 查看一下 “的” 的 idf
+cat result_idf.data | grep '的'
+# 输出：
+# 的  0.0008557529505832833<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="0x05-项目2：文本相似度计算"><a href="#0x05-项目2：文本相似度计算" class="headerlink" title="0x05 项目2：文本相似度计算"></a>0x05 项目2：文本相似度计算</h2><p><a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886/sentence-similarity: 对四种句子/文本相似度计算方法进行实验与比较</a></p>
+<p>使用 Word2Vec 的方法将所有句子生成句向量，然后利用四种方法计算文本相似度。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>配置 Vim：<br> <a href="https://bynss.com/linux/827013.html">怎样在 Ubuntu 上安装最新的 Vim | 月灯依旧</a><br> <a href="https://blog.csdn.net/weixin_36338224/article/details/120985361">保姆级教程！将 Vim 打造一个 IDE （Python 篇）</a><br> <a href="https://zhuanlan.zhihu.com/p/127933244">Vim-Python 环境 - 知乎</a><br> <a href="https://zhuanlan.zhihu.com/p/30022074">Vim - 配置 IDE 一般的 python 环境 - 知乎</a><br> <a href="https://blog.csdn.net/qq_34128332/article/details/115820865?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-1-115820865-blog-123357406.pc_relevant_default&utm_relevant_index=2">Vim 插件 YouCompleteMe 安装归纳</a></p>
+<p>文本相似度：<br> <a href="https://zhuanlan.zhihu.com/p/155960197">推荐算法原理（二）欧几里得距离计算物品间相似度 - 知乎</a><br> <a href="https://www.cnblogs.com/HuZihu/p/10178165.html">相似度度量：欧氏距离与余弦相似度</a><br> <a href="https://blog.csdn.net/steven_ffd/article/details/84881063">sklearn中CountVectorizer里token_pattern默认参数解读</a></p>
+<p>相似度计算：<br> <a href="https://www.delftstack.com/zh/howto/python/cosine-similarity-between-lists-python/">Python 中的余弦相似度 | D栈 - Delft Stack</a><br> <a href="https://github.com/cjymz886/sentence-similarity">GitHub - cjymz886/sentence-similarity: 对四种句子/文本相似度计算方法进行实验与比较</a></p>
 ]]></content>
       <categories>
         <category>FunRec</category>
