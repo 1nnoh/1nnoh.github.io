@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=800">
 
     <!-- Public identity metadata for the GitHub Pages user site. -->
-    <title>Junhao Hou — Academic Homepage</title>
+    <title>Junhao Hou</title>
     <meta
       name="description"
       content="Academic homepage of Junhao Hou, a PhD candidate at Zhejiang University working on physical intelligence across computer-aided design, computer vision, machine learning, and robotics."
     >
     <link rel="canonical" href="https://1nnoh.github.io/">
-    <link rel="icon" href="assets/icons/school.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/icons/attractor-logo.svg" type="image/svg+xml">
 
     <meta property="og:type" content="profile">
-    <meta property="og:title" content="Junhao Hou — Academic Homepage">
+    <meta property="og:title" content="Junhao Hou">
     <meta
       property="og:description"
       content="Research and academic profile of Junhao Hou, a PhD candidate at Zhejiang University."
@@ -22,12 +22,33 @@
     <meta property="og:url" content="https://1nnoh.github.io/">
     <meta
       property="og:image"
-      content="https://1nnoh.github.io/assets/images/houjunhao_2cun.jpg"
+      content="https://1nnoh.github.io/assets/images/og-homepage.png"
     >
-    <meta property="og:image:alt" content="Portrait of Junhao Hou against a white background">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta
+      property="og:image:alt"
+      content="Junhao Hou academic profile with the Attractor Lab logo and portrait"
+    >
 
-    <link rel="stylesheet" href="css/homepage.css?v=20260823-jon-yue-final">
-    <script src="script/homepage.js?v=20260823-media-preview-v3" defer></script>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Junhao Hou">
+    <meta
+      name="twitter:description"
+      content="Research and academic profile of Junhao Hou, a PhD candidate at Zhejiang University."
+    >
+    <meta
+      name="twitter:image"
+      content="https://1nnoh.github.io/assets/images/og-homepage.png"
+    >
+    <meta
+      name="twitter:image:alt"
+      content="Junhao Hou academic profile with the Attractor Lab logo and portrait"
+    >
+
+    <link rel="stylesheet" href="css/homepage.css?v=20260824-research-reveal-v1">
+    <script src="script/homepage.js?v=20260824-contact-share-v1" defer></script>
 
     <!-- Machine-readable public identity for the canonical site. -->
     <script type="application/ld+json">
@@ -101,7 +122,22 @@
 
           <nav class="profile-links" aria-label="Academic profiles">
             <!-- Keep this link order. -->
-            <a class="profile-link" href="mailto:junhaohou@zju.edu.cn">Email</a>
+            <span class="profile-contact">
+              <button
+                class="profile-link profile-link--button"
+                type="button"
+                data-copy-email
+                data-email="junhaohou@zju.edu.cn"
+                aria-describedby="email-tooltip"
+                aria-label="Copy email address"
+              >Email</button>
+              <span
+                class="profile-contact__popover profile-contact__popover--email"
+                id="email-tooltip"
+                role="tooltip"
+                data-email-tooltip
+              >junhaohou@zju.edu.cn</span>
+            </span>
             <span class="profile-links__separator" aria-hidden="true">/</span>
             <!-- CV: uncomment this link after a public CV file or URL is available.
             <span class="profile-links__separator" aria-hidden="true">/</span>
@@ -127,6 +163,32 @@
               target="_blank"
               rel="noreferrer"
             >GitHub</a>
+            <span class="profile-links__separator" aria-hidden="true">/</span>
+            <span class="profile-contact profile-contact--wechat">
+              <a
+                class="profile-link"
+                href="assets/images/wechat-qr.png"
+                target="_blank"
+                rel="noreferrer"
+                aria-describedby="wechat-tooltip"
+                aria-label="Open Junhao Hou's WeChat QR code in a new tab"
+              >WeChat</a>
+              <span
+                class="profile-contact__popover profile-contact__popover--wechat"
+                id="wechat-tooltip"
+                role="tooltip"
+              >
+                <span class="visually-hidden">Preview of Junhao Hou's WeChat QR code.</span>
+                <img
+                  src="assets/images/wechat-qr.png"
+                  alt=""
+                  width="690"
+                  height="690"
+                  loading="lazy"
+                >
+              </span>
+            </span>
+            <span class="visually-hidden" aria-live="polite" data-copy-status></span>
           </nav>
 
           <figure class="profile-portrait">
@@ -141,38 +203,92 @@
       </header>
 
       <section class="content-section research" aria-labelledby="research-title">
-        <h2 class="section-title" id="research-title">Research</h2>
+        <div class="research-heading">
+          <h2
+            class="section-title"
+            id="research-title"
+            tabindex="0"
+            aria-describedby="research-coda-note"
+          >Research</h2>
+          <span
+            class="research-hover-note research-heading__note"
+            id="research-coda-note"
+            role="note"
+            lang="zh-Hans"
+          >理明则简，用以验真。</span>
+        </div>
         <!-- RESEARCH SUMMARY: keep this vision statement evidence-bounded as the research focus evolves. -->
         <div class="research-summary">
-          <p>
-            I want to build intelligent systems that can model the physical world,
-            design functional artifacts, and ultimately bring them into reality. To get there, I
-            study models that go beyond appearance to capture the structure and
-            physics needed to understand and simulate the physical world, and to design and
-            manufacture artifacts within it.
+          <p class="research-vision">
+            I want to build intelligent systems that
+            <strong>see structure beneath appearance, act through it, and learn through interaction
+            at the limits of their understanding</strong>. Ultimately, my goal is to move from
+            understanding the physical world to creating within it&mdash;modeling what exists,
+            designing what could exist, and bringing those designs into reality.
           </p>
-          <p class="research-goal">
-            <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
-            <strong>Model Anything.</strong> Modeling the physical world by capturing its geometry,
-            motion, and physical properties for simulation and learning, so agents can perceive,
-            understand, reason, and act in the physical world. I currently focus on scalable
-            real-to-sim pipelines that turn images, videos, and interaction into structured data
-            for physical intelligence.
-          </p>
-          <p class="research-goal">
-            <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
-            <strong>Design Anything.</strong> Moving beyond shape generation toward true design
-            generation by integrating geometry with parameters, constraints, dependencies, and
-            design intent. I approach this through intelligent CAD, creating editable and
-            verifiable designs that reflect human intent and engineering requirements.
-          </p>
-          <p class="research-goal">
-            <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
-            <strong>Make Anything.</strong> Closing the gap between digital design and physical
-            realization by reasoning about whether and how a design can actually be made. I aim
-            to bring manufacturability into the design loop by accounting for materials,
-            processes, tolerances, tooling, and production constraints.
-          </p>
+
+          <div class="research-point">
+            <p
+              class="research-goal"
+              tabindex="0"
+              aria-describedby="research-model-note"
+            >
+              <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
+              <strong>Model.</strong> Modeling the physical world by capturing its geometry,
+              topology, motion, and physical properties, so agents can perceive, understand,
+              reason, and act within it. I currently focus on scalable real-to-sim pipelines that
+              turn images, videos, and interaction into structured data for physical intelligence.
+            </p>
+            <blockquote
+              class="research-hover-note research-point__note"
+              id="research-model-note"
+              lang="zh-Hans"
+            >
+              <p><em>原天地之美，而达万物之理。</em><cite>—《庄子·知北游》</cite></p>
+            </blockquote>
+          </div>
+
+          <div class="research-point">
+            <p
+              class="research-goal"
+              tabindex="0"
+              aria-describedby="research-design-note"
+            >
+              <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
+              <strong>Design.</strong> Moving beyond shape generation toward design generation by
+              integrating geometry with parameters, constraints, dependencies, and design intent.
+              I approach this through intelligent CAD, creating editable and verifiable designs
+              that reflect human intent and engineering requirements.
+            </p>
+            <blockquote
+              class="research-hover-note research-point__note"
+              id="research-design-note"
+              lang="zh-Hans"
+            >
+              <p><em>因其固然。</em><cite>—《庄子·养生主》</cite></p>
+            </blockquote>
+          </div>
+
+          <div class="research-point">
+            <p
+              class="research-goal"
+              tabindex="0"
+              aria-describedby="research-make-note"
+            >
+              <span class="research-goal__marker" aria-hidden="true">&#9656;</span>
+              <strong>Make.</strong> Closing the gap between digital design and physical realization
+              by reasoning about whether and how a design can actually be made. I aim to bring
+              manufacturability into the design loop by accounting for materials, processes,
+              tolerances, tooling, and production constraints.
+            </p>
+            <blockquote
+              class="research-hover-note research-point__note"
+              id="research-make-note"
+              lang="zh-Hans"
+            >
+              <p><em>物形之，势成之。</em><cite>—《道德经·五十一章》</cite></p>
+            </blockquote>
+          </div>
         </div>
 
         <p class="publication-note">

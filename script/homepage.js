@@ -4,6 +4,7 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const initializedRegions = new WeakSet();
+  let emailFeedbackTimer;
 
   const motionPreviewAllowed = () => finePointer.matches && !reducedMotion.matches;
 
@@ -110,6 +111,79 @@
     root.querySelectorAll("[data-publication-media]").forEach(setupRegion);
   };
 
+  const copyWithTextarea = (value) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.inset = "0 auto auto -9999px";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, value.length);
+
+    const copied = document.execCommand("copy");
+    textarea.remove();
+
+    if (!copied) {
+      throw new Error("Clipboard fallback was rejected.");
+    }
+  };
+
+  const copyText = async (value) => {
+    if (window.isSecureContext && navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(value);
+        return;
+      } catch {
+        // Fall through to the selection-based copy path when permission is unavailable.
+      }
+    }
+
+    copyWithTextarea(value);
+  };
+
+  const setupEmailCopy = () => {
+    const button = document.querySelector("[data-copy-email]");
+    const tooltip = document.querySelector("[data-email-tooltip]");
+    const status = document.querySelector("[data-copy-status]");
+
+    if (!button || !tooltip || !status) {
+      return;
+    }
+
+    const email = button.dataset.email;
+    if (!email) {
+      return;
+    }
+
+    const resetFeedback = () => {
+      tooltip.textContent = email;
+      button.setAttribute("aria-label", "Copy email address");
+      delete button.dataset.copyState;
+    };
+
+    button.addEventListener("click", async () => {
+      clearTimeout(emailFeedbackTimer);
+      status.textContent = "";
+
+      try {
+        await copyText(email);
+        tooltip.textContent = "Copied!";
+        button.dataset.copyState = "copied";
+        button.setAttribute("aria-label", "Email address copied");
+        status.textContent = `Email address ${email} copied to clipboard.`;
+      } catch {
+        tooltip.textContent = "Copy failed";
+        button.dataset.copyState = "failed";
+        button.setAttribute("aria-label", "Copy email address failed");
+        status.textContent = `Could not copy the email address. The address is ${email}.`;
+      }
+
+      emailFeedbackTimer = window.setTimeout(resetFeedback, 1600);
+    });
+  };
+
   const stopAllPreviews = () => {
     document.querySelectorAll("[data-publication-media]").forEach(deactivatePreview);
   };
@@ -142,6 +216,7 @@
 
   const initialize = () => {
     refreshPreviewRegions();
+    setupEmailCopy();
   };
 
   if (document.readyState === "loading") {

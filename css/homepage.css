@@ -24,6 +24,7 @@
   --color-link-hover: #f09228;
   --color-focus: #1772d0;
   --color-media-surface: #ffffff;
+  --color-border: #d9d9d9;
 
   --font-body: "Lato", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --body-size: 0.875rem;
@@ -206,6 +207,83 @@ button:focus-visible,
   font-weight: 500;
 }
 
+.profile-link--button {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  transition: color 120ms ease;
+}
+
+.profile-link--button:hover {
+  color: var(--color-link-hover);
+}
+
+.profile-contact {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.profile-contact__popover {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.55rem);
+  left: 50%;
+  visibility: hidden;
+  border: 0.0625rem solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.2rem);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+}
+
+.profile-contact:hover .profile-contact__popover,
+.profile-contact > .profile-link:focus-visible + .profile-contact__popover {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.profile-links:has(.profile-contact:hover)
+  .profile-contact:not(:hover)
+  .profile-contact__popover {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.2rem);
+}
+
+.profile-contact__popover--email {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.profile-contact__popover--wechat {
+  width: 13rem;
+  padding: 0.45rem;
+}
+
+.profile-contact__popover--wechat img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
 .profile-links__separator {
   color: var(--color-muted);
 }
@@ -234,11 +312,19 @@ button:focus-visible,
 }
 
 .section-title {
-  margin: 0 0 1.25rem;
+  margin: 0;
   font-size: var(--section-size);
   font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 1.25;
+}
+
+.research-heading {
+  display: flex;
+  min-height: 1.75rem;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin: 0 0 1.25rem;
 }
 
 .research-summary {
@@ -249,16 +335,76 @@ button:focus-visible,
   margin: 0;
 }
 
-.research-summary p + p {
-  margin-top: 0.85rem;
-}
-
+.research-vision strong,
 .research-goal strong {
   font-weight: 700;
 }
 
+.research-point {
+  margin-top: 0.9rem;
+}
+
 .research-goal__marker {
   margin-right: 0.22em;
+}
+
+.research-hover-note {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-0.12rem);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.research-heading__note {
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.section-title:hover + .research-heading__note,
+.section-title:focus + .research-heading__note {
+  opacity: 0.72;
+  transform: translateY(0);
+}
+
+.research-point__note {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin: 0 0 0 1.1rem;
+  overflow: hidden;
+  transition:
+    grid-template-rows 140ms ease,
+    margin-top 140ms ease,
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.research-point__note p {
+  min-height: 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.research-point__note em {
+  font-style: italic;
+}
+
+.research-point__note cite {
+  margin-left: 0.25em;
+  font-size: 0.75rem;
+  font-style: normal;
+}
+
+.research-point:hover .research-point__note,
+.research-point:focus-within .research-point__note {
+  grid-template-rows: 1fr;
+  margin-top: 0.3rem;
+  opacity: 0.72;
+  transform: translateY(0);
 }
 
 .publication-note {
