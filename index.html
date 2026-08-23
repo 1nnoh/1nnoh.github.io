@@ -48,8 +48,8 @@
       content="Junhao Hou academic profile with the Attractor Lab logo and portrait"
     >
 
-    <link rel="stylesheet" href="css/homepage.css?v=20260824-research-reveal-v1">
-    <script src="script/homepage.js?v=20260824-contact-share-v1" defer></script>
+    <link rel="stylesheet" href="css/homepage.css?v=20260824-wechat-popover-v3">
+    <script src="script/homepage.js?v=20260824-wechat-popover-v3" defer></script>
 
     <!-- Machine-readable public identity for the canonical site. -->
     <script type="application/ld+json">
@@ -176,14 +176,15 @@
             >GitHub</a>
             <span class="profile-links__separator" aria-hidden="true">/</span>
             <span class="profile-contact profile-contact--wechat">
-              <a
-                class="profile-link"
-                href="assets/images/wechat-qr.png"
-                target="_blank"
-                rel="noreferrer"
+              <button
+                class="profile-link profile-link--button"
+                type="button"
+                data-wechat-toggle
                 aria-describedby="wechat-tooltip"
-                aria-label="Open Junhao Hou's WeChat QR code in a new tab"
-              >WeChat</a>
+                aria-controls="wechat-tooltip"
+                aria-expanded="false"
+                aria-label="Show Junhao Hou's WeChat QR code"
+              >WeChat</button>
               <span
                 class="profile-contact__popover profile-contact__popover--wechat"
                 id="wechat-tooltip"

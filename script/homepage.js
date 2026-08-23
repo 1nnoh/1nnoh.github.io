@@ -184,6 +184,75 @@
     });
   };
 
+  const setupWechatPopover = () => {
+    const button = document.querySelector("[data-wechat-toggle]");
+    const contact = button?.closest(".profile-contact--wechat");
+
+    if (!button || !contact) {
+      return;
+    }
+
+    const setOpen = (open, dismissed = false) => {
+      contact.classList.toggle("is-open", open);
+      contact.classList.toggle("is-dismissed", dismissed);
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute(
+        "aria-label",
+        `${open ? "Hide" : "Show"} Junhao Hou's WeChat QR code`
+      );
+    };
+
+    button.addEventListener("click", () => {
+      if (finePointer.matches) {
+        return;
+      }
+
+      const opening = !contact.classList.contains("is-open");
+      setOpen(opening, !opening);
+    });
+
+    contact.addEventListener("pointerenter", () => {
+      contact.classList.remove("is-dismissed");
+    });
+
+    contact.addEventListener("pointerleave", () => {
+      if (!contact.classList.contains("is-open")) {
+        contact.classList.remove("is-dismissed");
+      }
+    });
+
+    button.addEventListener("focus", () => {
+      contact.classList.remove("is-dismissed");
+    });
+
+    contact.addEventListener("focusout", (event) => {
+      if (!event.relatedTarget || !contact.contains(event.relatedTarget)) {
+        setOpen(false, true);
+      }
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      if (!contact.contains(event.target)) {
+        setOpen(false, true);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      setOpen(false, true);
+      if (contact.contains(document.activeElement)) {
+        button.blur();
+      }
+    });
+
+    onMediaQueryChange(finePointer, () => {
+      setOpen(false);
+    });
+  };
+
   const stopAllPreviews = () => {
     document.querySelectorAll("[data-publication-media]").forEach(deactivatePreview);
   };
@@ -217,6 +286,7 @@
   const initialize = () => {
     refreshPreviewRegions();
     setupEmailCopy();
+    setupWechatPopover();
   };
 
   if (document.readyState === "loading") {

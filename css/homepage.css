@@ -248,17 +248,35 @@ button:focus-visible,
     visibility 120ms ease;
 }
 
-.profile-contact:hover .profile-contact__popover,
-.profile-contact > .profile-link:focus-visible + .profile-contact__popover {
+.profile-contact > .profile-link:focus-visible + .profile-contact__popover,
+.profile-contact.is-open .profile-contact__popover {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
 }
 
-.profile-links:has(.profile-contact:hover)
-  .profile-contact:not(:hover)
-  .profile-contact__popover {
+@media (hover: hover) and (pointer: fine) {
+  .profile-contact:hover .profile-contact__popover {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .profile-links:has(.profile-contact:hover)
+    .profile-contact:not(:hover)
+    .profile-contact__popover {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -0.2rem);
+  }
+}
+
+.profile-contact--wechat.is-dismissed
+  > .profile-link
+  + .profile-contact__popover {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
