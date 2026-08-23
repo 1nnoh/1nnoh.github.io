@@ -1,0 +1,14 @@
+# macOS metadata
+.DS_Store
+
+# Local development guidance and design records
+/AGENTS.md
+/DESIGN.md
+/CONTEXT.md
+/design-qa.md
+/references/
+
+# Author-owned source material retained locally, not published
+/assets/images/source/
+/assets/images/2cun.jpg
+/assets/images/junhao-hou-portrait.JPG
