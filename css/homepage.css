@@ -25,6 +25,7 @@
   --color-focus: #1772d0;
   --color-media-surface: #ffffff;
   --color-border: #d9d9d9;
+  --color-attribution: #666666;
 
   --font-body: "Lato", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --body-size: 0.875rem;
@@ -128,6 +129,19 @@ button:focus-visible,
   width: var(--page-width);
   margin-inline: 0;
   padding: 3.5rem var(--page-padding-inline) 3rem;
+}
+
+.site-footer {
+  width: var(--page-width);
+  padding: 0 var(--page-padding-inline) 1.5rem;
+  color: var(--color-attribution);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 .profile-header {
