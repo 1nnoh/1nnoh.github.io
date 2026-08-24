@@ -332,6 +332,8 @@ button:focus-visible,
   background: var(--color-surface);
   isolation: isolate;
   justify-self: end;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transition: transform 300ms cubic-bezier(.25,.8,.25,1), box-shadow 300ms cubic-bezier(.25,.8,.25,1);
 }
 
 .profile-portrait__image {
@@ -347,14 +349,25 @@ button:focus-visible,
   z-index: 1;
   inset: 0;
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: opacity 200ms ease-in-out;
 }
 
 .profile-portrait:focus-visible .profile-portrait__image--alternate {
   opacity: 1;
 }
 
+.profile-portrait:focus-visible {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.20);
+  transform: scale(1.03) translateY(-3px);
+}
+
 @media (hover: hover) and (pointer: fine) {
+  .profile-portrait:hover,
+  .profile-portrait:hover:focus-visible {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.20);
+    transform: scale(1.03) translateY(-3px);
+  }
+
   .profile-portrait:hover .profile-portrait__image--alternate {
     opacity: 1;
   }
