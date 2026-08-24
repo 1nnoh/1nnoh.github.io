@@ -205,12 +205,26 @@
             <span class="visually-hidden" aria-live="polite" data-copy-status></span>
           </nav>
 
-          <figure class="profile-portrait">
+          <figure
+            class="profile-portrait"
+            role="img"
+            aria-label="Portrait of Junhao Hou; hover or focus to reveal an alternate illustration."
+            tabindex="0"
+          >
             <img
+              class="profile-portrait__image profile-portrait__image--primary"
               src="assets/images/houjunhao_2cun.jpg"
-              alt="Portrait of Junhao Hou against a white background"
+              alt=""
               width="300"
               height="400"
+            >
+            <img
+              class="profile-portrait__image profile-portrait__image--alternate"
+              src="assets/images/mob.png"
+              alt=""
+              width="500"
+              height="500"
+              aria-hidden="true"
             >
           </figure>
         </div>
@@ -359,8 +373,8 @@
                 <a href="https://github.com/1nnoh/HiFi-BRep" target="_blank" rel="noreferrer">code</a>
               </div>
               <p class="publication-summary">
-                Uses differentiable validity constraints as an inductive bias for single-stage,
-                high-fidelity B-Rep representation and generation.
+                High-fidelity, padding-free B-Rep representation for single-stage generation with
+                end-to-end validity learning.
               </p>
             </div>
           </article>

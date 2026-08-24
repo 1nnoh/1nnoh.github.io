@@ -321,22 +321,43 @@ button:focus-visible,
 }
 
 .profile-portrait {
+  position: relative;
   grid-area: portrait;
   width: 12.5rem;
   height: 12.5rem;
+  overflow: hidden;
   margin: 0;
   align-self: center;
+  border-radius: 50%;
+  background: var(--color-surface);
+  isolation: isolate;
   justify-self: end;
 }
 
-.profile-portrait img {
+.profile-portrait__image {
   width: 100%;
   height: 100%;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-surface);
   object-fit: contain;
   object-position: center;
+}
+
+.profile-portrait__image--alternate {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.profile-portrait:focus-visible .profile-portrait__image--alternate {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .profile-portrait:hover .profile-portrait__image--alternate {
+    opacity: 1;
+  }
 }
 
 .content-section {
