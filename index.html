@@ -193,12 +193,15 @@
                 role="tooltip"
               >
                 <span class="visually-hidden">Preview of Junhao Hou's WeChat QR code.</span>
+                <!-- Source: local-only assets/images/source/wechat-qr-original.png; the public 690 x 690 PNG keeps module geometry and applies palette-only lossless encoding. -->
                 <img
-                  src="assets/images/wechat-qr.png"
+                  data-wechat-qr
+                  data-src="assets/images/wechat-qr.png"
                   alt=""
                   width="690"
                   height="690"
                   loading="lazy"
+                  decoding="async"
                 >
               </span>
             </span>
@@ -217,13 +220,16 @@
               alt=""
               width="300"
               height="400"
+              decoding="async"
             >
+            <!-- Source: supplied assets/images/source/mob.png; the public 400 x 400 WebP derivative uses deterministic high-quality downsampling without altering the illustration. -->
             <img
               class="profile-portrait__image profile-portrait__image--alternate"
-              src="assets/images/mob.png"
+              src="assets/images/mob.webp"
               alt=""
-              width="500"
-              height="500"
+              width="400"
+              height="400"
+              decoding="async"
               aria-hidden="true"
             >
           </figure>
@@ -329,7 +335,7 @@
           <!-- PUBLICATION 1: newest public work first. -->
           <article class="publication">
             <div class="publication-media-cell">
-              <!-- Source: author-owned assets/images/source/hifi-brep.pdf; the complete twelve-model CAD gallery is rendered intact, scaled without cropping, and centered on a white 1600 x 1600 square. -->
+              <!-- Source: author-owned assets/images/source/hifi-brep.pdf; the complete twelve-model CAD gallery remains preserved as the 1600 x 1600 composition in assets/images/source/publications/hifi-brep-1600.png, while this public derivative is a 320 x 320 lossless WebP scaled without cropping. -->
               <div class="publication-media" data-publication-media>
               <a
                 class="publication-media__link"
@@ -339,10 +345,11 @@
                 aria-label="Open the HiFi-BRep paper"
               >
                 <img
-                  src="assets/images/publications/hifi-brep.png"
+                  src="assets/images/publications/hifi-brep.webp"
                   alt="HiFi-BRep gallery of twelve translucent cyan CAD parts with varied topology and geometry"
-                  width="1600"
-                  height="1600"
+                  width="320"
+                  height="320"
+                  decoding="async"
                 >
               </a>
               </div>
@@ -382,7 +389,7 @@
           <!-- PUBLICATION 2 -->
           <article class="publication">
             <div class="publication-media-cell">
-              <!-- Source: author-owned assets/images/source/brep-gd.pdf; the complete six-panel face-point and edge-point diffusion figure is rendered intact, scaled without cropping, and centered on a white 1600 x 1600 square. -->
+              <!-- Source: author-owned assets/images/source/brep-gd.pdf; the complete six-panel face-point and edge-point diffusion figure remains preserved as the 1600 x 1600 composition in assets/images/source/publications/brep-gd-1600.png, while this public derivative is a 320 x 320 lossless WebP scaled without cropping. -->
               <div class="publication-media" data-publication-media>
               <a
                 class="publication-media__link"
@@ -392,11 +399,12 @@
                 aria-label="Open the BRep-GD paper"
               >
                 <img
-                  src="assets/images/publications/brep-gd.png"
+                  src="assets/images/publications/brep-gd.webp"
                   alt="BRep-GD diffusion progression from noisy face and edge point sets to a structured hexagonal CAD part"
-                  width="1600"
-                  height="1600"
+                  width="320"
+                  height="320"
                   loading="lazy"
+                  decoding="async"
                 >
               </a>
               </div>
@@ -430,7 +438,7 @@
           <!-- PUBLICATION 3 -->
           <article class="publication">
             <div class="publication-media-cell">
-              <!-- Source: author-owned assets/images/source/drawing2cad.pdf; its three beige/green CAD pairs are cropped from the vector figure, rearranged from a 3 x 2 strip to a paired 2 x 3 grid without altering the models, and centered on a white 1600 x 1600 square. -->
+              <!-- Source: author-owned assets/images/source/drawing2cad.pdf; its three beige/green CAD pairs remain preserved as the 1600 x 1600 composition in assets/images/source/publications/drawing2cad-1600.png, while this public derivative is a 320 x 320 lossless WebP scaled without cropping. -->
               <div class="publication-media" data-publication-media>
               <a
                 class="publication-media__link"
@@ -440,11 +448,12 @@
                 aria-label="Open the Drawing2CAD paper"
               >
                 <img
-                  src="assets/images/publications/drawing2cad.png"
+                  src="assets/images/publications/drawing2cad.webp"
                   alt="Drawing2CAD paired beige and green CAD models of a stepped shaft, hexagonal part, and bracket"
-                  width="1600"
-                  height="1600"
+                  width="320"
+                  height="320"
                   loading="lazy"
+                  decoding="async"
                 >
               </a>
               </div>
@@ -486,7 +495,7 @@
           <!-- PUBLICATION 4 -->
           <article class="publication">
             <div class="publication-media-cell">
-              <!-- Source: author-owned assets/images/source/brep-sub3.pdf; the complete topology graph is cropped from the vector figure, its thumbnail-illegible legends are omitted, and the unaltered graph is centered on a white 1600 x 1600 square. -->
+              <!-- Source: author-owned assets/images/source/brep-sub3.pdf; the complete topology graph remains preserved as the 1600 x 1600 composition in assets/images/source/publications/fus-gcn-1600.jpg, while this public derivative is a 320 x 320 lossless WebP scaled without cropping. -->
               <div class="publication-media" data-publication-media>
               <a
                 class="publication-media__link"
@@ -496,11 +505,12 @@
                 aria-label="Open the FuS-GCN paper"
               >
                 <img
-                  src="assets/images/publications/fus-gcn.jpg"
+                  src="assets/images/publications/fus-gcn.webp"
                   alt="FuS-GCN B-rep subgraph with planar, cylindrical, and extrusion surface nodes connected by line and circle edges"
-                  width="1600"
-                  height="1600"
+                  width="320"
+                  height="320"
                   loading="lazy"
+                  decoding="async"
                 >
               </a>
               </div>

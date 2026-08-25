@@ -5,6 +5,7 @@
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const initializedRegions = new WeakSet();
   let emailFeedbackTimer;
+  let wechatQrLoadPromise;
 
   const motionPreviewAllowed = () => finePointer.matches && !reducedMotion.matches;
 
@@ -187,10 +188,65 @@
   const setupWechatPopover = () => {
     const button = document.querySelector("[data-wechat-toggle]");
     const contact = button?.closest(".profile-contact--wechat");
+    const qrImage = contact?.querySelector("[data-wechat-qr]");
 
     if (!button || !contact) {
       return;
     }
+
+    const startQrLoad = () => {
+      if (!qrImage || wechatQrLoadPromise) {
+        return wechatQrLoadPromise;
+      }
+
+      const source = qrImage.dataset.src;
+      if (!source) {
+        return undefined;
+      }
+
+      qrImage.loading = "eager";
+      qrImage.src = source;
+      wechatQrLoadPromise = new Promise((resolve) => {
+        const finish = () => {
+          qrImage.removeEventListener("load", finish);
+          qrImage.removeEventListener("error", finish);
+          resolve();
+        };
+
+        qrImage.addEventListener("load", finish);
+        qrImage.addEventListener("error", finish);
+        if (qrImage.complete) {
+          finish();
+        }
+      }).then(() => {
+        if (typeof qrImage.decode === "function") {
+          return qrImage.decode().catch(() => undefined);
+        }
+        return undefined;
+      });
+
+      return wechatQrLoadPromise;
+    };
+
+    const scheduleIdleQrLoad = () => {
+      const preload = () => {
+        if (typeof window.requestIdleCallback === "function") {
+          window.requestIdleCallback(() => {
+            void startQrLoad();
+          }, { timeout: 2000 });
+        } else {
+          window.setTimeout(() => {
+            void startQrLoad();
+          }, 0);
+        }
+      };
+
+      if (document.readyState === "complete") {
+        preload();
+      } else {
+        window.addEventListener("load", preload, { once: true });
+      }
+    };
 
     const setOpen = (open, dismissed = false) => {
       contact.classList.toggle("is-open", open);
@@ -203,6 +259,7 @@
     };
 
     button.addEventListener("click", () => {
+      void startQrLoad();
       if (finePointer.matches) {
         return;
       }
@@ -212,6 +269,7 @@
     });
 
     contact.addEventListener("pointerenter", () => {
+      void startQrLoad();
       contact.classList.remove("is-dismissed");
     });
 
@@ -222,6 +280,7 @@
     });
 
     button.addEventListener("focus", () => {
+      void startQrLoad();
       contact.classList.remove("is-dismissed");
     });
 
@@ -251,6 +310,8 @@
     onMediaQueryChange(finePointer, () => {
       setOpen(false);
     });
+
+    scheduleIdleQrLoad();
   };
 
   const stopAllPreviews = () => {
