@@ -416,7 +416,7 @@ button:focus-visible,
 
 .research-hover-note {
   color: var(--color-muted);
-  font-size: 0.8125rem;
+  font-size: 12.5px;
   line-height: 1.45;
   opacity: 0;
   pointer-events: none;
@@ -431,12 +431,19 @@ button:focus-visible,
   white-space: nowrap;
 }
 
-.section-title:hover + .research-heading__note,
 .section-title:focus + .research-heading__note {
-  opacity: 0.72;
+  opacity: 0.68;
   transform: translateY(0);
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .section-title:hover + .research-heading__note {
+    opacity: 0.68;
+    transform: translateY(0);
+  }
+}
+
+.research-vision__note,
 .research-point__note {
   display: grid;
   grid-template-rows: 0fr;
@@ -449,28 +456,45 @@ button:focus-visible,
     transform 140ms ease;
 }
 
+.research-vision__note p,
 .research-point__note p {
   min-height: 0;
   overflow: hidden;
   text-align: right;
+  white-space: normal;
 }
 
+.research-vision__note em,
 .research-point__note em {
-  font-style: italic;
-}
-
-.research-point__note cite {
-  margin-left: 0.25em;
-  font-size: 0.75rem;
   font-style: normal;
 }
 
-.research-point:hover .research-point__note,
+.research-vision__note cite,
+.research-point__note cite {
+  display: block;
+  margin-left: 0;
+  margin-top: 0.08rem;
+  font-size: 11.5px;
+  font-style: normal;
+  text-align: right;
+}
+
+.research-vision:focus + .research-vision__note,
 .research-point:focus-within .research-point__note {
   grid-template-rows: 1fr;
   margin-top: 0.3rem;
-  opacity: 0.72;
+  opacity: 0.68;
   transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .research-vision:hover + .research-vision__note,
+  .research-point:hover .research-point__note {
+    grid-template-rows: 1fr;
+    margin-top: 0.3rem;
+    opacity: 0.68;
+    transform: translateY(0);
+  }
 }
 
 .publication-note {
